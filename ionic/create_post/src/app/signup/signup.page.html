@@ -1,0 +1,36 @@
+<ion-app>
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>계정 만들기</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content fullscreen>
+    
+    <form #form="ngForm" (ngSubmit)="sign_up(form)">
+      <ion-list lines="full" calss="ion-no-margin ion-no-padding">
+        <ion-item>
+          <ion-label position="stacked">ID: </ion-label>
+          <ion-input name="email" [(ngModel)]="user.email" required type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked">PW: </ion-label>
+            <ion-input name="password" [(ngModel)]="user.password" required type="password"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked">이름: </ion-label>
+            <ion-input name="name" [(ngModel)]="user.name" required type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked">부서: </ion-label>
+            <ion-input name="department" [(ngModel)]="user.department" required type="text" placeholder="인사과"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <div class="ion-padding">
+        <ion-button expand="block" type="submit" class="ion-no-margin">계정 만들기</ion-button>
+      </div>
+    </form>
+  </ion-content>
+
+</ion-app>

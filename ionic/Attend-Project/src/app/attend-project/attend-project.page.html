@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>프로젝트 참가</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-text color="primary">
+        <h1>프로젝트 이름: {{ project_name }}</h1>
+      </ion-text>
+      
+      <ion-text color="warning">
+        <h1>프로젝트 매니저: {{ project_mgr_uid }}</h1>
+      </ion-text>
+      <ion-text color="warning">
+        <h1>프로젝트 설명: {{ project_desc }}</h1>
+      </ion-text>
+    
+    <ion-button class="ion-margin-horizontal ion-float-end" size="large">취소</ion-button>
+    <ion-button class="ion-margin-horizontal ion-float-end" size="large" (click)="goMainPage()">참가</ion-button>
+</ion-content>

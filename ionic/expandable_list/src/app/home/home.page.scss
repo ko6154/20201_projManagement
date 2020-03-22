@@ -1,0 +1,44 @@
+
+.service-list {
+    --padding-end: 0;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+  }
+  
+  .service-header {
+    margin-bottom: 0;
+    font-size: 20px;
+    font-weight: 500;
+  
+    > ion-list {
+      margin-bottom: 0;
+    }
+  }
+  
+  .duration-list {
+    width: 100%;
+    margin-bottom: 0;
+    font-size: 12px;
+    font-weight: 500;
+  
+    ion-item {
+      --background: var(--ion-color-paleGrey);
+    }
+  }
+  
+  .duration-list-header {
+    color: var(--ion-color-cloudyBlue);
+  }
+  
+  .duration-list-item {
+    color: var(--ion-color-steel);
+  
+    input {
+      width: 100%;
+      // padding: 8px;
+      border: 1px solid var(--ion-color-veryLightBlue);
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
+  

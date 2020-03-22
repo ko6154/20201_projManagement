@@ -1,0 +1,29 @@
+<ion-app>
+    <ion-header translucent>
+      <ion-toolbar>
+        <ion-title>로그인</ion-title>
+      </ion-toolbar>
+      
+    </ion-header>
+  
+    <ion-content fullscreen>
+      
+      <form #form="ngForm" (ngSubmit)="login()">
+        <ion-list lines="full" calss="ion-no-margin ion-no-padding">
+          <ion-item>
+            <ion-label position="stacked">ID: </ion-label>
+            <ion-input name="email" [(ngModel)]="user.email" required type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+              <ion-label position="stacked">PW: </ion-label>
+              <ion-input name="password" [(ngModel)]="user.password" required type="password"></ion-input>
+          </ion-item>
+          
+        </ion-list>
+        <ion-button class="ion-margin-horizontal ion-float-end" size="large" type="submit" >로그인</ion-button>
+      </form>    
+  
+    </ion-content>
+    
+  
+  </ion-app>

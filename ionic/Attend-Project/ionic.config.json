@@ -1,0 +1,7 @@
+{
+  "name": "Attend-Project",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

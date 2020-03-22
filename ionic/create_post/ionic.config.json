@@ -1,0 +1,8 @@
+{
+  "name": "create_post",
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
+  "type": "angular"
+}

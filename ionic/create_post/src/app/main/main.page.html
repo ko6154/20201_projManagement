@@ -1,0 +1,38 @@
+<ion-app>
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>프로젝트 목록</ion-title>
+      <ion-label class="ion-text-wrap" slot="end">안녕하세요&nbsp;{{user_id}}님&nbsp;&nbsp;&nbsp;</ion-label>
+      <ion-button (click)="logout()" slot="end">로그아웃</ion-button>
+    </ion-toolbar>
+    
+  </ion-header>
+
+  <ion-content fullscreen>
+    <ion-list class="project-list">
+        <ion-item class="project-header">
+            <ion-label class="ion-text-wrap">이름</ion-label>
+            <ion-label class="ion-text-wrap">진행률</ion-label>
+            <ion-label class="ion-text-wrap">시작일</ion-label>
+            <ion-label class="ion-text-wrap">종료일</ion-label>
+            <ion-label class="ion-text-wrap">비고</ion-label>
+        </ion-item>
+        <ion-item  *ngFor="let project of projects" class="project-header {{project.progress_status}}"
+        (click)="project_click(project)" color='{{project.progress_status}}'>   <!-- title -->
+          <ion-label class="ion-text-wrap">{{ project.name }}</ion-label>
+          <ion-label class="ion-text-wrap">{{ project.progress }} %</ion-label>
+          <ion-label class="ion-text-wrap">{{ project.start }}</ion-label>
+          <ion-label class="ion-text-wrap">{{ project.end }}</ion-label>
+          <ion-label class="ion-text-wrap">{{ project.desc }}</ion-label>
+        </ion-item>
+    </ion-list>
+
+    <!-- fab placed to the bottom and start and on the bottom edge of the content overlapping footer with a list to the right -->
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="goGenerateProject()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ion-content>
+</ion-app>
