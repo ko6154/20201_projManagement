@@ -15,7 +15,7 @@ let {PythonShell} = require('python-shell')
 mysqlDB.connect();
 
 var app = express();
-app.set('port', process.env.PORT || 9000); //포트 지정
+app.set('port', process.env.PORT || 3000); //포트 지정
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); //post방식으로 데이터 받기위해 2줄 적어야한다

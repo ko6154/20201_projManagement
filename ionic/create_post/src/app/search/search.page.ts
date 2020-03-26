@@ -43,7 +43,7 @@ export class SearchPage implements OnInit {
             this.files.push({
               word: tmp[i]['word'],
               name: name,
-              path: `http://155.230.90.22:9000/download?path=${sp_file[j]}`,
+              path: `http://52.55.31.29:3000/download?path=${sp_file[j]}`,
               status: true
             })
           }

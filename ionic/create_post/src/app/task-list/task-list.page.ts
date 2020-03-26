@@ -242,7 +242,7 @@ export class TaskListPage {
     if(type != 'noti')
      attach = args[len].attach.split("*");
     let attaches = new Array();
-    let pre_path = `http://155.230.90.22:9000/download?path=`;
+    let pre_path = `http://52.55.31.29:3000/download?path=`;
     
     if(type != 'noti'){
       for(var i=0; i<attach.length-1; ++i){

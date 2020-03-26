@@ -13,7 +13,7 @@ export class HttpService {
     private httpClient : HttpClient
   ) { }
 
-  SERVER_ADDRESS: string = "http://155.230.90.22:9000";
+  SERVER_ADDRESS: string = "http://52.55.31.29:3000";
   header = new HttpHeaders(
     {
       'Content-Type': 'application/json',

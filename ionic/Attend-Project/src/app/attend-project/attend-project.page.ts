@@ -12,7 +12,7 @@ export class AttendProjectPage implements OnInit {
 
 data: any;
 proj_information: any;
-SERVER_ADDRESS: string = "http://155.230.90.22:9000";
+SERVER_ADDRESS: string = "http://52.55.31.29:3000";
   project_id:string;
   project_name: string;
   project_mgr_uid: string;
