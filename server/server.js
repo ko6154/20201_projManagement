@@ -10,6 +10,7 @@ var cors = require('cors') // 다른 서버로 접근하기위해서 사용
 var mysql = require('mysql');
 var crypto = require('crypto'); //비밀번호 암호화
 var mysqlDB = require('./mysql-db');
+var hostname = '0.0.0.0';
 let {PythonShell} = require('python-shell')
 //var PythonShell = require('python-shell'); 
 mysqlDB.connect();
@@ -20,7 +21,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); //post방식으로 데이터 받기위해 2줄 적어야한다
 app.use(cors());
-
+app.set('views',__dirname + '/views');
+app.set('views engin','ejs');
+app.engine('html',require('ejs').renderFile);
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -46,15 +49,15 @@ var router = express.Router();
 app.use('/', router);
 
 app.use(function (req, res, next) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf8' })
-    res.write(`<h3>해당하는 내용이 없습니다</h3>`)
-    res.end();
+   //res.writeHead(200, { 'Content-Type': 'text/html;charset=utf8' })
+   //res.write(`<h3>해당하는 내용이 없습니다</h3>`)
+   //res.end();
+	res.render('index.html');
 })
 
-http.createServer(app).listen(app.get('port'), function () {
+http.createServer(app).listen(app.get('port'),  function () {
     console.log("익스프레스로 웹 서버를 실행함 : " + app.get('port'));
 }) //express를 이용해 웹서버 만든다
-
 
 // SIGNUP
 router.route("/user/register").post(function (req, res) {
@@ -127,6 +130,7 @@ router.route("/user/login").post(function (req, res) {
         }
     })
 })
+
 
 
 router.route("/task/createBIG").post(upload.array('userFiles', 12), function (req, res) {
