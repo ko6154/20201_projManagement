@@ -27,7 +27,7 @@ app.use(session({
     resave: false,//세션 상시 저장할지 정하는 flag
     saveUninitialized: true
 }));
-app.use('/node_modules',express.static(path.join(__dirname,'/node_modules')))
+app.use('node_modules',express.static(path.join(__dirname,'/node_modules')))
 app.set('views',__dirname + '/views');
 app.set('views engin','ejs');
 app.engine('html',require('ejs').renderFile);
