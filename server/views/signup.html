@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <meta charset="ko">
+    <title>signup</title>
+</header>
+<body>
+    <center>
+        <form action="/user/register" method="POST">
+            <p>Email:&nbsp;<input name="email"></input></p>
+            <p>PW:&nbsp;<input name="password"></input></p>
+            <p>이름:&nbsp;<input name = "name"></input></p>
+            <p>부서:&nbsp;<input name = "department"></input></p>
+            <input name="signup" type="submit" value = "계정 만들기"></input>
+        </form>
+    </center>
+    <script>
+        var info = JSON.parse(admit);
+        console.log(info)
+    </script>
+</body>
+</html>

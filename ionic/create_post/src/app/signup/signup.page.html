@@ -10,7 +10,7 @@
     <form #form="ngForm" (ngSubmit)="sign_up(form)">
       <ion-list lines="full" calss="ion-no-margin ion-no-padding">
         <ion-item>
-          <ion-label position="stacked">ID: </ion-label>
+          <ion-label position="stacked">Email: </ion-label>
           <ion-input name="email" [(ngModel)]="user.email" required type="text"></ion-input>
         </ion-item>
         <ion-item>
@@ -23,7 +23,7 @@
         </ion-item>
         <ion-item>
             <ion-label position="stacked">부서: </ion-label>
-            <ion-input name="department" [(ngModel)]="user.department" required type="text" placeholder="인사과"></ion-input>
+            <ion-input name="department" [(ngModel)]="user.department" required type="text" placeholder="부서를 입력하세요"></ion-input>
         </ion-item>
       </ion-list>
 

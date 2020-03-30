@@ -59,6 +59,15 @@ http.createServer(app).listen(app.get('port'),  function () {
     console.log("익스프레스로 웹 서버를 실행함 : " + app.get('port'));
 }) //express를 이용해 웹서버 만든다
 
+router.route("/login").get(function (req, res){
+	res.render("login.html");
+})
+
+router.route("/signup").get(function (req, res){
+	res.render("signup.html");
+})
+
+
 // SIGNUP
 router.route("/user/register").post(function (req, res) {
     var email = req.body.email;
