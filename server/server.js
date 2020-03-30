@@ -13,6 +13,7 @@ var mysqlDB = require('./mysql-db');
 var hostname = '0.0.0.0';
 let {PythonShell} = require('python-shell')
 //var PythonShell = require('python-shell'); 
+var session = require('express-session');
 mysqlDB.connect();
 
 var app = express();
@@ -21,6 +22,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); //post방식으로 데이터 받기위해 2줄 적어야한다
 app.use(cors());
+app.use(session({
+    secret: '@#@$MYSIGN#@$#$',//임시 세션키값
+    resave: false,//세션 상시 저장할지 정하는 flag
+    saveUninitialized: true
+}));
+app.use('/node_modules',express.static(path.join(__dirname,'/node_modules')))
 app.set('views',__dirname + '/views');
 app.set('views engin','ejs');
 app.engine('html',require('ejs').renderFile);
@@ -52,6 +59,7 @@ app.use(function (req, res, next) {
    //res.writeHead(200, { 'Content-Type': 'text/html;charset=utf8' })
    //res.write(`<h3>해당하는 내용이 없습니다</h3>`)
    //res.end();
+    sess = req.session;
 	res.render('index.html');
 })
 
@@ -67,6 +75,9 @@ router.route("/signup").get(function (req, res){
 	res.render("signup.html");
 })
 
+router.route("/main").get(function (req, res){
+	res.render("main.html");
+})
 
 // SIGNUP
 router.route("/user/register").post(function (req, res) {
@@ -87,6 +98,7 @@ router.route("/user/register").post(function (req, res) {
             res.write(JSON.stringify(admit));
             res.end();
             console.log(results);
+            
         } else {
             console.log("USER INSERT ERROR");
             admit = { "register": "deny" };
@@ -95,6 +107,34 @@ router.route("/user/register").post(function (req, res) {
         }
     })
 })
+
+// SIGNUP_pc
+router.route("/user_pc/register").post(function (req, res) {
+    var email = req.body.email;
+    var inputPassword = req.body.password;
+    var u_name = req.body.name;
+    var department = req.body.department;
+    var u_salt = Math.round((new Date().valueOf() * Math.random())) + "";
+    var hashPassword = crypto.createHash("sha512").update(inputPassword + u_salt).digest("hex");
+    console.log(`email : ${email} , password : ${inputPassword}, hashPassword : ${hashPassword}, name : ${u_name} , department : ${department}, salt : ${u_salt}`);
+
+    var data = { USER_ID: email, USER_PW: hashPassword, NAME: u_name, DEPT: department, TOKEN: "t", SALT: u_salt };
+    mysqlDB.query('INSERT INTO USER set ?', data, function (err, results) {
+        var admit;
+        if (!err) {
+            admit = { "register": "success" };
+            console.log("Create user success");
+            console.log(results);
+            res.redirect('/login');
+            
+        } else {
+            console.log("USER INSERT ERROR");
+            admit = { "register": "deny" };
+            res.redirect('/signup');            
+        }
+    })
+})
+
 // LOGIN
 router.route("/user/login").post(function (req, res) {
     var email = req.body.email;
@@ -104,6 +144,7 @@ router.route("/user/login").post(function (req, res) {
 
     mysqlDB.query('select * from USER where USER_ID=?', [email], function (err, results) {
         var login;
+        var login_data;
         if (err) {
             login = { "login": "error" };
             console.log("LOGIN ERROR");
@@ -121,26 +162,83 @@ router.route("/user/login").post(function (req, res) {
 
             if (hashPassword === user.USER_PW) {
                 console.log("login success");
-                login = { "login": "success" };
+                login = { "login": "success" };    
+                 //세션 처리 해야한다// 
+                sess = req.session;
+                sess.username = email;
+                sess.state = 't';    
+                //권한 세션 입력해야한다.-> 디비처리//      
             } else {
                 console.log("WRONG ID or PASSWORD");
                 login = { "login": "wrong" }
             }
-            console.log(JSON.stringify(login));
-            res.write(JSON.stringify(login));
+            login_data = JSON.stringify(login);
+            console.log(login_data);
+            res.write(login_data);              
             res.end();
         }
         else {
             login = { "login": "wrong" };
             console.log("WRONG ID")
-            console.log(JSON.stringify(login));
-            res.write(JSON.stringify(login));
+            login_data = JSON.stringify(login);
+            console.log(login_data);
+            res.write(login_data);  
             res.end();
         }
     })
 })
+//login_pc
+router.route("/user_pc/login").post(function (req, res) {
+    var email = req.body.email;
+    var password = req.body.password;
+    console.log("email : " + email);
+    console.log("password : " + password);
+    mysqlDB.query('select * from USER where USER_ID=?', [email], function (err, results) {
+        var login;
+        var login_data;
+        if (err) {
+            login = { "login": "error" };
+            console.log("LOGIN ERROR");
+            console.log(err);
+            console.log(JSON.stringify(login));
+            res.redirect('/login');
+            return;
+        }
+        if (results.length > 0) {
+            console.log(results);
+            var user = results[0];
+            var hashPassword = crypto.createHash("sha512").update(password + user.SALT).digest("hex");
 
-
+            if (hashPassword === user.USER_PW) {
+                console.log("login success");
+                login = { "login": "success" };    
+                 //세션 처리 해야한다// 
+                sess = req.session;
+                sess.username = email;
+                sess.state = 't';    
+                //권한 세션 입력해야한다.-> 디비처리//      
+                login_data = JSON.stringify(login);
+                console.log(login_data);             
+                res.redirect('/main');
+                
+            } else {
+                console.log("WRONG ID or PASSWORD");
+                login = { "login": "wrong" };
+                login_data = JSON.stringify(login);
+                console.log(login_data);             
+                res.redirect('/login');
+            }
+            
+        }
+        else {
+            login = { "login": "wrong" };
+            console.log("WRONG ID");
+            login_data = JSON.stringify(login);
+            console.log(login_data);
+            res.redirect('/login'); 
+        }
+    })
+})
 
 router.route("/task/createBIG").post(upload.array('userFiles', 12), function (req, res) {
     if (req.files != null)

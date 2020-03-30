@@ -1,16 +1,97 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
 <!DOCTYPE html>
 <html>
-<header>
-    <meta charset="ko">
-    <title>login</title>
-</header>
-<body>
-    <center>
-        <form action="/user/login" method="POST">
-            <p>Email&nbsp;<input name="email"></input></p>
-            <p>PW&nbsp;<input name="password" type = "password"></input></p>
-            <input name="login" type="submit" value = "로그인"></input>
-        </form>
-    </center>
-</body>
+    <head>
+        <title>Login</title>
+       <!--Made with love by Mutiullah Samim -->
+
+        <!--Bootsrap 4 CDN-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+        <!--Fontawesome CDN-->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+        <!--Custom styles-->
+        <link rel="stylesheet" href="{{ url_for('static', filename = 'signin.css') }}">
+        <script type = "text/javascript" src="node_modules/jquery/dist/jquery/js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+        function check_validation() {
+            var loginForm = document.loginForm;
+            var id = loginForm.id.value;
+            var password = loginForm.pw.value;
+
+            if(!id || !password) {
+                alert("이메일과 비밀번호를 입력해주세요.");
+            } else {
+                loginForm.submit();
+            }
+        }
+
+        function enterkey() {
+            if (window.event.keyCode == 13) {
+                check_validation();
+            }
+        }
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="d-flex justify-content-center h-100">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>PMD</h3>
+                        <div class="d-flex justify-content-end social_icon">
+                            <span><i class="fab fa-twitter-square"></i></span>
+                            <span><i class="fab fa-facebook-square"></i></span>
+                            <span><i class="fab fa-instagram"></i></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form name="loginForm" action="/user_pc/login" method="POST">
+                            <div class="input-group form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                                <input type="text" name="email" class="form-control" placeholder="이메일">
+                            </div>
+                            <div class="input-group form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                </div>
+                                <input type="password" class="form-control" name="password" placeholder="비밀번호">
+                            </div>
+                            <div class="row align-items-center remember">
+                                <input type="checkbox">Forget Me Not
+                            </div>
+                            {% if fail %}
+                                <div id="chk_again" style="color:red;">아이디, 비밀번호를 다시 확인해주세요</div>
+                            {% endif %}
+                            <!--자바스크립트로 자동 로그인 구현해야함-->
+                            <div class="form-group">
+                                <input type="submit" value="로그인" class="btn float-right login_btn" onclick="check_validation();">
+                            </div>
+                            <!--로그인 실패시 알림 띄워 줘야함-->
+                           
+                        </form>
+                            
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-center links">
+                            아직 계정이 없으신가요? <a href="/signup">회원가입</a>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <a href="#">비밀번호 찾기</a>
+                            <!--찾기 페이지도 구현해야함-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </body>
 </html>
