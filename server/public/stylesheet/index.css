@@ -6,7 +6,9 @@
                 height: 100%;
                 font-family: 'Numans', sans-serif;
             }
-
+            p{
+                font-size: 40px;
+            }
             .container{
             height: 100%;
             align-content: center;

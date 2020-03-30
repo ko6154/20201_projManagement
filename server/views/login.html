@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
         <!--Custom styles-->
-        <link rel="stylesheet" href="stylesheet/signin.css">
+        <link type="text/css" rel="stylesheet" href="stylesheet/signin.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
         function check_validation() {
@@ -44,11 +44,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>PMD</h3>
-                        <div class="d-flex justify-content-end social_icon">
-                            <span><i class="fab fa-twitter-square"></i></span>
-                            <span><i class="fab fa-facebook-square"></i></span>
-                            <span><i class="fab fa-instagram"></i></span>
-                        </div>
                     </div>
                     <div class="card-body">
                         <form name="loginForm" action="/user_pc/login" method="POST">
@@ -65,11 +60,9 @@
                                 <input type="password" class="form-control" name="password" placeholder="비밀번호">
                             </div>
                             <div class="row align-items-center remember">
-                                <input type="checkbox">Forget Me Not
+                                <input type="checkbox">자동 로그인
                             </div>
-                            {% if fail %}
-                                <div id="chk_again" style="color:red;">아이디, 비밀번호를 다시 확인해주세요</div>
-                            {% endif %}
+                            
                             <!--자바스크립트로 자동 로그인 구현해야함-->
                             <div class="form-group">
                                 <input type="submit" value="로그인" class="btn float-right login_btn" onclick="check_validation();">
