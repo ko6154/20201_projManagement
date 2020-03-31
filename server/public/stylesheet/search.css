@@ -25,14 +25,14 @@ header{
     color: white;
   }
 
-  #make_pro{
-    margin-left: 20px;
-  }
-
   #logout_btn{
     float: right;    
     margin-left: 5px;
     margin-right: 15px;
     height: 30px !important;
     font-size: 15px !important;
+  }
+
+  #search{
+      margin-left: 10px !important;
   }

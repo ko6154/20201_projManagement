@@ -79,6 +79,14 @@ router.route("/main").get(function (req, res){
 	res.render("main.html");
 })
 
+router.route("/create").get(function(req,res){
+    res.render("create.html");
+})
+
+router.route("/search").get(function(req,res){
+    res.render("search.html");
+})
+
 // SIGNUP
 router.route("/user/register").post(function (req, res) {
     var email = req.body.email;
@@ -145,6 +153,7 @@ router.route("/user/login").post(function (req, res) {
     mysqlDB.query('select * from USER where USER_ID=?', [email], function (err, results) {
         var login;
         var login_data;
+        
         if (err) {
             login = { "login": "error" };
             console.log("LOGIN ERROR");
@@ -156,17 +165,21 @@ router.route("/user/login").post(function (req, res) {
         }
 
         if (results.length > 0) {
-            console.log(results);
+            console.log(results);            
             var user = results[0];
-            var hashPassword = crypto.createHash("sha512").update(password + user.SALT).digest("hex");
+            
+            var hashPassword = crypto.createHash("sha512").update(password + user.SALT).digest("hex");            
 
             if (hashPassword === user.USER_PW) {
                 console.log("login success");
-                login = { "login": "success" };    
+                login = { "login": "success" };  
+                console.log("name = "+user.NAME);  
                  //세션 처리 해야한다// 
                 sess = req.session;
-                sess.username = email;
-                sess.state = 't';    
+                sess.email = email;
+                sess.state = 't';  
+                sess.name = user.NAME;  
+                console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
             } else {
                 console.log("WRONG ID or PASSWORD");
@@ -187,6 +200,7 @@ router.route("/user/login").post(function (req, res) {
         }
     })
 })
+
 //login_pc
 router.route("/user_pc/login").post(function (req, res) {
     var email = req.body.email;
@@ -214,12 +228,17 @@ router.route("/user_pc/login").post(function (req, res) {
                 login = { "login": "success" };    
                  //세션 처리 해야한다// 
                 sess = req.session;
-                sess.username = email;
-                sess.state = 't';    
+                sess.email = email;
+                sess.state = 't'; //권한  
+                sess.name = user.NAME;  
+                console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
                 login_data = JSON.stringify(login);
-                console.log(login_data);             
-                res.redirect('/main');
+                console.log(login_data);  
+                req.session.save(function(){
+                     res.redirect('/main');
+                });           
+               
                 
             } else {
                 console.log("WRONG ID or PASSWORD");

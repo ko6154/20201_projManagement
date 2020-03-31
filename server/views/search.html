@@ -15,12 +15,22 @@
 <body>
 <br>
 <header>    
-    <p><strong>&nbsp;&nbsp;프로젝트 목록</strong>
+    <p><strong>&nbsp;&nbsp;프로젝트 검색</strong>
         <small><input id = "logout_btn" type="button" value="로그아웃" onclick="location.href = '/'"></small>
     </p>
     
 </header>
-<br>
+    <form  action="/search/project" method="POST">
+        <p id = "search">
+        프로젝트 명:&nbsp;<input type="text" placeholder="프로젝트 명">
+        &nbsp;|&nbsp;
+        담당자 명:&nbsp;<input type="search" placeholder="담당자 명">
+        &nbsp;|&nbsp;
+        기간:&nbsp;<input type="date">&nbsp;~<input type="date">
+        &nbsp;|&nbsp;
+        <input type="submit" value="검색">
+        </p>
+    </form>
 <table id="customers">
   <tr>
     <th>프로젝트 명</th>
@@ -105,9 +115,7 @@
 </table>
 <br>
 <footer>
-    <input id = "make_pro" type="button" value="프로젝트 생성" onclick="location.href = '/create'">
-    &nbsp;&nbsp;
-    <input id = "search_pro" type="button" value="프로젝트 검색" onclick="location.href = '/search'">
+    
 </footer>
 <script>
 

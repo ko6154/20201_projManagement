@@ -15,7 +15,7 @@
 <body>
 <br>
 <header>    
-    <p><strong>&nbsp;&nbsp;프로젝트 목록</strong>
+    <p><strong>&nbsp;&nbsp;프로젝트 생성</strong>
         <small><input id = "logout_btn" type="button" value="로그아웃" onclick="location.href = '/'"></small>
     </p>
     
@@ -105,9 +105,7 @@
 </table>
 <br>
 <footer>
-    <input id = "make_pro" type="button" value="프로젝트 생성" onclick="location.href = '/create'">
-    &nbsp;&nbsp;
-    <input id = "search_pro" type="button" value="프로젝트 검색" onclick="location.href = '/search'">
+    <form action="/create_task" method="GET"><input id = "make_pro" type="submit" value="프로젝트 생성"></form>
 </footer>
 <script>
 
