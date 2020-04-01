@@ -74,11 +74,11 @@ router.route("/login").get(function (req, res){
 router.route("/signup").get(function (req, res){
 	res.render("signup.html");
 })
-
-router.route("/main").get(function (req, res){
-	res.render("main.html");
-})
-
+///
+//router.route("/main").get(function (req, res){
+//	res.render("main.html");
+//})
+///
 router.route("/create").get(function(req,res){
     res.render("create.html");
 })
@@ -236,7 +236,7 @@ router.route("/user_pc/login").post(function (req, res) {
                 login_data = JSON.stringify(login);
                 console.log(login_data);  
                 req.session.save(function(){
-                     res.redirect('/main');
+                    res.render('main.html',{username:sess.name});
                 });           
                
                 
