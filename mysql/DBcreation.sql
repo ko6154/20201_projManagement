@@ -1,4 +1,4 @@
-use capstoneDB;
+use pmDB;
 #drop view POST_LIST;
 #drop table COMMENT_NOTI;
 #drop table COMMENT_SML;
