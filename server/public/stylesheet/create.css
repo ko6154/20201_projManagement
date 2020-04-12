@@ -1,38 +1,40 @@
+* {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
 
 header{
-    font-size: 30px;
+  font-size: 30px;
+  margin-left: 20px;
+  margin-top: 25px;
 }
-#customers {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  #customers td, #customers th {
-    border: 1px solid #ddd;
-    padding: 15px;
-  }
-  
-  #customers tr:nth-child(even){background-color: #f2f2f2;}
-  
-  #customers tr:hover {background-color: #ddd;}
-  
-  #customers th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #3dc2ff;
-    color: white;
-  }
 
-  #make_pro{
-    margin-left: 20px;
-  }
+textarea {
+  
+  width:80%;
+}
 
-  #logout_btn{
-    float: right;    
-    margin-left: 5px;
-    margin-right: 15px;
-    height: 30px !important;
-    font-size: 15px !important;
-  }
+form {
+  position: absolute;
+  top:15%; left:25%;
+  background-color: #3dc2ff;
+  width:700px;
+}
+
+#hr_title {
+  border:solid 1px;
+}
+
+div {
+  margin: 30px;
+}
+
+#submit {
+  position: relative;
+  top : 50px;
+  bottom : 30px;
+}
+
+.added {
+  margin-left:100px;
+}
