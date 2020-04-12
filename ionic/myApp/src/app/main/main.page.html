@@ -1,0 +1,40 @@
+
+<ion-header>
+    <ion-toolbar color="secondary">
+
+        <ion-buttons slot="primary">
+            <ion-button>
+                <ion-icon slot="end" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="font-size:0.9em">진행중인 프로젝트</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+    <ion-list class="project-list">
+
+        <ion-item *ngFor="let project of projects" class="project-header {{project.progress_status}}"
+                  (click)="project_click(project)">
+            <!-- title -->
+                <ion-card style="width:100%;" class="project-header {{project.progress_status}}" color='{{project.progress_status}}'>               
+                    <ion-card-header>
+                        <ion-card-subtitle>~ {{ project.end }}</ion-card-subtitle>
+                        <ion-card-title style="font-size:1.5em">{{ project.name }}</ion-card-title>
+
+                    </ion-card-header>
+                    <ion-card-content style="height:10px;">
+                        {{ project.desc }}
+                    </ion-card-content>
+
+                    <p align="right">진행률 {{project.progress}}%&nbsp;&nbsp;</p>
+                    <ion-progress-bar style="height:7px" color="secondary" value=".{{ project.progress }}"></ion-progress-bar>
+                </ion-card>
+        </ion-item>
+    </ion-list>
+    <!-- fab placed to the bottom and start and on the bottom edge of the content overlapping footer with a list to the right -->
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="secondary" (click)="goGenerateProject()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

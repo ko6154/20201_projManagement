@@ -1,0 +1,111 @@
+<ion-app>
+  <ion-header>
+      <ion-toolbar color="secondary">
+          <ion-buttons slot="start">
+              <ion-button (click)="goBack()">
+                  <ion-icon name="chevron-back-outline"></ion-icon>
+              </ion-button>
+          </ion-buttons>  
+          <ion-title style="font-size:0.9em"> {{ project_name }} </ion-title>
+          
+          <ion-buttons slot="primary">
+              <ion-button (click)="navCtrl.navigateForward('/search')">
+                  <ion-icon name="search" ></ion-icon>
+              </ion-button>
+          </ion-buttons>
+      </ion-toolbar>
+
+    <ion-fab vertical="top" horizontal="end" slot="fixed">
+      <ion-fab-button *ngIf="isPM" color="light">
+        <ion-icon name="settings"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button color="light" (click) = "update_status('1')">
+          <ion-label>완료</ion-label>
+        </ion-fab-button>
+        <ion-fab-button color="light">
+          <ion-label>수정</ion-label>
+        </ion-fab-button>
+        <ion-fab-button color="light" (click) = "update_status('-1')">
+          <ion-label>삭제</ion-label>
+        </ion-fab-button>
+        <ion-fab-button color="light">
+          <ion-icon name="clipboard" (click) = "attend_dialog()"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab>
+    
+
+  </ion-header>
+  <ion-content>
+      <ion-list>    <!-- WHOLE -->
+        <ion-item class="noti-list-title" (click)="notiIsOpen= toggle(notiIsOpen)">
+          <ion-icon [name]="notiIsOpen ? 'arrow-dropdown' : 'arrow-dropright'" style="padding-right:5px"></ion-icon>
+          <ion-label class="ion-text-wrap">공지사항</ion-label>
+        </ion-item>
+        <ion-list class="noti-list" *ngIf="notiIsOpen"> <!-- NOTI -->
+          <ion-item class="noti-title" *ngFor="let noti of notis" (click)="go_board('noti', noti)">
+            <ion-label class="ion-text-wrap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ noti.title }}</ion-label>
+            <ion-icon *ngIf="noti.status == 1" name="checkmark-circle"></ion-icon>
+          </ion-item>
+        </ion-list>
+        
+        <ion-item class="task-list-title" (click)="taskIsOpen = toggle(taskIsOpen)">
+          <ion-icon [name]="taskIsOpen ? 'arrow-dropdown' : 'arrow-dropright'" style="padding-right:5px"></ion-icon>
+            <ion-label class="ion-text-wrap">업무 목록</ion-label>
+        </ion-item>
+        <ng-container *ngIf="taskIsOpen">
+          <ion-list class="big-list" *ngFor="let big of tasks" > <!-- BIG -->
+            <ion-item class="big-title">
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <ion-icon [name]="bigIsOpen[big.id] ? 'arrow-dropdown' : 'arrow-dropright'"  (click)="bigIsOpen[big.id] = toggle(bigIsOpen[big.id])" style="padding-right:5px"></ion-icon>
+              <ion-label class="ion-text-wrap" (click)="go_board('big', big)">{{ big.title }}</ion-label>
+              <ion-icon *ngIf="big.status == 1" name="checkmark-circle"></ion-icon>
+            </ion-item>
+
+            <ng-container *ngIf="bigIsOpen[big.id]">
+              <ion-list class="mid-list" *ngFor="let mid of big['mids']"> <!-- MID -->
+                <ion-item class="mid-title">
+                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                  <ion-icon [name]="midIsOpen[mid.id] ? 'arrow-dropdown' : 'arrow-dropright'" (click)="midIsOpen[mid.id]= toggle(midIsOpen[mid.id])" style="padding-right:5px"></ion-icon>
+                  <ion-label class="ion-text-wrap" (click)="go_board('mid', big, mid)">{{ mid.title}}</ion-label>
+                  <ion-icon *ngIf="mid.status == 1" name="checkmark-circle"></ion-icon>
+                </ion-item>
+                <ng-container *ngIf="midIsOpen[mid.id]">
+                  <ion-item class="sml-title" *ngFor="let sml of mid['smls']" (click)="go_board('sml', big, mid, sml)"> <!-- SML -->
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                    <ion-label class="ion-text-wrap">{{ sml.title }}</ion-label>
+                    <ion-icon *ngIf="sml.status == 1" name="checkmark-circle"></ion-icon>
+                  </ion-item> <!-- SML -->
+                </ng-container>
+
+              </ion-list> <!-- MID -->
+            </ng-container>
+
+          </ion-list> <!-- BIG -->
+        </ng-container>
+
+      </ion-list>
+      
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="light">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="start">
+          <ion-fab-button color="light" (click)="go_create_page('small')">
+            <ion-label>소</ion-label>
+          </ion-fab-button>
+          <ion-fab-button *ngIf="isPM" color="light" (click)="go_create_page('mid')">
+            <ion-label>중</ion-label>
+          </ion-fab-button>
+          <ion-fab-button *ngIf="isPM" color="light" (click)="go_create_page('big')">
+            <ion-label>대</ion-label>
+          </ion-fab-button>
+          <ion-fab-button *ngIf="isPM" color="light" (click)="go_create_page('noti')">
+            <ion-label>공지</ion-label>
+          </ion-fab-button>
+        </ion-fab-list>
+      </ion-fab>
+      
+  </ion-content>
+</ion-app>
