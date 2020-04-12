@@ -7,108 +7,50 @@
 <html>
 <head>
     <title>PMD</title>
-    <link type="text/css" rel="stylesheet" href="stylesheet/main.css">
+    </title>
+    <link type="text/css" rel="stylesheet" href="stylesheet/create.css">
     <script type="text/javascript">
-    var user_name = 
+        var count=0;
+        function user_append( div_id ) {      
+            var added_div = document.getElementById(div_id);
+            var str= "<input type='text' name='user_id'>"
+            var p="<p></p>";
+            var added_input = document.createElement("input");
+            var added_p = document.createElement("p");
+            added_input.id = "added_" + count;
+            added_input.name = "user_id";
+            added_input.placeholder="팀원 이름";
+            added_input.className="added"
+            added_input.innerHTML = str;
+            added_div.append(added_p);
+            added_div.appendChild(added_input);
+
+            count++;
+        }
     </script>
  </head>
 <body>
-<br>
-<header>    
-    <p><strong>&nbsp;&nbsp;프로젝트 생성</strong>
-        <small><input id = "logout_btn" type="button" value="로그아웃" onclick="location.href = '/'"></small>
-    </p>
-    
-</header>
-<br>
-<table id="customers">
-  <tr>
-    <th>프로젝트 명</th>
-    <th>진행률</th>
-    <th>시작일</th>
-    <th>종료일</th>
-    <th>비고</th>
-  </tr>
-  <tr id = "no.1" onclick="location.href='/'"><!---각 행마다 해당 프로젝트로 가는 링크 걸 예정--->
-        <td>이렇게</td>
-        <td>적당히</td>
-        <td>내용이</td>
-        <td>들어갈</td>
-        <td>겁니다.</td>   
-  </tr>
-  <tr id = "no.2">    
-    <td>&nbsp;</td>
-    <td>&nbsp; </td>
-    <td>&nbsp; </td>
-    <td>&nbsp;</td>
-    <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.3">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.4">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.5">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.6">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.7">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.8">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.9">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.10">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
+    <header>프로젝트 생성</header>
+    <hr id="hr_title">
+    <form action = "/project/create" method="POST">
+            <div>
+                프로젝트 이름 : <input type="text" name="title" value=""> 
+            </div>
+            <div>
+                시작 날짜 : <input type="date" name="start_date" value="">
+                종료 날짜 : <input type="date" name="end_date" value="">
+            </div>      
 
-
-    
-</table>
-<br>
-<footer>
-    <form action="/create_task" method="GET"><input id = "make_pro" type="submit" value="프로젝트 생성"></form>
-</footer>
-<script>
-
-</script>
+            <div>
+                프로젝트 설명 : <br>
+                <textarea rows = "10" cols="100">  </textarea> 
+            </div>
+            <div id="user">
+                참여할 팀원 : <input type="text" name="user_id" placeholder="팀원 이름">
+                 &nbsp; <input type="button" onclick="user_append('user')" value="추가">
+            </div>
+            
+                <input type="submit" id="submit" value="생성">
+    </form>
 </body>
-</html>
+ </html>
