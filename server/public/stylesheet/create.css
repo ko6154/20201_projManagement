@@ -9,11 +9,6 @@ header{
   margin-top: 25px;
 }
 
-textarea {
-  
-  width:80%;
-}
-
 form {
   position: absolute;
   top:15%; left:25%;
@@ -37,4 +32,28 @@ div {
 
 .added {
   margin-left:100px;
+}
+
+#t_area{
+  height: 250px;
+  resize: none;
+  width:70%
+}
+#member{
+  display:inline-block;
+  table-layout: fixed;
+  margin-left: 5px;
+  height: 250px;
+  width: 25%;
+  background-color: white !important;
+  
+}
+th{  
+  border-bottom: black solid 1px;
+  text-align: center;
+  width: 25%;
+}
+
+tr:nth-child(even){
+  background-color: gray;
 }

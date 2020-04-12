@@ -8,24 +8,25 @@
 <head>
     <title>PMD</title>
     </title>
-    <link type="text/css" rel="stylesheet" href="stylesheet/create.css">
+    <link type="text/css" rel="stylesheet" href="../stylesheet/create.css">
     <script type="text/javascript">
         var count=0;
         function user_append( div_id ) {      
-            var added_div = document.getElementById(div_id);
-            var str= "<input type='text' name='user_id'>"
-            var p="<p></p>";
-            var added_input = document.createElement("input");
-            var added_p = document.createElement("p");
-            added_input.id = "added_" + count;
-            added_input.name = "user_id";
-            added_input.placeholder="팀원 이름";
-            added_input.className="added"
-            added_input.innerHTML = str;
-            added_div.append(added_p);
-            added_div.appendChild(added_input);
-
-            count++;
+            var new_name = document.getElementById("user_id").value;     
+            //디비 들어가서 검색해야함//
+            console.log(new_name);       
+            var att = document.getElementById("att").value;
+            var table=document.getElementById("member");
+            var table_len=(table.rows.length);
+            var check = document.getElementById("att");
+            var text="";
+            if (check.checked){
+                text = "관리자";
+            }
+            console.log(text);
+            var row = table.insertRow(table_len).innerHTML="<tr><td>"+new_name+"</td><td>"+text+"</td></tr>";
+            document.getElementById("user_id").value = " ";
+            document.getElementById("att").checked = false;
         }
     </script>
  </head>
@@ -43,14 +44,21 @@
 
             <div>
                 프로젝트 설명 : <br>
-                <textarea rows = "10" cols="100">  </textarea> 
+                <textarea id="t_area" rows = "10" cols="50" WRAP = "PHYSICAL" >  </textarea>
+                &nbsp;
+                &nbsp;
+                <table id ="member">
+                    <tr><th colspan="2">참가자</th></tr>                   
+                </table>
             </div>
             <div id="user">
-                참여할 팀원 : <input type="text" name="user_id" placeholder="팀원 이름">
-                 &nbsp; <input type="button" onclick="user_append('user')" value="추가">
+                참여할 팀원 : <input type="text" id="user_id" placeholder="팀원 이름">
+                 &nbsp; 
+                 <input id="att" type="checkbox">관리자&nbsp;
+                 <input id="append" type="button" onclick="user_append('user')" value="추가">
             </div>
-            
-                <input type="submit" id="submit" value="생성">
+            <input type="submit" id="submit" value="생성">
+               
     </form>
 </body>
  </html>
