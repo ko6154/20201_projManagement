@@ -1,0 +1,12 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>검색</ion-title>
+    <ion-searchbar showCancelButton="always" animated (ionInput)="filter($event)"  placeholder="Filter Word"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let file of dfiles" href='{{file.path}}'> {{ file.word +' ' +file.name }} </ion-item>
+  </ion-list>
+</ion-content>
