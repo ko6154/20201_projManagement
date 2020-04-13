@@ -80,11 +80,31 @@ router.route("/signup").get(function (req, res){
 //})
 ///
 router.route("/create").get(function(req,res){
-    res.render("create.html");
+    sess=req.session;
+    res.render("create.html",{username:sess.name});
 })
 
 router.route("/search").get(function(req,res){
-    res.render("search.html");
+    sess=req.session;
+    res.render("search.html",{username:sess.name});
+})
+
+router.route("/table").get(function(req,res){
+    sess = req.session;
+    var project={};
+    mysqlDB.query('SELECT PROJ_NAME FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME= ? AND USER.USER_ID=ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID', [sess.name], function (err,rows, fields) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            console.log(rows);
+            project=rows;
+            console.log(project);
+            res.end();
+        }
+    }); 
+    res.render("table.html",project);
 })
 
 // SIGNUP
@@ -234,7 +254,7 @@ router.route("/user_pc/login").post(function (req, res) {
                 console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
                 login_data = JSON.stringify(login);
-                console.log(login_data);  
+                console.log(login_data); 
                 req.session.save(function(){
                     res.render('main.html',{username:sess.name});
                 });           

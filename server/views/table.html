@@ -1,0 +1,36 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PMD</title>
+    <link type="text/css" rel="stylesheet" href="../stylesheet/table.css">
+    <script type="text/javascript">
+        var proj = JSON.parse('project');
+        var table=document.getElementById("customers");
+        var table_len=(table.rows.length);
+        table.insertRow(table_len).innerHTML="<tr><td>"+project.PROJ_NAME+"</td><td></td></tr>";        
+    </script>
+ </head>
+<body>
+<table id="customers">
+  <tr>
+    <th>프로젝트 명</th>
+    <th>진행률</th>
+    <th>시작일</th>
+    <th>종료일</th>
+    <th>비고</th>
+  </tr>
+  <tr id = "no.1"><!---각 행마다 해당 프로젝트로 가는 링크 걸 예정--->
+        <td>이렇게</td>
+        <td>적당히</td>
+        <td>내용이</td>
+        <td>들어갈</td>
+        <td>겁니다.</td>   
+  </tr>
+  
+</body>
+</html>

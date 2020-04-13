@@ -1,0 +1,42 @@
+
+header{
+    font-size: 30px;
+}
+#customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%; 
+    
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 15px;
+   
+  }
+  
+  #customers tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #customers tr:hover {background-color: #ddd;}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #3dc2ff;
+    color: white;
+    height:7%;
+  }
+
+  #make_pro{
+    margin-left: 20px;
+  }
+
+  #logout_btn{
+    float: right;    
+    margin-left: 5px;
+    margin-right: 15px;
+    height: 30px !important;
+    font-size: 15px !important;
+  }

@@ -1,29 +1,14 @@
 
 header{
     font-size: 30px;
+    border-bottom: black solid 1px;
 }
 #customers {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+    margin-left: 2.5%;
+    margin-right:2.5%;
+    
   }
   
-  #customers td, #customers th {
-    border: 1px solid #ddd;
-    padding: 15px;
-  }
-  
-  #customers tr:nth-child(even){background-color: #f2f2f2;}
-  
-  #customers tr:hover {background-color: #ddd;}
-  
-  #customers th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #3dc2ff;
-    color: white;
-  }
 
   #make_pro{
     margin-left: 20px;
