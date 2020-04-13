@@ -1,31 +1,29 @@
-<ion-app>
-  <ion-header translucent>
-    <ion-toolbar>
-      <ion-title>로그인</ion-title>
+<ion-header class="ion-no-border">
+    <ion-toolbar color="secondary">
+
+        <ion-buttons slot="primary">
+            <ion-button>
+                <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>로그인</ion-title>
     </ion-toolbar>
-    
-  </ion-header>
+</ion-header>
 
-  <ion-content fullscreen>
-    
-    <form #form="ngForm" (ngSubmit)="login()">
-      <ion-list lines="full" calss="ion-no-margin ion-no-padding">
-        <ion-item>
-          <ion-label position="stacked">Email: </ion-label>
-          <ion-input name="email" [(ngModel)]="user.email" required type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label position="stacked">PW: </ion-label>
-            <ion-input name="password" [(ngModel)]="user.password" required type="password"></ion-input>
-        </ion-item>
-        
-      </ion-list>
-      <ion-button class="ion-margin-horizontal ion-float-end" size="large" type="submit" >로그인</ion-button>
-    </form>
-
-    <ion-button class="ion-margin-horizontal ion-float-end" size="large" (click)="goSignUp()" >계정 만들기</ion-button>
-
-  </ion-content>
-  
-
-</ion-app>
+<ion-content [fullscreen]="true">
+    <ion-card>
+        <form #form="ngForm" (ngSubmit)="login()">
+            <ion-item >
+                <ion-label position="floating" style="font-size:0.8em">아이디</ion-label>
+                <ion-input name="email" [(ngModel)]="user.email" required type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating" style="font-size:0.8em">비밀번호</ion-label>
+                <ion-input name="password" [(ngModel)]="user.password" required type="password"></ion-input>
+            </ion-item>
+            <br>
+            <ion-button style="margin:auto;width:90%;height:40px" color="secondary" expand="block" type="submit">로그인</ion-button>
+        </form>
+        <p align="center" style="font-size:0.8em" (click)="goSignUp()">회원가입</p>
+    </ion-card>
+</ion-content>
