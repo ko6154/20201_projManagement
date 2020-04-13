@@ -1,36 +1,45 @@
-<ion-app>
-  <ion-header translucent>
-    <ion-toolbar>
-      <ion-title>계정 만들기</ion-title>
-    </ion-toolbar>
-  </ion-header>
+﻿<ion-app>
+    <ion-header class="ion-no-border">
+        <ion-toolbar color="secondary">
 
-  <ion-content fullscreen>
-    
-    <form #form="ngForm" (ngSubmit)="sign_up(form)">
-      <ion-list lines="full" calss="ion-no-margin ion-no-padding">
-        <ion-item>
-          <ion-label position="stacked">Email: </ion-label>
-          <ion-input name="email" [(ngModel)]="user.email" required type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label position="stacked">PW: </ion-label>
-            <ion-input name="password" [(ngModel)]="user.password" required type="password"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label position="stacked">이름: </ion-label>
-            <ion-input name="name" [(ngModel)]="user.name" required type="text"></ion-input>
-        </ion-item>
-        <ion-item>
-            <ion-label position="stacked">부서: </ion-label>
-            <ion-input name="department" [(ngModel)]="user.department" required type="text" placeholder="부서를 입력하세요"></ion-input>
-        </ion-item>
-      </ion-list>
+            <ion-buttons slot="start">
+                <ion-button (click)="goBack()">
+                    <ion-icon name="chevron-back-outline"></ion-icon>
 
-      <div class="ion-padding">
-        <ion-button expand="block" type="submit" class="ion-no-margin">계정 만들기</ion-button>
-      </div>
-    </form>
-  </ion-content>
+                </ion-button>
+            </ion-buttons>
+            <ion-title>회원가입</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content fullscreen>
 
+        <form #form="ngForm" (ngSubmit)="sign_up(form)">
+            <ion-list lines="full" calss="ion-no-margin ion-no-padding">
+                <ion-item>
+                    <ion-label position="floating" style="font-size:0.8em">아이디</ion-label>
+                    <ion-input name="email" [(ngModel)]="user.email" required type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" style="font-size:0.8em">비밀번호</ion-label>
+                    <ion-input name="password" [(ngModel)]="user.password" required type="password"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" style="font-size:0.8em">비밀번호 확인</ion-label>
+                    <ion-input name="password" [(ngModel)]="user.password" required type="password"></ion-input>
+                </ion-item>
+                <br>
+                <ion-item>
+                    <ion-label position="floating" style="font-size:0.8em">이름</ion-label>
+                    <ion-input name="name" [(ngModel)]="user.name" required type="text"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating" style="font-size:0.8em">부서</ion-label>
+                    <ion-input name="department" [(ngModel)]="user.department" required type="text"></ion-input>
+                </ion-item>
+            </ion-list>
+            <div class="ion-padding">
+                <ion-button expand="block" type="submit" class="ion-no-margin" color="secondary">가입하기</ion-button>
+            </div>
+        </form>
+    </ion-content>
 </ion-app>
