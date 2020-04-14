@@ -83,7 +83,9 @@ export class GenerateProjectPage {
     );
   }
 
-
+   goBack(){
+  	  this.navCtrl.pop();
+  }
  
  
 }

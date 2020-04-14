@@ -17,6 +17,14 @@ const routes: Routes = [
   { path: 'add-member', loadChildren: './add-member/add-member.module#AddMemberPageModule' },  { path: 'board', loadChildren: './board/board.module#BoardPageModule' },
   { path: 'create-noti', loadChildren: './create-noti/create-noti.module#CreateNotiPageModule' },
   { path: 'search', loadChildren: './search/search.module#SearchPageModule' },
+  {
+    path: 'manage-member',
+    loadChildren: () => import('./manage-member/manage-member.module').then( m => m.ManageMemberPageModule)
+  },
+  {
+    path: 'history',
+    loadChildren: () => import('./history/history.module').then( m => m.HistoryPageModule)
+  },
 ];
 
 @NgModule({

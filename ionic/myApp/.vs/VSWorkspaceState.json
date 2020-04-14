@@ -3,10 +3,9 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\generate-project",
-    "\\src\\app\\main",
+    "\\src\\app\\http_service_module",
     "\\src\\theme"
   ],
-  "SelectedNode": "\\src\\app\\generate-project\\generate-project.page.ts",
+  "SelectedNode": "\\src\\app\\http_service_module\\http.service.ts",
   "PreviewInSolutionExplorer": false
 }

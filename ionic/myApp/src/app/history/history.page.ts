@@ -5,26 +5,22 @@ import { NavController } from '@ionic/angular';
 import { DataService } from '../services/data.service'
 import { MenuController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
-
 @Component({
-  selector: 'app-main',
-  templateUrl: './main.page.html',
-  styleUrls: ['./main.page.scss'],
+  selector: 'app-history',
+  templateUrl: './history.page.html',
+  styleUrls: ['./history.page.scss'],
 })
-export class MainPage  {
+export class HistoryPage{
   projects: Array<{}> = [];
-
   constructor(
-    private httpService : HttpService,
+	   private httpService : HttpService,
     private storage : StorageService,
     private navCtrl : NavController,
     private dataService: DataService,
 	private menu: MenuController,
 	public toastController: ToastController
-  ) {  }
-  
+  ) { }
 
- 
   user_id : string;
   async initalize() {
     
@@ -33,7 +29,7 @@ export class MainPage  {
       this.user_id = val;
     });
 
-    this.httpService.get_project_list(this.user_id).subscribe(
+    this.httpService.get_done_project_list(this.user_id).subscribe(
       (res: any[])  => {
         let tmp_projects: Array<{}> = [];
         res.forEach(function (value){
@@ -88,22 +84,6 @@ export class MainPage  {
     }
   }
 
-  async presentToast() {
-    const toast = await this.toastController.create({
-      message: '로그아웃 되었습니다.',
-      duration: 2000,
-	  color: 'dark'
-    });
-    toast.present();
-  }
-
-  logout(){
-	this.presentToast();
-    this.storage.del_uid();
-    this.storage.del_pw();
-    
-    this.navCtrl.navigateForward("/home");
-  }
   project_click(project){
     this.dataService.setProjectID(project.id);
     console.log(project.id);
@@ -112,14 +92,8 @@ export class MainPage  {
     this.dataService.setAttendLink(project.proj_url);
     this.navCtrl.navigateForward("/task-list");
   }
-  goGenerateProject(){
-    this.navCtrl.navigateForward("/generate-project");
-  }
-  openCustom() {
-	this.menu.enable(true, 'first');
-    this.menu.open('first');
-  }
-  goHistory(){
-    this.navCtrl.navigateForward("/history");
+  
+  goBack(){
+  	  this.navCtrl.pop();
   }
 }

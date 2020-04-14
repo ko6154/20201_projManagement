@@ -57,6 +57,10 @@ export class HttpService {
     let URL = `${this.SERVER_ADDRESS}/project/select?user_id=${user_id}`;
     return this.httpClient.get(URL, {headers: this.header});
   }
+  get_done_project_list(user_id) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/done_project/select?user_id=${user_id}`;
+    return this.httpClient.get(URL, {headers: this.header});
+  }
   create_noti(info): Promise<{}>{
     let URL = `${this.SERVER_ADDRESS}/create/noti`;
     return this.httpClient.post(URL, info, {headers: this.header}).toPromise();
