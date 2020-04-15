@@ -82,6 +82,10 @@ export class CreateBigPage implements OnInit{
     this.formData.set('BigStart', start);
     this.formData.set('BigEnd', end);
     this.formData.set('BigWeight', this.uploadForm.get('BigWeight').value);
+    let valid = this.uploadForm.get('BigWeight').value  // 중요도 값이 정상 범위가 아닌 경우 5로 설정.
+    if(valid < 1 || valid > 10){
+      this.formData.set('BigWeight', '5');
+    }
     this.formData.set('BigDesc', this.uploadForm.get('BigDesc').value);
     this.formData.set('BigCreated', created);
     this.formData.set('BigAttach', original_names);
@@ -151,3 +155,4 @@ export class CreateBigPage implements OnInit{
   }
 
 }
+
