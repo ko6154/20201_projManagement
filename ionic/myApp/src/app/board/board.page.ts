@@ -181,11 +181,11 @@ export class BoardPage implements OnInit {
   }
 
   dateConvertor(date: string) : string{
-    date = date.substr(0, 10) + " " + date.split('T')[1].substr(0, 5);
+    date = date.substr(0, 10);
     return date;
   }
   dateConvertorCreate(date: string) : string{
-    date = date.substr(0, 10) + " " + date.split('T')[1].substr(0, 8);
+    date = date.substr(0, 10);
     return date;
   }
 }

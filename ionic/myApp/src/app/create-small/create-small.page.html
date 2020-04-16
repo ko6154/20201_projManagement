@@ -25,11 +25,11 @@
         </ion-item>
         <ion-item>
           <ion-label>시작날짜</ion-label>
-          <ion-datetime formControlName="SmlStart" displayFormat="YYYY-MM-DD HH:mm" max="2050-12-31" placeholder="Select Date"></ion-datetime>
+          <ion-datetime formControlName="SmlStart" displayFormat="YYYY-MM-DD" max="2050-12-31" placeholder="Select Date"></ion-datetime>
         </ion-item>
         <ion-item>
           <ion-label>종료날짜</ion-label>
-          <ion-datetime formControlName="SmlEnd" displayFormat="YYYY-MM-DD HH:mm" max="2050-12-31" placeholder="Select Date" (ionChange)="date_validate()"></ion-datetime>
+          <ion-datetime formControlName="SmlEnd" displayFormat="YYYY-MM-DD" max="2050-12-31" placeholder="Select Date" (ionChange)="date_validate()"></ion-datetime>
         </ion-item>
         <ion-item>
           <ion-label position="floating">내용</ion-label>

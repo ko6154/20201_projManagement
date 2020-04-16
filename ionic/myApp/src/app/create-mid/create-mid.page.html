@@ -21,16 +21,16 @@
       </ion-item>
       <ion-item>
         <ion-label position="floating">중분류</ion-label>
-        <ion-input formControlName="MidLevel" placeholder="중분류 수준을 입력하세요" type="number" required></ion-input>
+        <ion-input min="1" formControlName="MidLevel" placeholder="중분류 수준을 입력하세요" type="number" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>시작날짜</ion-label>
-        <ion-datetime formControlName="MidStart" max="2050-12-31" displayFormat="YYYY-MM-DD HH:mm" placeholder="Select Date">
+        <ion-datetime formControlName="MidStart" max="2050-12-31" displayFormat="YYYY-MM-DD" placeholder="Select Date">
         </ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label>종료날짜</ion-label>
-        <ion-datetime formControlName="MidEnd" max="2050-12-31" displayFormat="YYYY-MM-DD HH:mm" placeholder="Select Date"
+        <ion-datetime formControlName="MidEnd" max="2050-12-31" displayFormat="YYYY-MM-DD" placeholder="Select Date"
           (ionChange)="date_validate()"></ion-datetime>
       </ion-item>
       <ion-item>

@@ -39,8 +39,10 @@ export class MainPage  {
         res.forEach(function (value){
           let start = value["PROJ_START"];
           let end = value["PROJ_END"];
+          let deadline = value["PROJ_END"];
           start = start.substr(0,10) + " " +start.split('T')[1].substr(0,5);
           end = end.substr(0,10) + " " +end.split('T')[1].substr(0,5);
+          deadline = end.substr(0,10);
           tmp_projects.push({
             id: value["PROJ_ID"],
             name: value["PROJ_NAME"],
@@ -50,7 +52,8 @@ export class MainPage  {
             desc: value["PROJ_DESC"],
             mgr_id: value["PROJ_MGR_UID"],
             proj_url: value["PROJ_URL"],
-            progress_status: ''
+            progress_status: '',
+            deadline: deadline
           });
         });
         this.projects = tmp_projects;
