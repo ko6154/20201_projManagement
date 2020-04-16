@@ -8,10 +8,32 @@
             </ion-button>
         </ion-buttons>
         <ion-title>완료한 프로젝트</ion-title>
-    </ion-toolbar>
-</ion-header>
 
+        <ion-buttons slot="primary">
+            <ion-icon name="search"></ion-icon>
+        </ion-buttons>
+    </ion-toolbar>
+
+</ion-header>
+<!-- 한번에 설정하는 방법 찾기-->
 <ion-content>
+    <ion-list class="search-box" >
+        <ion-item>
+            <ion-label color="primary">프로젝트 관리자</ion-label>
+            <ion-input [(ngModel)]="search.mgr_id" placeholder="Insert the Administor"  name="mgr_id" ></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label color="primary">시작날짜</ion-label>
+            <ion-datetime  [(ngModel)]="search.start_date" max="2050-12-31" displayFormat="YYYY-MM-DD" placeholder="Insert the Years" name="start_date"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label color="primary">종료날짜</ion-label>
+            <ion-datetime [(ngModel)]="search.end_date" max="2050-12-31" displayFormat="YYYY-MM-DD" placeholder="Insert the Years" name="end_date"></ion-datetime>
+        </ion-item>
+        <ion-button  expand="block" color="secondary" fill="outline" (click) = search_project()>검색 </ion-button>
+    </ion-list>
+
+
     <ion-list class="project-list">
         <ion-item *ngFor="let project of projects" class="project-header {{project.progress_status}}"
                   (click)="project_click(project)">
@@ -32,4 +54,7 @@
         </ion-item>
     </ion-list>
 
+
 </ion-content>
+
+
