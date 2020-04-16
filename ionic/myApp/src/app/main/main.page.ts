@@ -1,8 +1,8 @@
 ﻿import { Component } from '@angular/core';
-import { HttpService } from '../http_service_module/http.service'
+import { HttpService } from '../http_service_module/http.service';
 import { StorageService } from '../storage_service_module/storage.service';
 import { NavController } from '@ionic/angular';
-import { DataService } from '../services/data.service'
+import { DataService } from '../services/data.service';
 import { MenuController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 
