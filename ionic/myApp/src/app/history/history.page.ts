@@ -2,9 +2,12 @@
 import { HttpService } from '../http_service_module/http.service'
 import { StorageService } from '../storage_service_module/storage.service';
 import { NavController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { DataService } from '../services/data.service'
 import { MenuController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+
 @Component({
   selector: 'app-history',
   templateUrl: './history.page.html',
@@ -17,11 +20,20 @@ export class HistoryPage{
     private storage : StorageService,
     private navCtrl : NavController,
     private dataService: DataService,
+    private alertController : AlertController,
 	private menu: MenuController,
 	public toastController: ToastController
   ) { }
 
+  search = {
+      mgr_id:'',
+      start_date:'',
+      end_date:'',
+    }
+  sdate: string;
+  edate: string;
   user_id : string;
+
   async initalize() {
     
     await this.storage.get_uid()
@@ -54,6 +66,31 @@ export class HistoryPage{
         this.setProgressStatus();
       }
     );
+  }
+
+  search_project(){
+    this.sdate = this.search.start_date;
+    this.edate = this.search.end_date;
+
+    this.search.start_date = this.search.start_date.substr(0,10);
+    this.search.end_date = this.search.end_date.substr(0,10);
+
+    let sql = ''
+
+    this.alertController.create({
+      header: 'Value',
+      subHeader: '입력값',
+      message:  this.user_id +" "+ this.search.start_date +" "+ this.search.mgr_id +" "+ this.search.end_date,
+      buttons: [{
+        text: '확인',
+        handler:()=>{
+          this.search.start_date = this.sdate;
+          this.search.end_date = this.edate;
+        }
+      }]
+    }).then(alert=>{
+      alert.present();
+    });
   }
 
   ionViewWillEnter(){
