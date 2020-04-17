@@ -125,4 +125,7 @@ export class MainPage  {
   goHistory(){
     this.navCtrl.navigateForward("/history");
   }
+  goInviteList(){
+    this.navCtrl.navigateForward("/invite-list");
+  }
 }

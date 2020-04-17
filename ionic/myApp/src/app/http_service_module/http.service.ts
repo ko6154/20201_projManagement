@@ -241,4 +241,35 @@ export class HttpService {
     return this.httpClient.get(URL, {headers: this.header}).toPromise();
   }
   
+  get_project_members(proj_id: string) : Observable<{}> {
+	let URL = `${this.SERVER_ADDRESS}/select/attendence?proj_id=${proj_id}`;
+	return this.httpClient.get(URL, {headers: this.header});
+  }
+
+  get_project_inviting_members(proj_id: string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/select/invite?proj_id=${proj_id}`;
+	return this.httpClient.get(URL, {headers: this.header});
+  }
+
+  invite(info) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/invite`;
+    return this.httpClient.post(URL, info, {headers: this.header})
+    .pipe(
+      tap(async (res) => {
+        if(res["invite"] === "success"){
+          this.httpSubject.next(true);
+        }else{
+          this.httpSubject.next(false);
+        }
+      })
+    );
+  }
+  get_invitations(user_id: string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/select/invitations?user_id=${user_id}`;
+	return this.httpClient.get(URL, {headers: this.header});
+  }
+  get_projectname(proj_id: string) : Observable<{}> {
+	let URL = `${this.SERVER_ADDRESS}/select/projectname?proj_id=${proj_id}`;
+	return this.httpClient.get(URL, {headers: this.header});
+  }
 }

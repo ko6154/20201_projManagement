@@ -25,6 +25,10 @@ const routes: Routes = [
     path: 'history',
     loadChildren: () => import('./history/history.module').then( m => m.HistoryPageModule)
   },
+  {
+    path: 'invite-list',
+    loadChildren: () => import('./invite-list/invite-list.module').then( m => m.InviteListPageModule)
+  },
 ];
 
 @NgModule({

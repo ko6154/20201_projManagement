@@ -1,0 +1,32 @@
+﻿<ion-header>
+    <ion-toolbar color="secondary">
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>프로젝트 초대</ion-title>
+
+
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>프로젝트 초대...</ion-card-title>
+        </ion-card-header>
+        <ion-list>
+            <ion-item slot="start" *ngFor="let invitation of invitations">
+                <ion-icon color="success" slot="start" name="checkmark-circle-outline"></ion-icon>
+                <ion-icon color="danger" slot="start" name="close-circle-outline"></ion-icon>
+
+                <ion-label>{{invitation.proj_id}}</ion-label>
+            </ion-item>
+
+
+        </ion-list>
+        <br />
+
+    </ion-card>
+</ion-content>

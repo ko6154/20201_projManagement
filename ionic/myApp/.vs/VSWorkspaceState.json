@@ -3,9 +3,10 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\http_service_module",
+    "\\src\\app\\add-member",
+    "\\src\\app\\generate-project",
     "\\src\\theme"
   ],
-  "SelectedNode": "\\src\\app\\http_service_module\\http.service.ts",
+  "SelectedNode": "\\src\\app\\main",
   "PreviewInSolutionExplorer": false
 }

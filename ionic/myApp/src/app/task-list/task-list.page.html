@@ -13,7 +13,12 @@
                     <ion-icon name="search"></ion-icon>
                 </ion-button>
             </ion-buttons>
-            
+            <ion-buttons slot="end">
+                <ion-button (click)="openCustom()">
+                    <ion-icon slot="end" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+                </ion-button>
+            </ion-buttons>
+
         </ion-toolbar>
         <ion-fab>
             <ion-fab-button *ngIf="isPM" color="light">
@@ -36,7 +41,34 @@
         </ion-fab>
 
     </ion-header>
-    
+
+    <ion-menu side="end" menuId="second" contentId="maa">
+        <ion-header>
+            <ion-toolbar color="secondary">
+                <ion-title style="font-size:0.9em"></ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-list>
+                <ion-item (click)="goAddMember()">
+                    <ion-icon slot="start" name="person-add-outline"></ion-icon>
+                    <ion-label>멤버 관리</ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-icon slot="start" name="document-outline"></ion-icon>
+                    <ion-label>프로젝트 정보 수정</ion-label>
+                </ion-item>
+
+
+
+            </ion-list>
+
+        </ion-content>
+        <ion-button size="large" style="padding:10px;" color="danger">프로젝트 탈퇴</ion-button>
+    </ion-menu>
+    <ion-router-outlet id="maa"></ion-router-outlet>
+
+
 
     <ion-content>
         <ion-list>

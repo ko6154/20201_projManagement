@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { HttpService } from '../http_service_module/http.service'
-import { StorageService } from '../storage_service_module/storage.service'
+import { HttpService } from '../http_service_module/http.service';
+import { StorageService } from '../storage_service_module/storage.service';
 import { NavController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
-import { DataService } from '../services/data.service'
+import { DataService } from '../services/data.service';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-task-list',
@@ -14,10 +15,9 @@ export class TaskListPage {
   isPM: boolean;
   project_id: string;
   project_name: string;
-
   notiIsOpen: boolean;
-  notis: Array<{}> = [];
 
+ notis: Array<{}> = [];
   taskIsOpen: boolean;
   tasks: Array<{}> = [];
 
@@ -29,6 +29,7 @@ export class TaskListPage {
     private storage: StorageService,
     private navCtrl : NavController,
     private alertCtrl: AlertController,
+	private menu: MenuController,
     private dataService : DataService
   ) {
     
@@ -242,7 +243,7 @@ export class TaskListPage {
     if(type != 'noti')
      attach = args[len].attach.split("*");
     let attaches = new Array();
-    let pre_path = `http://155.230.90.22:9000/download?path=`;
+    let pre_path = `http://52.55.31.29:3000/download?path=`;
     
     if(type != 'noti'){
       for(var i=0; i<attach.length-1; ++i){
@@ -346,7 +347,14 @@ export class TaskListPage {
       }
     });
   }
+  openCustom() {
+	this.menu.enable(true, 'second');
+    this.menu.open('second');
+  }
   goBack(){
   	  this.navCtrl.pop();
+  }
+  goAddMember(){
+  	  this.navCtrl.navigateForward("/add-member");
   }
 }

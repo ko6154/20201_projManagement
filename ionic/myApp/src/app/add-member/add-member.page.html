@@ -1,9 +1,68 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>add-member</ion-title>
-  </ion-toolbar>
-</ion-header>
+﻿<ion-header>
+    <ion-toolbar color="secondary">
+        <ion-buttons slot="start">
+            <ion-button (click)="goBack()">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>멤버 관리</ion-title>
 
+
+    </ion-toolbar>
+</ion-header>
 <ion-content>
+    <ion-toolbar>
+        <ion-title slot="start">< {{project_name}} ></ion-title>
+    </ion-toolbar>
+    <br />
+    <p style="font-size:0.7em">관리자 권한</p>
+        <form #form="ngForm" (ngSubmit)="invite()">
+            <div>
+                <div style="width:80%;float:left">
+                    <ion-item>
+                        <ion-checkbox slot="start" name="invite_isPM" [(ngModel)]="invite_info.isPM" checked="false"></ion-checkbox>
+                        <ion-input name="invite_id" placeholder="아이디" [(ngModel)]="invite_info.recv_id" required type="text"></ion-input>
+                    </ion-item>
+                </div>
+                <div>
+                    <ion-button color="success" type="submit">초대</ion-button>
+                </div>
+                
+            </div>
+        </form>
+    
+    <br />
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>members</ion-card-title>
+            </ion-card-header>
+
+
+            <ion-list>
+                <ion-item slot="start" *ngFor="let member of members">
+                    <ion-icon slot="start" name="ribbon-outline" *ngIf="member.isPM === 1"></ion-icon>
+                    <ion-label>{{member.user_id}}</ion-label>
+                </ion-item>
+
+
+            </ion-list>
+            <br />
+        </ion-card>
+
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>inviting...</ion-card-title>
+            </ion-card-header>
+
+
+            <ion-list>
+                <ion-item slot="start" *ngFor="let member of inviting_members">
+                    <ion-icon color="danger" slot="start" name="close-circle-outline"></ion-icon>
+                    <ion-label>{{member.recv_user_id}}</ion-label>
+                </ion-item>
+
+            </ion-list>
+            <br />
+        </ion-card>
 
 </ion-content>
