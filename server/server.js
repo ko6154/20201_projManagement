@@ -90,21 +90,58 @@ router.route("/search").get(function(req,res){
 })
 
 router.route("/table").get(function(req,res){
-    sess = req.session;
-    var project={};
-    mysqlDB.query('SELECT PROJ_NAME FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME= ? AND USER.USER_ID=ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID', [sess.name], function (err,rows, fields) {
+    sess = req.session; 
+    mysqlDB.query('SELECT PROJ_NAME, PROJECT.PROJ_MGR_UID, PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJECT.PROJ_DESC FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME= ? AND USER.USER_ID=ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID', [sess.name], function (err,rows, fields) {
         if (err) {
             console.log(err);
             res.end();
         }
         else {
-            console.log(rows);
-            project=rows;
-            console.log(project);
+           // console.log(rows);
+            console.log(rows.length);
+           // console.log(rows[0]);
+          //  console.log(JSON.stringify(rows[0]));
+            var project = JSON.stringify(rows);
+           
+            var size = rows.length;
+           // console.log(project);
+            res.render("table.html",{pro:project,len:size});
+        }        
+    }); 
+  
+    
+})
+//search_project
+router.route("/search/project").post(function(req,res){
+   var pid = req.body.p_name;
+   var mname = req.body.m_name;
+   var sdate = req.body.s_date;
+   var edate = req.body.e_date;
+   console.log(req);
+   console.log(pid);
+})
+//search_table
+router.route("/search/table").get(function(req,res){
+    sess = req.session; 
+    mysqlDB.query('SELECT PROJ_NAME, PROJECT.PROJ_MGR_UID, PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJECT.PROJ_DESC FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME= ? AND USER.USER_ID=ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID', [sess.name], function (err,rows, fields) {
+        if (err) {
+            console.log(err);
             res.end();
         }
+        else {
+           // console.log(rows);
+            console.log(rows.length);
+           // console.log(rows[0]);
+          //  console.log(JSON.stringify(rows[0]));
+            var project = JSON.stringify(rows);
+           
+            var size = rows.length;
+           // console.log(project);
+            res.render("table.html",{pro:project,len:size});
+        }        
     }); 
-    res.render("table.html",project);
+  
+    
 })
 
 // SIGNUP
@@ -253,8 +290,10 @@ router.route("/user_pc/login").post(function (req, res) {
                 sess.name = user.NAME;  
                 console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
-                login_data = JSON.stringify(login);
-                console.log(login_data); 
+                 
+                mysqlDB.query('select * from INVITE where RECV_USER_ID=?', [sess.email], function (err, results) {
+                    console.log(results);
+                })
                 req.session.save(function(){
                     res.render('main.html',{username:sess.name});
                 });           
@@ -263,8 +302,7 @@ router.route("/user_pc/login").post(function (req, res) {
             } else {
                 console.log("WRONG ID or PASSWORD");
                 login = { "login": "wrong" };
-                login_data = JSON.stringify(login);
-                console.log(login_data);             
+                
                 res.redirect('/login');
             }
             
@@ -272,8 +310,7 @@ router.route("/user_pc/login").post(function (req, res) {
         else {
             login = { "login": "wrong" };
             console.log("WRONG ID");
-            login_data = JSON.stringify(login);
-            console.log(login_data);
+            
             res.redirect('/login'); 
         }
     })

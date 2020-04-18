@@ -35,6 +35,7 @@
     <small><span style="float: right;"><%= username %>님 환영합니다.&nbsp;<input id = "logout_btn" type="button" value="로그아웃" onclick="location.href = '/'"></span></small>
     <hr id="hr_title">
     <form action = "/project/create" method="POST">
+        <input type = "hidden" name="mgr_id" value= "<%= username %>">
             <div>
                 프로젝트 이름 : <input type="text" name="title" value=""> 
             </div>
@@ -45,7 +46,7 @@
 
             <div>
                 프로젝트 설명 : <br>
-                <textarea id="t_area" rows = "10" cols="50" WRAP = "PHYSICAL" >  </textarea>
+                <textarea name = "desc" id="t_area" rows = "10" cols="50" WRAP = "PHYSICAL" >  </textarea>
                 &nbsp;
                 &nbsp;
                 <table id ="member">

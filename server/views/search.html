@@ -8,9 +8,7 @@
 <head>
     <title>PMD</title>
     <link type="text/css" rel="stylesheet" href="stylesheet/main.css">
-    <script type="text/javascript">
-    var user_name = 
-    </script>
+    
  </head>
 <body>
 <br>
@@ -22,97 +20,17 @@
 </header>
     <p id = "search">
         <form  action="/search/project" method="POST">            
-            &nbsp;&nbsp;&nbsp;&nbsp;프로젝트 명:&nbsp;<input type="text" placeholder="프로젝트 명">
+            &nbsp;&nbsp;&nbsp;&nbsp;프로젝트 명:&nbsp;<input name = "p_name" type="text" placeholder="프로젝트 명">
                 &nbsp;|&nbsp;
-                담당자 명:&nbsp;<input type="search" placeholder="담당자 명">
+                담당자 명:&nbsp;<input name="m_name" type="search" placeholder="담당자 명">
                 &nbsp;|&nbsp;
-                기간:&nbsp;<input type="date">&nbsp;~<input type="date">
+                기간:&nbsp;<input name="s_date" type="date">&nbsp;~<input name="e_date" type="date">
                 &nbsp;|&nbsp;
                 <input type="submit" value="검색">            
         </form>
     </p>
-<table id="customers">
-  <tr>
-    <th>프로젝트 명</th>
-    <th>진행률</th>
-    <th>시작일</th>
-    <th>종료일</th>
-    <th>비고</th>
-  </tr>
-  <tr id = "no.1" onclick="location.href='/'"><!---각 행마다 해당 프로젝트로 가는 링크 걸 예정--->
-        <td>이렇게</td>
-        <td>적당히</td>
-        <td>내용이</td>
-        <td>들어갈</td>
-        <td>겁니다.</td>   
-  </tr>
-  <tr id = "no.2">    
-    <td>&nbsp;</td>
-    <td>&nbsp; </td>
-    <td>&nbsp; </td>
-    <td>&nbsp;</td>
-    <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.3">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.4">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.5">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.6">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.7">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.8">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.9">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-    <tr id = "no.10">    
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>
-        <td>&nbsp; </td>
-        <td>&nbsp;</td>
-        <td>&nbsp; </td>   
-    </tr>
-
-
-    
-</table>
+    <iframe src="http://52.55.31.29:3000/search/table" id="customers" scrolling="auto" frameborder="0" width="95%" height="70%">
+</iframe>
 <br>
 <footer>
     
