@@ -666,31 +666,37 @@ router.route("/project/create").post(function (req, res) {
                 fs.mkdirSync(dir);
             
             console.log("PROJECT create success");
-            data = {
-                PROJ_ID: results.insertId,
-                USER_ID: user_id
-            };
-            console.log(data);
 
-            mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
-                var admit;
-                if (!err) {
-                    admit = { "create": "success" };
-                    console.log("ATTENDENCE create success");
-                    res.write(JSON.stringify(admit));
-                    res.end();
-                } else {
-                    console.log("ATTENDENCE create fail");
-                    admit = { "create": "deny" };
-                    res.write(JSON.stringify(admit));
-                    res.end();
-                }
-            })
+            // user_id 배열 요소 하나씩 attendence db에 넣는다.
+            for(i=0; i<user_id.length; i++) {
+                data = {
+                    PROJ_ID: results.insertId,
+                    USER_ID: user_id[i]
+                };
+                console.log(data); 
+                
+                mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
+                    var admit;
+                    if (!err) {
+                        console.log("ATTENDENCE create success");
+                        if (i == user_id.length-1) {
+                            admit = { "create": "success" };
+                            res.write(JSON.stringify(admit));
+                            res.end();
+                        }
+                    } else {
+                        console.log("ATTENDENCE create fail");
+                        admit = { "create": "ATTENDENE create fail." };
+                        res.write(JSON.stringify(admit));
+                        res.end();
+                    }
+                })
+            }
         } else {
             console.log(err);
 
             console.log("PROJECT create fail");
-            admit = { "create": "deny" };
+            admit = { "create": "PROJECT create fail." };
             res.write(JSON.stringify(admit));
             res.end();
         }
