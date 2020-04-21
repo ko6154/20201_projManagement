@@ -667,14 +667,40 @@ router.route("/project/create").post(function (req, res) {
             
             console.log("PROJECT create success");
 
-            // user_id 배열 요소 하나씩 attendence db에 넣는다.
-            for(i=0; i<user_id.length; i++) {
+            
+            if (Array.isArray(user_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
+                // user_id 배열 요소 하나씩 attendence db에 넣는다.
+                for(var i=0; i<user_id.length; i++) {
+                    data = {
+                        PROJ_ID: results.insertId,
+                        USER_ID: user_id[i]
+                    };
+                    console.log(data); 
+
+                    mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
+                        var admit;
+                        if (!err) {
+                            console.log("ATTENDENCE create success");
+                            if (i == user_id.length-1) {
+                                admit = { "create": "success" };
+                                res.write(JSON.stringify(admit));
+                                res.end();
+                            }
+                        }else {
+                            console.log("ATTENDENCE create fail");
+                            admit = { "create": "ATTENDENE create fail." };
+                            res.write(JSON.stringify(admit));
+                            res.end();
+                        }
+                    })
+                }
+            }else { // user_id가 배열이 아닌 경우 입력이 1개만 된 경우이므로 따로 처리한다.
                 data = {
                     PROJ_ID: results.insertId,
-                    USER_ID: user_id[i]
+                    USER_ID: user_id
                 };
                 console.log(data); 
-                
+
                 mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
                     var admit;
                     if (!err) {
@@ -684,7 +710,7 @@ router.route("/project/create").post(function (req, res) {
                             res.write(JSON.stringify(admit));
                             res.end();
                         }
-                    } else {
+                    }else {
                         console.log("ATTENDENCE create fail");
                         admit = { "create": "ATTENDENE create fail." };
                         res.write(JSON.stringify(admit));
@@ -692,7 +718,8 @@ router.route("/project/create").post(function (req, res) {
                     }
                 })
             }
-        } else {
+
+        } else {    // err of query(INSERT INTO PROJECT set ?)
             console.log(err);
 
             console.log("PROJECT create fail");
