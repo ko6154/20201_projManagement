@@ -14,6 +14,7 @@ var hostname = '0.0.0.0';
 let {PythonShell} = require('python-shell')
 //var PythonShell = require('python-shell'); 
 var session = require('express-session');
+var query;
 mysqlDB.connect();
 
 var app = express();
@@ -81,7 +82,7 @@ router.route("/signup").get(function (req, res){
 ///
 router.route("/create").get(function(req,res){
     sess=req.session;
-    res.render("create.html",{username:sess.name});
+    res.render("create.html",{username:sess.name,useremail:sess.email});
 })
 
 router.route("/search").get(function(req,res){
@@ -97,7 +98,7 @@ router.route("/table").get(function(req,res){
             res.end();
         }
         else {
-           // console.log(rows);
+            console.log(rows);
             console.log(rows.length);
            // console.log(rows[0]);
           //  console.log(JSON.stringify(rows[0]));
@@ -117,31 +118,30 @@ router.route("/search/project").post(function(req,res){
    var mname = req.body.m_name;
    var sdate = req.body.s_date;
    var edate = req.body.e_date;
-   console.log(req);
-   console.log(pid);
+   console.log(pid+""+mname+""+sdate+""+edate);
+   mysqlDB.query("SELECT PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJ_DESC FROM PROJECT WHERE PROJ_NAME = ? AND PROJ_MGR_UID = ? AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= ? AND DATE_FORMAT(PROJ_END, '%Y-%m-%d') <= ?", [pid,mname,sdate,edate], function (err,rows, fields) {
+    if (err) {
+        console.log(err);
+        res.end();
+    }
+    else {
+        console.log(rows);
+        console.log(rows.length);
+       // console.log(rows[0]);
+      //  console.log(JSON.stringify(rows[0]));
+        var project = JSON.stringify(rows);
+       
+        var size = rows.length;
+       // console.log(project);
+        res.render("searchtbl.html",{pro:project,len:size});
+    }        
+}); 
 })
+
 //search_table
 router.route("/search/table").get(function(req,res){
-    sess = req.session; 
-    mysqlDB.query('SELECT PROJ_NAME, PROJECT.PROJ_MGR_UID, PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJECT.PROJ_DESC FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME= ? AND USER.USER_ID=ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID', [sess.name], function (err,rows, fields) {
-        if (err) {
-            console.log(err);
-            res.end();
-        }
-        else {
-           // console.log(rows);
-            console.log(rows.length);
-           // console.log(rows[0]);
-          //  console.log(JSON.stringify(rows[0]));
-            var project = JSON.stringify(rows);
-           
-            var size = rows.length;
-           // console.log(project);
-            res.render("table.html",{pro:project,len:size});
-        }        
-    }); 
-  
-    
+    sess=req.session;
+    res.render("searchtbl.html",{pro:"",len:0,name:sess.name});    
 })
 
 // SIGNUP
@@ -302,7 +302,6 @@ router.route("/user_pc/login").post(function (req, res) {
             } else {
                 console.log("WRONG ID or PASSWORD");
                 login = { "login": "wrong" };
-                
                 res.redirect('/login');
             }
             
@@ -310,7 +309,6 @@ router.route("/user_pc/login").post(function (req, res) {
         else {
             login = { "login": "wrong" };
             console.log("WRONG ID");
-            
             res.redirect('/login'); 
         }
     })

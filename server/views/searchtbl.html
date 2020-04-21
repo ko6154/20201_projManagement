@@ -1,0 +1,60 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PMD</title>
+    <link type="text/css" rel="stylesheet" href="../stylesheet/table.css">
+   
+ </head>
+<body>  
+    <p id = "search">
+        <form  action="/search/project" method="POST" >            
+            프로젝트 명:&nbsp;<input name = "p_name" type="text" placeholder="프로젝트 명">
+                &nbsp;|&nbsp;
+                담당자 명:&nbsp;<input name="m_name" type="search" placeholder="담당자 명">
+                &nbsp;|&nbsp;
+                기간:&nbsp;<input name="s_date" type="date">&nbsp;~<input name="e_date" type="date">
+                &nbsp;|&nbsp;
+                <input type="submit" value="검색">            
+        </form>
+    </p>
+  <table id="customers">
+    <tr id ="title">
+      <th>프로젝트 명</th>
+      <th>진행률</th>
+      <th>시작일</th>
+      <th>종료일</th>
+      <th>비고</th>
+    </tr>
+    
+</table>
+<script type="text/javascript">
+  var project = JSON.parse('<%- pro %>');
+  var size = Number('<%= len %>');    
+  console.log(typeof(size));  
+  var today = new Date();
+  var date = new Date();
+  var table=document.getElementById("customers"); 
+  for(var i=0;i<size;i++) 
+  {
+    console.log(table_len);
+    var proj = project[i];
+    var year = project[i].PROJ_END.substring(0,4);
+    var month = project[i].PROJ_END.substring(5,7);
+    var day = project[i].PROJ_END.substring(8,10);
+    //console.log(year+" "+month+" "+day);
+    date.setFullYear(year,month-1,day);
+    console.log(date.getTime());
+    if(date.getTime() > today.getTime())
+    {
+      var table_len=(table.rows.length);
+      var row = table.insertRow(table_len).innerHTML="<tr id = 'no.'"+table_len+"><td>"+proj.PROJ_NAME+"</td><td>"+proj.PROJ_PROGRESS+"</td><td>"+proj.PROJ_START.substring(0,10)+"</td><td>"+proj.PROJ_END.substring(0,10)+"</td><td>"+proj.PROJ_DESC+"</td></tr>";
+    }
+   } 
+  </script>
+</body>
+</html>
