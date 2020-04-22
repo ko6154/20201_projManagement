@@ -1388,7 +1388,7 @@ router.route("/extract/word").get(function (req, res) {
 
 
 //history project select
-rounter.route("/done_project/select").get(function (req, res){
+router.route("/done_project/select").get(function (req, res){
         var user_id = req.query.user_id;
         console.log("======= Proejct Select =======\n");
         console.log("user_id: " + user_id);
