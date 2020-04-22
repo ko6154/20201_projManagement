@@ -4,9 +4,8 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\add-member",
-    "\\src\\app\\generate-project",
     "\\src\\theme"
   ],
-  "SelectedNode": "\\src\\app\\main",
+  "SelectedNode": "\\src\\app\\add-member\\add-member.page.html",
   "PreviewInSolutionExplorer": false
 }

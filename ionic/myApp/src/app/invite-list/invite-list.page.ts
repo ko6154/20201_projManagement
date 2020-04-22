@@ -37,8 +37,9 @@ export class InviteListPage {
       (res: any[]) => {
         let tmp_invitations: Array<{}> = [];
         res.forEach(function (value) {
-          tmp_invitations.push({
+		  tmp_invitations.push({
             proj_id: value["PROJ_ID"],
+			proj_name: '',
 			send_id: value["SEND_USER_ID"],
 			isPM: value["ISPM"]
 		  });
@@ -49,11 +50,84 @@ export class InviteListPage {
         console.log(error);
       }
     );
+
+	for(let i = 0; i < this.invitations.length; ++i){
+		
+	}
   }
 
   goBack(){
   	  this.navCtrl.pop();
   }
 
-
+  acceptInvite(invitation){
+	this.http.accept_invite(invitation.proj_id, this.user_id, invitation.isPM).subscribe(
+	  res => {
+        if(res["accept"] === "success"){
+          this.alertCtrl.create({
+            header: '수락 성공',
+            message: '프로젝트 초대를 수락하였습니다.',
+            buttons: [{
+              text: '확인',
+              handler:() =>{
+                this.initialize();
+              }
+            }]
+          }).then(alert=>{
+            alert.present();
+          });
+        }else if(res["accept"] === "deny"){
+          this.alertCtrl.create({
+            header: '수락 실패',
+            message: '잠시후 다시 시도해주세요.',
+            buttons: [{
+              text: '확인'
+            }]
+          }).then(alert=>{
+            alert.present();
+          });
+        }
+      },
+      error => {
+        console.log(error.status);
+        console.log(error.error);
+        console.log(error.headers);
+      }
+	);
+  }
+  rejectInvite(invitation){
+	this.http.reject_invite(invitation.proj_id, this.user_id).subscribe(
+	  res => {
+        if(res["reject"] === "success"){
+          this.alertCtrl.create({
+            header: '초대 거절',
+            message: '프로젝트 초대를 거절하였습니다.',
+            buttons: [{
+              text: '확인',
+              handler:() =>{
+                this.initialize();
+              }
+            }]
+          }).then(alert=>{
+            alert.present();
+          });
+        }else if(res["reject"] === "fail"){
+          this.alertCtrl.create({
+            header: '거절 실패',
+            message: '잠시후 다시 시도해주세요.',
+            buttons: [{
+              text: '확인'
+            }]
+          }).then(alert=>{
+            alert.present();
+          });
+        }
+      },
+      error => {
+        console.log(error.status);
+        console.log(error.error);
+        console.log(error.headers);
+      }
+	);
+  }
 }

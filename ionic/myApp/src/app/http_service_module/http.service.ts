@@ -13,7 +13,7 @@ export class HttpService {
     private httpClient : HttpClient
   ) { }
 
-  SERVER_ADDRESS: string = "http://52.55.31.29:3000";
+  SERVER_ADDRESS: string = "http://52.55.31.29:8000";
   header = new HttpHeaders(
     {
       'Content-Type': 'application/json',
@@ -271,5 +271,49 @@ export class HttpService {
   get_projectname(proj_id: string) : Observable<{}> {
 	let URL = `${this.SERVER_ADDRESS}/select/projectname?proj_id=${proj_id}`;
 	return this.httpClient.get(URL, {headers: this.header});
+  }
+  accept_invite(proj_id:string, user_id: string, isPM: boolean) : Observable<{}> {
+	let URL = `${this.SERVER_ADDRESS}/accept/invite?proj_id=${proj_id}&user_id=${user_id}&isPM=${isPM}`;
+	return this.httpClient.post(URL, {headers: this.header})
+	.pipe(
+      tap(async (res) => {
+        if(res["accept"] === "success"){
+          this.httpSubject.next(true);
+        }else{
+          this.httpSubject.next(false);
+        }
+      })
+    );
+  }
+  reject_invite(proj_id:string, user_id: string) : Observable<{}> {
+	let URL = `${this.SERVER_ADDRESS}/reject/invite?proj_id=${proj_id}&user_id=${user_id}`;
+	return this.httpClient.post(URL, {headers: this.header})
+	.pipe(
+      tap(async (res) => {
+        if(res["reject"] === "success"){
+          this.httpSubject.next(true);
+        }else{
+          this.httpSubject.next(false);
+        }
+      })
+    );
+  }
+  get_isPM(proj_id:string, user_id: string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/get/isPM?proj_id=${proj_id}&user_id=${user_id}`;
+	return this.httpClient.get(URL, {headers: this.header});
+  }
+
+  cancel_invite(proj_id:string, user_id: string) : Observable<{}> {
+	let URL = `${this.SERVER_ADDRESS}/cancel/invite?proj_id=${proj_id}&user_id=${user_id}`;
+	return this.httpClient.post(URL, {headers: this.header})
+	.pipe(
+      tap(async (res) => {
+        if(res["cancel"] === "success"){
+          this.httpSubject.next(true);
+        }else{
+          this.httpSubject.next(false);
+        }
+      })
+    );
   }
 }

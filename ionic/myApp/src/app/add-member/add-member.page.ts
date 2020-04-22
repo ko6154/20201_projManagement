@@ -17,7 +17,7 @@ export class AddMemberPage{
   invite_you_id: string;
   isPM: number;
   user_id: string;
-
+  ttt: string;
   project_creater: string;
 
   members: Array<{}> = [];
@@ -55,6 +55,16 @@ export class AddMemberPage{
     });
 
 	this.invite_info.send_id = this.user_id;
+
+	this.http.get_isPM(this.project_id, this.user_id).subscribe(
+		(res: any[]) => {
+			let temp_isPM: number;
+			res.forEach(function (value){
+				temp_isPM = value["ISPM"];
+			});
+			this.isPM = temp_isPM;
+		}
+	);
 
 	this.http.get_project_members(this.project_id).subscribe(
       (res: any[]) => {
@@ -98,19 +108,66 @@ export class AddMemberPage{
         if(res["invite"] === "success"){
           this.alertCtrl.create({
             header: '초대 성공',
-            message: '로그인 화면으로 이동합니다.',
+            message: '성공적으로 초대되었습니다.',
             buttons: [{
               text: '확인',
               handler:() =>{
-                this.navCtrl.navigateForward('/add-member');
+                this.initialize();
               }
             }]
           }).then(alert=>{
             alert.present();
           });
-        }else{
+        }else if(res["invite"] === "deny"){
           this.alertCtrl.create({
             header: '초대 실패',
+            message: '잠시후 다시 시도해주세요.',
+            buttons: [{
+              text: '확인'
+            }]
+          }).then(alert=>{
+            alert.present();
+          });
+        }
+		else{
+		  this.alertCtrl.create({
+            header: '초대 실패',
+            message: '해당 유저가 존재하지 않습니다.',
+            buttons: [{
+              text: '확인'
+            }]
+          }).then(alert=>{
+            alert.present();
+          });
+		}
+      },
+      error => {
+        console.log(error.status);
+        console.log(error.error);
+        console.log(error.headers);
+      }
+	);
+  }
+
+  cancelInvite(member) {
+	this.http.cancel_invite(this.project_id, member.recv_user_id).subscribe(
+	  res => {
+        if(res["cancel"] === "success"){
+          this.alertCtrl.create({
+            header: '초대 취소',
+            message: '성공적으로 취소되었습니다.',
+            buttons: [{
+              text: '확인',
+              handler:() =>{
+                this.initialize();
+              }
+            }]
+          }).then(alert=>{
+            alert.present();
+          });
+        }else if(res["cancel"] === "fail"){
+          this.alertCtrl.create({
+            header: '초대 취소 실패',
             message: '잠시후 다시 시도해주세요.',
             buttons: [{
               text: '확인'

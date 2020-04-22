@@ -15,7 +15,8 @@
         <ion-title slot="start">< {{project_name}} ></ion-title>
     </ion-toolbar>
     <br />
-    <p style="font-size:0.7em">관리자 권한</p>
+    <div *ngIf="isPM == 1">
+        <p style="font-size:0.7em">관리자 권한</p>
         <form #form="ngForm" (ngSubmit)="invite()">
             <div>
                 <div style="width:80%;float:left">
@@ -27,10 +28,10 @@
                 <div>
                     <ion-button color="success" type="submit">초대</ion-button>
                 </div>
-                
+
             </div>
         </form>
-    
+    </div>
     <br />
         <ion-card>
             <ion-card-header>
@@ -40,7 +41,8 @@
 
             <ion-list>
                 <ion-item slot="start" *ngFor="let member of members">
-                    <ion-icon slot="start" name="ribbon-outline" *ngIf="member.isPM === 1"></ion-icon>
+                    <ion-icon slot="start" name="ribbon-outline" *ngIf="member.isPM == 1"></ion-icon>
+                    <ion-icon slot="start" *ngIf="member.isPM == 0" ></ion-icon>
                     <ion-label>{{member.user_id}}</ion-label>
                 </ion-item>
 
@@ -54,10 +56,16 @@
                 <ion-card-title>inviting...</ion-card-title>
             </ion-card-header>
 
-
+       
             <ion-list>
                 <ion-item slot="start" *ngFor="let member of inviting_members">
-                    <ion-icon color="danger" slot="start" name="close-circle-outline"></ion-icon>
+                    <ion-buttons>
+                        <ion-button (click)="cancelInvite(member)">
+                            <ion-icon color="danger" slot="start" name="close-circle-outline" *ngIf="isPM == 1"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                    
+                    <ion-icon slot="start"  *ngIf="isPM == 0"></ion-icon>
                     <ion-label>{{member.recv_user_id}}</ion-label>
                 </ion-item>
 

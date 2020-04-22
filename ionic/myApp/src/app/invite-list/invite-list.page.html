@@ -10,23 +10,26 @@
 
     </ion-toolbar>
 </ion-header>
-
 <ion-content>
-    <ion-card>
-        <ion-card-header>
-            <ion-card-title>프로젝트 초대...</ion-card-title>
-        </ion-card-header>
-        <ion-list>
-            <ion-item slot="start" *ngFor="let invitation of invitations">
-                <ion-icon color="success" slot="start" name="checkmark-circle-outline"></ion-icon>
-                <ion-icon color="danger" slot="start" name="close-circle-outline"></ion-icon>
+    <ion-list>
+        <ion-item *ngFor="let invitation of invitations">
+            <ion-card style="width:100%">
+                <ion-card-header>
+                    <ion-card-subtitle>{{invitation.proj_id}}</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-buttons>
+                        <ion-button (click)="acceptInvite(invitation)">
+                            <ion-icon color="success" slot="start" name="checkmark-circle-outline"></ion-icon>
+                        </ion-button>
+                        <ion-button (click)="rejectInvite(invitation)">
+                            <ion-icon color="danger" slot="start" name="close-circle-outline"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-card-content>
+            </ion-card>
+        </ion-item>
 
-                <ion-label>{{invitation.proj_id}}</ion-label>
-            </ion-item>
 
-
-        </ion-list>
-        <br />
-
-    </ion-card>
+    </ion-list>
 </ion-content>
