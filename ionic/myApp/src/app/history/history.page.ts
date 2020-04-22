@@ -25,30 +25,31 @@ export class HistoryPage{
 	public toastController: ToastController
   ) { }
 
+  ishidden = false;
+
   search = {
+      user_id:'',
       mgr_id:'',
       start_date:'',
       end_date:'',
     }
   sdate: string;
   edate: string;
-  user_id : string;
 
   async initalize() {
-    
     await this.storage.get_uid()
     .then(val => {
-      this.user_id = val;
+      this.search.user_id = val;
     });
 
-    this.httpService.get_done_project_list(this.user_id).subscribe(
+    this.httpService.get_done_project_list(this.search.user_id).subscribe(
       (res: any[])  => {
         let tmp_projects: Array<{}> = [];
         res.forEach(function (value){
           let start = value["PROJ_START"];
           let end = value["PROJ_END"];
-          start = start.substr(0,10) + " " +start.split('T')[1].substr(0,5);
-          end = end.substr(0,10) + " " +end.split('T')[1].substr(0,5);
+          start = start.substr(0,10);
+          end = end.substr(0,10);
           tmp_projects.push({
             id: value["PROJ_ID"],
             name: value["PROJ_NAME"],
@@ -68,6 +69,11 @@ export class HistoryPage{
     );
   }
 
+  hideSearchBox() {
+    let ishidden = false;
+    this.ishidden = (this.ishidden)? false:true;
+  }
+
   search_project(){
     this.sdate = this.search.start_date;
     this.edate = this.search.end_date;
@@ -80,7 +86,7 @@ export class HistoryPage{
     this.alertController.create({
       header: 'Value',
       subHeader: '입력값',
-      message:  this.user_id +" "+ this.search.start_date +" "+ this.search.mgr_id +" "+ this.search.end_date,
+      message:  this.search.user_id +" "+ this.search.start_date +" "+ this.search.mgr_id +" "+ this.search.end_date,
       buttons: [{
         text: '확인',
         handler:()=>{

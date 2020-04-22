@@ -1385,3 +1385,23 @@ router.route("/extract/word").get(function (req, res) {
       
     });
 });
+
+
+//history project select
+rounter.route("/done_project/select").get(function (req, res){
+        var user_id = req.query.user_id;
+        console.log("======= Proejct Select =======\n");
+        console.log("user_id: " + user_id);
+    
+        mysqlDB.query('select * from PROJECT pj where PROJ_STATUS=0 AND EXISTS ( select * from ATTENDENCE at where at.USER_ID = ? AND pj.PROJ_ID = at.PROJ_ID)', [user_id], function (err, rows, fields) {
+            if (err) {
+                console.log(err);
+                res.end();
+            }
+            else {
+                console.log(rows);
+                res.write(JSON.stringify(rows));
+                res.end();
+            }
+        })
+    })

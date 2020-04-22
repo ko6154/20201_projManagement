@@ -9,7 +9,7 @@
         </ion-buttons>
         <ion-title>완료한 프로젝트</ion-title>
 
-        <ion-buttons slot="primary">
+        <ion-buttons slot="primary" (click)="hideSearchBox()">
             <ion-icon name="search"></ion-icon>
         </ion-buttons>
     </ion-toolbar>
@@ -17,7 +17,7 @@
 </ion-header>
 <!-- 한번에 설정하는 방법 찾기-->
 <ion-content>
-    <ion-list class="search-box" >
+    <ion-list class="search-box" [hidden]="ishidden">
         <ion-item>
             <ion-label color="primary">프로젝트 관리자</ion-label>
             <ion-input [(ngModel)]="search.mgr_id" placeholder="Insert the Administor"  name="mgr_id" ></ion-input>
