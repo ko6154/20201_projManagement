@@ -30,7 +30,7 @@
             <ion-label color="primary">종료날짜</ion-label>
             <ion-datetime [(ngModel)]="search.end_date" max="2050-12-31" displayFormat="YYYY-MM-DD" placeholder="Insert the Years" name="end_date"></ion-datetime>
         </ion-item>
-        <ion-button  expand="block" color="secondary" fill="outline" (click) = search_project()>검색 </ion-button>
+        <ion-button  expand="block" color="secondary" fill="outline" (click) = "search_project()">검색 </ion-button>
     </ion-list>
 
 

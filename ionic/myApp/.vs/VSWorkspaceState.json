@@ -4,8 +4,10 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\add-member",
+    "\\src\\app\\task-list",
+    "\\src\\environments",
     "\\src\\theme"
   ],
-  "SelectedNode": "\\src\\app\\add-member\\add-member.page.html",
+  "SelectedNode": "\\src\\app\\task-list\\task-list.page.ts",
   "PreviewInSolutionExplorer": false
 }

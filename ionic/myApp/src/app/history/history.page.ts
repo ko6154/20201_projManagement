@@ -16,7 +16,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class HistoryPage{
   projects: Array<{}> = [];
   constructor(
-	   private httpService : HttpService,
+	private httpService : HttpService,
     private storage : StorageService,
     private navCtrl : NavController,
     private dataService: DataService,
@@ -82,9 +82,11 @@ export class HistoryPage{
     this.search.start_date = this.search.start_date.substr(0,10);
     this.search.end_date = this.search.end_date.substr(0,10);
     
-    this.httpService.test_history(this.search.user_id,this.search.mgr_id,this.search.start_date,this.search.end_date)
+    this.httpService.test_history(this.search.user_id,this.search.mgr_id,this.search.start_date,this.search.end_date).subscribe(
+	
+	);
 
-    let sql = ''
+    let sql: '';
 
     /*this.alertController.create({
       header: 'Value',
