@@ -2,6 +2,7 @@
 import { HttpClient, HttpHeaders } from  '@angular/common/http';
 import { tap } from  'rxjs/operators';
 import { Observable, BehaviorSubject } from  'rxjs';
+import { AlertController } from '@ionic/angular';
 import { async } from '@angular/core/testing';
 
 @Injectable({
@@ -10,6 +11,7 @@ import { async } from '@angular/core/testing';
 export class HttpService {
 
   constructor(
+    private alertController : AlertController,
     private httpClient : HttpClient
   ) { }
 
@@ -272,6 +274,24 @@ export class HttpService {
 	let URL = `${this.SERVER_ADDRESS}/select/projectname?proj_id=${proj_id}`;
 	return this.httpClient.get(URL, {headers: this.header});
   }
+
+
+  test_history(user_id: string, mgr_id:string, sdate:string, edate:string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/test/history?user_id=${user_id}&mgr_id=${mgr_id}&start_date=${sdate}&end_date=${edate}`;
+    this.alertController.create({
+      header: 'Value',
+      subHeader: '입력값',
+      message: user_id +" "+ sdate + " " +mgr_id +" "+ edate,
+      buttons: [{
+        text: '확인',
+      }]
+    }).then(alert=>{
+      alert.present();
+    });
+    return this.httpClient.post(URL, {headers: this.header});
+  }
+
+
   accept_invite(proj_id:string, user_id: string, isPM: boolean) : Observable<{}> {
 	let URL = `${this.SERVER_ADDRESS}/accept/invite?proj_id=${proj_id}&user_id=${user_id}&isPM=${isPM}`;
 	return this.httpClient.post(URL, {headers: this.header})
@@ -302,6 +322,7 @@ export class HttpService {
     let URL = `${this.SERVER_ADDRESS}/get/isPM?proj_id=${proj_id}&user_id=${user_id}`;
 	return this.httpClient.get(URL, {headers: this.header});
   }
+
 
   cancel_invite(proj_id:string, user_id: string) : Observable<{}> {
 	let URL = `${this.SERVER_ADDRESS}/cancel/invite?proj_id=${proj_id}&user_id=${user_id}`;

@@ -75,15 +75,18 @@ export class HistoryPage{
   }
 
   search_project(){
+    
     this.sdate = this.search.start_date;
     this.edate = this.search.end_date;
 
     this.search.start_date = this.search.start_date.substr(0,10);
     this.search.end_date = this.search.end_date.substr(0,10);
+    
+    this.httpService.test_history(this.search.user_id,this.search.mgr_id,this.search.start_date,this.search.end_date)
 
     let sql = ''
 
-    this.alertController.create({
+    /*this.alertController.create({
       header: 'Value',
       subHeader: '입력값',
       message:  this.search.user_id +" "+ this.search.start_date +" "+ this.search.mgr_id +" "+ this.search.end_date,
@@ -96,7 +99,7 @@ export class HistoryPage{
       }]
     }).then(alert=>{
       alert.present();
-    });
+    });*/
   }
 
   ionViewWillEnter(){
