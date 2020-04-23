@@ -276,8 +276,8 @@ export class HttpService {
   }
 
 
-  test_history(user_id: string, mgr_id: string, sdate: string, edate: string) : Observable<{}> {
-    let URL = `${this.SERVER_ADDRESS}/test/history?user_id=${user_id}&mgr_id=${mgr_id}&start_date=${sdate}&end_date=${edate}`;
+  search_history(user_id: string, mgr_id: string, sdate: string, edate: string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/search/history?user_id=${user_id}&mgr_id=${mgr_id}&start_date=${sdate}&end_date=${edate}`;
     this.alertController.create({
       header: 'Value',
       subHeader: '입력값',

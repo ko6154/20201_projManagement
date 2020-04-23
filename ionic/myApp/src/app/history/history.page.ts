@@ -82,7 +82,30 @@ export class HistoryPage{
     this.search.start_date = this.search.start_date.substr(0,10);
     this.search.end_date = this.search.end_date.substr(0,10);
     
-    this.httpService.test_history(this.search.user_id,this.search.mgr_id,this.search.start_date,this.search.end_date).subscribe(
+    this.httpService.search_history(this.search.user_id,this.search.mgr_id,this.search.start_date,this.search.end_date).subscribe(
+      (res: any[])  => {
+        let tmp_projects: Array<{}> = [];
+        res.forEach(function (value){
+          let start = value["PROJ_START"];
+          let end = value["PROJ_END"];
+          start = start.substr(0,10);
+          end = end.substr(0,10);
+          tmp_projects.push({
+            id: value["PROJ_ID"],
+            name: value["PROJ_NAME"],
+            progress: value["PROJ_PROGRESS"],
+            start: start,
+            end: end,
+            desc: value["PROJ_DESC"],
+            mgr_id: value["PROJ_MGR_UID"],
+            proj_url: value["PROJ_URL"],
+            progress_status: ''
+          });
+        });
+        this.projects = tmp_projects;
+
+        this.setProgressStatus();
+      }
 	
 	);
 
