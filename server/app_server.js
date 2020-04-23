@@ -17,7 +17,7 @@ var session = require('express-session');
 mysqlDB.connect();
 
 var app = express();
-app.set('port', process.env.PORT || 3000); //포트 지정
+app.set('port', process.env.PORT || 8000); //포트 지정
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); //post방식으로 데이터 받기위해 2줄 적어야한다
@@ -1354,3 +1354,230 @@ router.route("/extract/word").get(function (req, res) {
       
     });
 });
+
+// 자기한테온초대보기
+router.route("/select/invitations").get(function (req, res) {
+	var user_id = req.query.user_id;
+	console.log("====== Invitations Select ======");
+	console.log("user_id : " + user_id);
+
+	mysqlDB.query('select * from INVITE where RECV_USER_ID = ?', [user_id], function(err, rows, fields) {
+		if(err) {
+			console.log(err);
+			res.end();
+		}
+		else {
+			console.log(rows);
+			res.write(JSON.stringify(rows));
+			res.end();
+		}
+	})
+});
+
+//해당프로젝트초대중인사람보기
+router.route("/select/invite").get(function (req, res) {
+	var proj_id = req.query.proj_id;
+	console.log("====== Inviting Select ======");
+	console.log("proj_id : " + proj_id);
+	console.log("\n");
+
+	mysqlDB.query('select * from INVITE where PROJ_ID = ?', [proj_id], function(err, rows, fields) {
+		if(err) {
+			console.log(err);
+			res.end();
+		}
+		else {
+			console.log(rows);
+			res.write(JSON.stringify(rows));
+			res.end();
+		}
+	})
+});
+
+//해당프로젝트 멤버들보기ㅑ
+router.route("/select/attendence").get(function (req, res) {
+	var proj_id = req.query.proj_id;
+	console.log("====== Members Select ======");
+	console.log("proj_id : " + proj_id);
+	console.log("\n");
+
+	mysqlDB.query('select * from ATTENDENCE where PROJ_ID = ?', [proj_id], function(err, rows, fields) {
+		if(err){
+			console.log(err);
+			res.end();
+		}
+		else{
+			console.log(rows);
+			res.write(JSON.stringify(rows));
+			res.end();
+		}
+	})
+});
+
+//초대
+router.route("/invite").post(function(req, res) {
+	var proj_id = req.body.proj_id;
+	var send_user_id = req.body.send_id;
+	var recv_user_id = req.body.recv_id;
+	var isPM = req.body.isPM;
+
+	console.log("====== Invite user ======");
+	console.log("proj_id: " + proj_id + "  send_user_id: " + send_user_id + " recv_user_id: " + recv_user_id + " isPM: " + isPM);
+	console.log("\n");
+
+	var data = { PROJ_ID: proj_id, SEND_USER_ID: send_user_id, RECV_USER_ID: recv_user_id, ISPM: isPM };
+	mysqlDB.query('select * from USER where USER_ID = ?', [recv_user_id], function(err, results) {
+		if(err){
+		}
+		else{
+			if(results.length > 0){
+				mysqlDB.query('INSERT INTO INVITE set ?', data, function(err, resultss){
+					var admit;
+					if(err){
+						console.log("INVITE error");
+						admit = {"invite": "deny"};
+						res.write(JSON.stringify(admit));
+						res.end();
+					}
+					else{
+						admit = {"invite": "success"};
+						console.log("invite success");
+						res.write(JSON.stringify(admit));
+						res.end();
+					}
+				})
+			}
+			else{
+				console.log("해당 user가 존재하지 않습니다.");
+				var admit;
+				admit = {"invite": "notExist"};
+				res.write(JSON.stringify(admit));
+				res.end();
+			}
+		}
+	})
+});
+
+//ㅊ초대수락
+router.route("/accept/invite").post(function(req, res) {
+	var proj_id = req.query.proj_id;
+	var user_id = req.query.user_id;
+	var isPM = req.query.isPM;
+	console.log("====== Accept Invitation ======");
+	console.log("proj_id: " + proj_id + "  user_id: " + user_id);
+	console.log("\n");
+	var data = {PROJ_ID: proj_id, USER_ID: user_id, ISPM: isPM};
+	mysqlDB.query('delete from INVITE where PROJ_ID = ? and RECV_USER_ID = ?', [proj_id, user_id], function(err, results) {
+		var admit;
+		if(err){
+			console.log("delete from invite table error");
+			admit = {"accept": "deny"};
+			res.write(JSON.stringify(admit));
+			res.end();
+		}
+		else{
+			mysqlDB.query('insert into ATTENDENCE set ?', data, function(err, results) {
+				if(err){
+				}
+				else{
+					console.log("insert into ATTENDENCE success");
+					admit = {"accept": "success"};
+					res.write(JSON.stringify(admit));
+					res.end();
+				}
+			})
+		}
+	})
+});
+
+//reject invite
+router.route("/reject/invite").post(function(req, res) {
+	var proj_id = req.query.proj_id;
+	var user_id = req.query.user_id;
+
+	console.log("====== Reject Invite ======");
+	console.log("proj_id: " + proj_id + "  user_id: " + user_id);
+
+	mysqlDB.query('delete from INVITE where PROJ_ID = ? and RECV_USER_ID = ?', [proj_id, user_id], function(err, results) {
+		var admit;
+		if(err){
+			admit = {"reject": "fail"};
+			console.log(err);
+			res.write(JSON.stringify(admit));
+			res.end();
+		}
+		else{
+			admit = {"reject": "success"};
+			console.log("reject success");
+			res.write(JSON.stringify(admit));
+			res.end();
+		}
+	})
+});
+
+// 해당유저가 해당프로젝트의 PM인지 아닌지
+router.route("/get/isPM").get(function(req, res) {
+	var proj_id = req.query.proj_id;
+	var user_id = req.query.user_id;
+	
+	console.log("====== get isPM ======");
+	console.log("proj_id: " + proj_id + "  user_id: " + user_id);
+	console.log("\n");
+
+	mysqlDB.query('select * from ATTENDENCE where PROJ_ID = ? and USER_ID = ?', [proj_id, user_id], function(err, rows, fields) {
+		if(err){
+			console.log(err);
+			res.end();
+		}
+		else{
+			console.log(rows);
+			res.write(JSON.stringify(rows));
+			res.end();
+		}
+	})
+});
+
+//초대취소
+router.route("/cancel/invite").post(function(req, res) {
+	var proj_id = req.query.proj_id;
+	var user_id = req.query.user_id;
+
+	console.log("====== cancel invite ======");
+	console.log("proj_id: " + proj_id + "user_id: " + user_id);
+
+	mysqlDB.query('delete from INVITE where PROJ_ID = ? and RECV_USER_ID = ?', [proj_id, user_id], function(err, results) {
+		var admit;
+		if(err){
+			admit = {"cancel" : "fail"};
+			console.log(err);
+			res.write(JSON.stringify(admit));
+			res.end();
+		}
+		else{
+			admit = {"cancel" : "success"};
+			console.log("cancel success");
+			res.write(JSON.stringify(admit));
+			res.end();
+		}
+	})
+});
+
+
+//history project select
+router.route("/done_project/select").get(function (req, res){
+    var user_id = req.query.user_id;
+    console.log("======= Proejct Select =======\n");
+    console.log("user_id: " + user_id);
+
+    mysqlDB.query('select * from PROJECT pj where PROJ_STATUS=0 AND EXISTS ( select * from ATTENDENCE at where at.USER_ID = ? AND pj.PROJ_ID = at.PROJ_ID)', [user_id], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            console.log(rows);
+            res.write(JSON.stringify(rows));
+            res.end();
+        }
+    })
+})
