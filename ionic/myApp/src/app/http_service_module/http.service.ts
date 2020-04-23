@@ -287,9 +287,10 @@ export class HttpService {
       }]
     }).then(alert=>{
       alert.present();
-    });
-    return this.httpClient.post(URL, {headers: this.header});
+    })
+    return this.httpClient.get(URL, {headers: this.header});
   }
+
 
 
   accept_invite(proj_id:string, user_id: string, isPM: boolean) : Observable<{}> {

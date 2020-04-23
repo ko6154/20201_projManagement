@@ -1563,13 +1563,14 @@ router.route("/cancel/invite").post(function(req, res) {
 });
 
 
+
 //history project select
 router.route("/done_project/select").get(function (req, res){
     var user_id = req.query.user_id;
     console.log("======= Proejct Select =======\n");
     console.log("user_id: " + user_id);
 
-    mysqlDB.query('select * from PROJECT pj where PROJ_STATUS=0 AND EXISTS ( select * from ATTENDENCE at where at.USER_ID = ? AND pj.PROJ_ID = at.PROJ_ID)', [user_id], function (err, rows, fields) {
+    mysqlDB.query('select * from PROJECT pj where PROJ_STATUS=1 AND EXISTS ( select * from ATTENDENCE at where at.USER_ID = ? AND pj.PROJ_ID = at.PROJ_ID)', [user_id], function (err, rows, fields) {
         if (err) {
             console.log(err);
             res.end();
@@ -1580,4 +1581,40 @@ router.route("/done_project/select").get(function (req, res){
             res.end();
         }
     })
-})
+});
+
+router.route("/search/history").get(function (req, res){
+    var user_id = req.query.user_id;
+    var mgr_id = req.query.mgr_id;
+    var sdate = req.query.start_date;
+    var edate = req.query.end_date;
+
+    var sql = "select * from PROJECT pj where PROJ_STATUS=1 AND EXISTS ( select * from ATTENDENCE at where at.USER_ID = '"+ user_id +"' AND pj.PROJ_ID = at.PROJ_ID";
+
+
+    if(mgr_id)
+    {
+        sql = sql + " AND pj.PROJ_MGR_UID = '" + mgr_id + "'";
+    }
+    if(sdate)
+    {
+        sql = sql + " AND pj.PROJ_START >= '" + sdate + "'";
+    }
+    if(edate)
+    {
+        sql = sql + " AND pj.PROJ_END <= '" + edate + "'";
+    }
+    sql = sql + ")";
+    mysqlDB.query(sql, function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            console.log(rows);
+            res.write(JSON.stringify(rows));
+            res.end();
+        }
+    })
+});
+

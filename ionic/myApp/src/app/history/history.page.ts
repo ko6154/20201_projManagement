@@ -106,25 +106,7 @@ export class HistoryPage{
 
         this.setProgressStatus();
       }
-	
 	);
-
-    let sql: '';
-
-    /*this.alertController.create({
-      header: 'Value',
-      subHeader: '입력값',
-      message:  this.search.user_id +" "+ this.search.start_date +" "+ this.search.mgr_id +" "+ this.search.end_date,
-      buttons: [{
-        text: '확인',
-        handler:()=>{
-          this.search.start_date = this.sdate;
-          this.search.end_date = this.edate;
-        }
-      }]
-    }).then(alert=>{
-      alert.present();
-    });*/
   }
 
   ionViewWillEnter(){
