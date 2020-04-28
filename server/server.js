@@ -712,12 +712,14 @@ router.route("/project/create").post(function (req, res) {
                     mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
                         var admit;
                         if (!err) {
+                            sess = req.session;
                             console.log("ATTENDENCE create success");
-                            if (i == user_id.length-1) {
+                            res.render('main.html', {username:sess.name})
+                            /*if (i == user_id.length-1) {
                                 admit = { "create": "success" };
                                 res.write(JSON.stringify(admit));
                                 res.end();
-                            }
+                            }*/
                         }else {
                             console.log("ATTENDENCE create fail");
                             admit = { "create": "ATTENDENE create fail." };
