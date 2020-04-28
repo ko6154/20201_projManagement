@@ -19,12 +19,25 @@ export class SignupPage{
   user = {
     email: '',
     password: '',
+	password2: '',
     name: '',
     department: ''
   }
   
   sign_up(form: FormGroup){
-    this.http.register(form.value).subscribe(
+	if(this.user.password != this.user.password2) {
+		this.alertController.create({
+      header: '회원가입 실패',
+      message: '비밀번호가 일치하지 않습니다.',
+      buttons: [{
+        text: '확인',
+      }]
+    }).then(alert=>{
+      alert.present();
+    })
+	}
+	else {
+		this.http.register(form.value).subscribe(
       res => {
         if(res["register"] === "success"){
           this.alertController.create({
@@ -59,6 +72,8 @@ export class SignupPage{
         console.log(error.headers);
       }
     );
+	}
+    
   }
   goBack(){
   	  this.navCtrl.pop();
