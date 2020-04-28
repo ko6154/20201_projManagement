@@ -70,9 +70,16 @@
                      <input id="append" type="button" onclick="user_append()" value="추가">
                 </div>
                 <div id="user"> </div>  <!-- user_id input hidden 태그 들어감 -->
-                <input type="submit" id="submit" value="생성">
-                   
+                <input type="submit" id="submit" value="생성">                   
         </form>
+        
         </article>
+        <footer>
+            <a href="javascript:history.back()" style="margin-left: 2.5%;"><button>뒤로가기</button></a>
+        </footer>
+        <script>
+            var msg = JSON.parse('<%-admit%>');
+            console.log(msg);
+        </script>
     </body>
  </html>

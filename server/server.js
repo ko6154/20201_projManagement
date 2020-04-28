@@ -15,6 +15,8 @@ let {PythonShell} = require('python-shell')
 //var PythonShell = require('python-shell'); 
 var session = require('express-session');
 var query;
+
+
 mysqlDB.connect();
 
 var app = express();
@@ -82,7 +84,7 @@ router.route("/signup").get(function (req, res){
 ///
 router.route("/create").get(function(req,res){
     sess=req.session;
-    res.render("create.html",{username:sess.name,useremail:sess.email});
+    res.render("create.html",{username:sess.name,useremail:sess.email,admit:" "});
 })
 
 router.route("/search").get(function(req,res){
@@ -98,14 +100,15 @@ router.route("/table").get(function(req,res){
             res.end();
         }
         else {
+       
             console.log(rows);
             console.log(rows.length);
            // console.log(rows[0]);
           //  console.log(JSON.stringify(rows[0]));
-            var project = JSON.stringify(rows);
-           
-            var size = rows.length;
-           // console.log(project);
+            var project = JSON.stringify(rows);   
+            var size = rows.length;            
+            project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
+            console.log(project);         
             res.render("table.html",{pro:project,len:size});
         }        
     }); 
