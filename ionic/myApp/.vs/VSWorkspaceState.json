@@ -4,10 +4,10 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\add-member",
-    "\\src\\app\\task-list",
+    "\\src\\app\\history",
     "\\src\\environments",
     "\\src\\theme"
   ],
-  "SelectedNode": "\\src\\app\\task-list\\task-list.page.ts",
+  "SelectedNode": "\\src\\app\\history\\history.page.html",
   "PreviewInSolutionExplorer": false
 }

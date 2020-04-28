@@ -15,7 +15,8 @@
         <ion-item *ngFor="let invitation of invitations">
             <ion-card style="width:100%">
                 <ion-card-header>
-                    <ion-card-subtitle>{{invitation.proj_id}}</ion-card-subtitle>
+                    <ion-card-subtitle>초대자 : {{invitation.send_id}}</ion-card-subtitle>
+                    <ion-card-title style="font-size:1.2em">{{invitation.proj_name}}</ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
                     <ion-buttons>

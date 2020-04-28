@@ -266,13 +266,13 @@ export class HttpService {
       })
     );
   }
-  get_invitations(user_id: string) : Observable<{}> {
+  get_invitations(user_id: string) : Promise<{}> {
     let URL = `${this.SERVER_ADDRESS}/select/invitations?user_id=${user_id}`;
-	return this.httpClient.get(URL, {headers: this.header});
+	return this.httpClient.get(URL, {headers: this.header}).toPromise();
   }
-  get_projectname(proj_id: string) : Observable<{}> {
+  get_projectname(proj_id: string) : Promise<{}> {
 	let URL = `${this.SERVER_ADDRESS}/select/projectname?proj_id=${proj_id}`;
-	return this.httpClient.get(URL, {headers: this.header});
+	return this.httpClient.get(URL, {headers: this.header}).toPromise();
   }
 
 

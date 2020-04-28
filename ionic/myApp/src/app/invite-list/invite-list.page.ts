@@ -33,7 +33,9 @@ export class InviteListPage {
       this.user_id = val;
     });
 	
-	this.http.get_invitations(this.user_id).subscribe(
+	
+
+	await this.http.get_invitations(this.user_id).then(
       (res: any[]) => {
         let tmp_invitations: Array<{}> = [];
         res.forEach(function (value) {
@@ -50,10 +52,22 @@ export class InviteListPage {
         console.log(error);
       }
     );
-
+	
 	for(let i = 0; i < this.invitations.length; ++i){
-		
+		await this.http.get_projectname((this.invitations[i]["proj_id"])).then(
+			(res: any[]) => {
+				var temp_proj_name;
+				res.forEach(function (value) {
+					temp_proj_name = value["PROJ_NAME"];
+				});
+				this.invitations[i]["proj_name"] = temp_proj_name;
+			},
+			error => {
+				console.log(error);
+			}
+		);
 	}
+	
   }
 
   goBack(){
