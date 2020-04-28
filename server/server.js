@@ -121,34 +121,59 @@ router.route("/table").get(function(req,res){
 })
 //search_project
 router.route("/search/project").post(function(req,res){
-   var pid = req.body.p_name;
-   var mname = req.body.m_name;
-   var sdate = req.body.s_date;
-   var edate = req.body.e_date;
-   console.log(pid+""+mname+""+sdate+""+edate);
-   mysqlDB.query("SELECT PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJ_DESC FROM PROJECT WHERE PROJ_NAME = ? AND PROJ_MGR_UID = ? AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= ? AND DATE_FORMAT(PROJ_END, '%Y-%m-%d') <= ?", [pid,mname,sdate,edate], function (err,rows, fields) {
-    if (err) {
-        console.log(err);
-        res.end();
-    }
-    else {
-        console.log(rows);
-        console.log(rows.length);
-       // console.log(rows[0]);
-      //  console.log(JSON.stringify(rows[0]));
-        var project = JSON.stringify(rows);
-       
-        var size = rows.length;
-       // console.log(project);
-        res.render("searchtbl.html",{pro:project,len:size});
-    }        
-}); 
-})
+    var pid = req.body.p_name;
+    var mname = req.body.m_name;
+    var sdate = req.body.s_date;
+    var edate = req.body.e_date;
+    var inputIsNothing =1;   // 검색조건이 하나도 안 들어왔음을 체크하는 변수,   1이면 empty, 0이면 입력 있음
+    console.log(pid+""+mname+""+sdate+""+edate);
+ 
+     var sql="SELECT PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJ_DESC FROM PROJECT WHERE 1=1 ";
+     if (pid !== '') {sql = sql.concat("AND PROJ_NAME = '" + pid + "' "); inputIsNothing=0;}
+     if (mname !== '') {sql = sql.concat("AND PROJ_MGR_UID = '" + mname + "' "); inputIsNothing=0;}
+     if (sdate !== '') {sql = sql.concat("AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= '" + sdate + "' "); inputIsNothing=0;}
+     if (edate !== '') {sql = sql.concat("AND DATE_FORMAT(PROJ_END, '%Y-%m-%d') <= '" + edate + "'"); inputIsNothing=0;}
+ 
+     if ( (inputIsNothing) ) {   // 검색조건을 하나도 입력 안한경우 경고창만 띄우고 밑의 query는 실행하지 않는다.
+         // alert:true -> searchtbl.html 에서 alert를 띄운다.
+         res.render("searchtbl.html",{pro:"", len:0,name:sess.name, alert:true});
+         return 0;
+     }
+     
+     console.log("pid : " + pid);
+     console.log("mname : " + mname);
+     console.log("sdate : " + sdate);
+     console.log("edate : " + edate);
+     console.log("pid !== '' : " +(pid !== ''));
+     console.log("mname !== '' : " +(mname !== ''));
+     console.log("sdate !== '' : " +(sdate !== ''));
+     console.log("edate !== '' : " +(edate !== ''));
+ 
+     console.log(sql);
+     //mysqlDB.query("SELECT PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJ_DESC FROM PROJECT WHERE PROJ_NAME = ? AND PROJ_MGR_UID = ? AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= ? AND DATE_FORMAT(PROJ_END, '%Y-%m-%d') <= ?", [pid,mname,sdate,edate], function (err,rows, fields) {
+     mysqlDB.query(sql, function(err, rows) {
+     if (err) {
+         console.log(err);
+         res.end();
+     }
+     else {
+         console.log(rows);
+         console.log("row length : " + rows.length);
+        // console.log(rows[0]);
+       //  console.log(JSON.stringify(rows[0]));
+         var project = JSON.stringify(rows);
+        
+         var size = rows.length;
+        // console.log(project);
+         res.render("searchtbl.html",{pro:project,len:size, alert:false});
+     }        
+ }); 
+ })
 
 //search_table
 router.route("/search/table").get(function(req,res){
     sess=req.session;
-    res.render("searchtbl.html",{pro:"",len:0,name:sess.name});    
+    res.render("searchtbl.html",{pro:"",len:0,name:sess.name, alert:false});    
 })
 
 // SIGNUP
@@ -711,12 +736,14 @@ router.route("/project/create").post(function (req, res) {
                 mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
                     var admit;
                     if (!err) {
+                        sess = req.session;
                         console.log("ATTENDENCE create success");
-                        if (i == user_id.length-1) {
+                        res.render('main.html', {username:sess.name})
+                        /*if (i == user_id.length-1) {
                             admit = { "create": "success" };
                             res.write(JSON.stringify(admit));
                             res.end();
-                        }
+                        }*/
                     }else {
                         console.log("ATTENDENCE create fail");
                         admit = { "create": "ATTENDENE create fail." };
