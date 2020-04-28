@@ -74,6 +74,10 @@ router.route("/login").get(function (req, res){
 	res.render("login.html");
 })
 
+router.route("/projPage").get(function (req, res){
+	res.render("projPage.html");
+})
+
 router.route("/signup").get(function (req, res){
 	res.render("signup.html");
 })

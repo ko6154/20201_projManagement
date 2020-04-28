@@ -14,7 +14,7 @@
  </head>
 <body>  
   <table id="customers">
-    <tr id ="title" onclick='javascript:clickTrEvent(this)'>
+    <tr id ="title">
       <th>프로젝트 명</th>
       <th>진행률</th>
       <th>시작일</th>
@@ -31,7 +31,8 @@
   var date = new Date();
   var table=document.getElementById("customers"); 
   var table_len=(table.rows.length);
-
+  var ary = new Array();
+  
   for(var i=0;i<size;i++) 
   {
     console.log(table_len);
@@ -44,20 +45,43 @@
     date.setFullYear(year,month-1,day);
     console.log(date.getTime());
 
-    
-    function clickTrEvent(trObj) {
-        alert(trObj);
-        console.log(trObj);
+    $('tr').off('click').on('click',function(){
+      var target =  $(this).attr('id');
+      var index = Number(target);      
+      if(target != "title"){
+        console.log(ary[index-1].proj_name);
+        openWin = window.open("/projPage", "popForm", "width=600,height=400,top=100,left=300");
+        openWin.document.write("<p>"+ary[index-1].proj_name+"</p>");
+        openWin.document.write("<p>"+ary[index-1].proj_prog+"</p>");
+        openWin.document.write("<p>"+ary[index-1].proj_start+"</p>");
+        openWin.document.write("<p>"+ary[index-1].proj_end+"</p>");
+        openWin.document.write("<p>"+ary[index-1].proj_desc+"</p>");
+        return;
       }
-      
+     
+
+    });
+    
     if(date.getTime() > today.getTime())
     {
-      
       var table_len=(table.rows.length);
-      var row = table.insertRow(table_len).innerHTML="<tr><td>"+proj.PROJ_NAME+"</td><td>"+proj.PROJ_PROGRESS+"</td><td>"+proj.PROJ_START.substring(0,10)+"</td><td>"+proj.PROJ_END.substring(0,10)+"</td><td>"+proj.PROJ_DESC+"</td></tr>";
-      console.log(row);
+      var row = table.insertRow(table_len);
+      var col0= row.insertCell(0).innerHTML="<td>"+proj.PROJ_NAME+"</td>";
+      var col1= row.insertCell(1).innerHTML="<td>"+proj.PROJ_PROGRESS+"</td>";
+      var col2= row.insertCell(2).innerHTML="<td>"+proj.PROJ_START.substring(0,10)+"</td>";
+      var col3= row.insertCell(3).innerHTML="<td>"+proj.PROJ_END.substring(0,10)+"</td>";
+      var col4= row.insertCell(4).innerHTML="<td>"+proj.PROJ_DESC+"</td>";
+      var obj = new Object();
+      obj.proj_name = proj.PROJ_NAME;
+      obj.proj_prog = proj.PROJ_PROGRESS;
+      obj.proj_start = proj.PROJ_START.substring(0,10);
+      obj.proj_end = proj.PROJ_END.substring(0,10);
+      obj.proj_desc = proj.PROJ_DESC;
+      ary.push(obj);
+      row.id = table_len;
+      //console.log(row);
     }
-    console.log(table);
+   // console.log(table);
     
    
    } 
