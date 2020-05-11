@@ -17,7 +17,7 @@ export class TaskListPage {
   project_name: string;
   notiIsOpen: boolean;
 
- notis: Array<{}> = [];
+  notis: Array<{}> = [];
   taskIsOpen: boolean;
   tasks: Array<{}> = [];
 
@@ -29,7 +29,7 @@ export class TaskListPage {
     private storage: StorageService,
     private navCtrl : NavController,
     private alertCtrl: AlertController,
-	private menu: MenuController,
+	  private menu: MenuController,
     private dataService : DataService
   ) {
     
@@ -243,7 +243,7 @@ export class TaskListPage {
     if(type != 'noti')
      attach = args[len].attach.split("*");
     let attaches = new Array();
-    let pre_path = `http://52.55.31.29:3000/download?path=`;
+    let pre_path = `http://52.55.31.29:8000/download?path=`;
     
     if(type != 'noti'){
       for(var i=0; i<attach.length-1; ++i){

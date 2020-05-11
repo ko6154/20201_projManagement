@@ -4,10 +4,11 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\add-member",
-    "\\src\\app\\history",
+    "\\src\\app\\home",
+    "\\src\\app\\signup",
     "\\src\\environments",
     "\\src\\theme"
   ],
-  "SelectedNode": "\\src\\app\\history\\history.page.html",
+  "SelectedNode": "\\src\\app\\signup\\signup.page.ts",
   "PreviewInSolutionExplorer": false
 }

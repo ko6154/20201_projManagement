@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goHome()">
+        <ion-icon name="home-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title> {{project_name}} </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openCustom()">
+        <ion-icon slot="end" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-menu side="end" menuId="second" contentId="maa">
+  <ion-header>
+      <ion-toolbar color="secondary">
+          <ion-title>메뉴</ion-title>
+      </ion-toolbar>
+  </ion-header>
+  <ion-content>
+      <ion-list>
+          <ion-item (click)="goAddMember()">
+              <ion-icon slot="start" name="person-add-outline"></ion-icon>
+              <ion-label>멤버 관리</ion-label>
+          </ion-item>
+
+
+      </ion-list>
+
+  </ion-content>
+  <ion-button *ngIf="isPM" size="large" style="padding:10px;" color="success" (click)="update_status('1')">프로젝트 완료</ion-button>
+  <ion-button *ngIf="isPM" size="large" style="padding:10px;" color="danger" (click)="update_status('-1')">프로젝트 삭제</ion-button>
+  <ion-button *ngIf="isPM == 0" size="large" style="padding:10px;" color="danger">프로젝트 탈퇴</ion-button>
+</ion-menu>
+<ion-router-outlet id="maa"></ion-router-outlet>
+
+
+<ion-content>
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="noti">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <ion-label>공지사항</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="task">
+        <ion-icon name="document-text-outline"></ion-icon>
+        <ion-label>과업</ion-label>
+      </ion-tab-button>
+
+      <ion-tab-button tab="whiteboard">
+        <ion-icon name="tv-outline"></ion-icon>
+        <ion-label>화이트보드</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

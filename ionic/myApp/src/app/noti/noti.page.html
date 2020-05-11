@@ -1,0 +1,9 @@
+<ion-content>
+  <ion-list class="noti-list">
+    <!-- NOTI -->
+    <ion-item class="noti-title" *ngFor="let noti of notis" (click)="go_board('noti', noti)">
+      <ion-label class="ion-text-wrap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ noti.title }}</ion-label>
+      <ion-icon *ngIf="noti.status == 1" name="checkmark-circle"></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>

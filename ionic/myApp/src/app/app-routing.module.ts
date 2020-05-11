@@ -14,7 +14,8 @@ const routes: Routes = [
   { path: 'create-big', loadChildren: './create-big/create-big.module#CreateBigPageModule' },
   { path: 'create-mid', loadChildren: './create-mid/create-mid.module#CreateMidPageModule' },
   { path: 'create-small', loadChildren: './create-small/create-small.module#CreateSmallPageModule' },
-  { path: 'add-member', loadChildren: './add-member/add-member.module#AddMemberPageModule' },  { path: 'board', loadChildren: './board/board.module#BoardPageModule' },
+  { path: 'add-member', loadChildren: './add-member/add-member.module#AddMemberPageModule' },
+  { path: 'board', loadChildren: './board/board.module#BoardPageModule' },
   { path: 'create-noti', loadChildren: './create-noti/create-noti.module#CreateNotiPageModule' },
   { path: 'search', loadChildren: './search/search.module#SearchPageModule' },
   {
@@ -29,6 +30,27 @@ const routes: Routes = [
     path: 'invite-list',
     loadChildren: () => import('./invite-list/invite-list.module').then( m => m.InviteListPageModule)
   },
+  {
+    path: 'detailproject',
+    loadChildren: () => import('./detailproject/detailproject.module').then( m => m.DetailprojectPageModule)
+  },
+  {
+    path: 'noti',
+    loadChildren: () => import('./noti/noti.module').then( m => m.NotiPageModule)
+  },
+  {
+    path: 'task',
+    loadChildren: () => import('./task/task.module').then( m => m.TaskPageModule)
+  },
+  {
+    path: 'whiteboard',
+    loadChildren: () => import('./whiteboard/whiteboard.module').then( m => m.WhiteboardPageModule)
+  },
+  {
+    path: 'detail',
+    loadChildren: () => import('./detail/detail.module').then( m => m.DetailPageModule)
+  },
+  
 ];
 
 @NgModule({
