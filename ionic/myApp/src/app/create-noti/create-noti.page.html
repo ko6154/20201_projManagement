@@ -1,21 +1,34 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>공지 작성</ion-title>
-  </ion-toolbar>
-</ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title> 공지 작성 </ion-title>
 
+  </ion-toolbar>
+
+</ion-header>
 <ion-content fullscreen>
   <form #form="ngForm" (ngSubmit)="create_noti()">
     <ion-list>
       <ion-item>
-        <ion-label position="floating" required>제목</ion-label>
-        <ion-input name="title" [(ngModel)]="noti.title" placeholder="제목을 입력하세요"></ion-input>
+        <ion-input name="title" [(ngModel)]="noti.title" placeholder="제목"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">내용</ion-label>
-        <ion-textarea name="desc" [(ngModel)]="noti.desc" rows="10"></ion-textarea>
+        <ion-card style="width:100%">
+        
+          <ion-card-content>
+            <ion-textarea name="desc" [(ngModel)]="noti.desc" rows="8" placeholder="내용"></ion-textarea>
+          </ion-card-content>
+        </ion-card>
+        
       </ion-item>
     </ion-list>
-    <ion-button class="ion-margin-horizontal ion-float-end" size="large" type="submit">제출</ion-button>
+    <section>
+      <ion-button expand="full" type="submit" color="secondary">작성</ion-button>
+    </section>
+    
   </form>
 </ion-content>

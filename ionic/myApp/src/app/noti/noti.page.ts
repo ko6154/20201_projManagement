@@ -65,8 +65,15 @@ export class NotiPage {
         console.log(error);
       }
     );
+    for(var i = 0; i < this.notis.length; i++) {
+      var time = this.notis[i]["created"].substr(0, 10);
+      time += "/";
+      time += this.notis[i]["created"].substr(11, 8);
+      this.notis[i]["created"] = time;
+    }
+    this.notis.reverse();
   }
-
+  
   go_board(type: string, ...args: any) {
     var len = args.length-1;
     let title  = args[len]['title'];
@@ -109,5 +116,8 @@ export class NotiPage {
     console.log(attaches)
 
     this.navCtrl.navigateForward('/board');
+  }
+  goCreateNoti() {
+    this.navCtrl.navigateForward('/create-noti');
   }
 }

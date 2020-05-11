@@ -40,37 +40,69 @@ export class CreateNotiPage{
     let now = new Date().toISOString();
     let created = now.substr(0, 10) + " " + now.split('T')[1].substr(0, 8);
     this.noti.created = created;
-
-    this.http.create_noti(this.noti).then(
-      ret => {
-        console.log(ret['create']);
-        if (ret['create'] == 'success') {
+    if(this.noti.title == '') {
+      this.alertController.create({
+        header: '작성 실패',
+        message: '제목을 입력하세요.',
+        buttons: [{
+          text: '확인',
+          handler: () => {
+            
+          }
+        }]
+      }).then(alert => {
+        alert.present();
+      });
+    }
+    else if(this.noti.desc == '') {
+      this.alertController.create({
+        header: '작성 실패',
+        message: '내용을 입력하세요.',
+        buttons: [{
+          text: '확인',
+          handler: () => {
+            
+          }
+        }]
+      }).then(alert => {
+        alert.present();
+      });
+    }
+    else {
+      this.http.create_noti(this.noti).then(
+        ret => {
+          console.log(ret['create']);
+          if (ret['create'] == 'success') {
+              this.alertController.create({
+                header: 'Confirm!',
+                subHeader: '작업 추가 성공!',
+                message: '업무리스트로 이동합니다.',
+                buttons: [{
+                  text: '확인',
+                  handler: () => {
+                    this.navCtrl.navigateForward('/detail');
+                  }
+                }]
+              }).then(alert => {
+                alert.present();
+              });
+          } else {
             this.alertController.create({
-              header: 'Confirm!',
-              subHeader: '작업 추가 성공!',
-              message: '업무리스트로 이동합니다.',
+              header: 'Reject!',
+              subHeader: '작업 추가 실패',
+              message: '입력값을 확인해주세요.',
               buttons: [{
-                text: '확인',
-                handler: () => {
-                  this.navCtrl.navigateForward('/task-list');
-                }
+                text: '확인'
               }]
             }).then(alert => {
               alert.present();
             });
-        } else {
-          this.alertController.create({
-            header: 'Reject!',
-            subHeader: '작업 추가 실패',
-            message: '입력값을 확인해주세요.',
-            buttons: [{
-              text: '확인'
-            }]
-          }).then(alert => {
-            alert.present();
-          });
-        }
-      });
+          }
+        });
+    }
+    
   }
-
+  goBack() {
+    this.navCtrl.pop();
+  }
 }

@@ -2,8 +2,16 @@
   <ion-list class="noti-list">
     <!-- NOTI -->
     <ion-item class="noti-title" *ngFor="let noti of notis" (click)="go_board('noti', noti)">
-      <ion-label class="ion-text-wrap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ noti.title }}</ion-label>
-      <ion-icon *ngIf="noti.status == 1" name="checkmark-circle"></ion-icon>
+      <ion-text>
+        <h2>{{noti.title}}</h2>
+        <p>작성자: {{noti.author}}<br>작성날짜:  {{noti.created}}</p>
+      </ion-text>
+    
     </ion-item>
   </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="secondary" (click)="goCreateNoti()">
+        <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+</ion-fab>
 </ion-content>
