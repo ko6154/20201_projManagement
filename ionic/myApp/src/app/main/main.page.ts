@@ -113,7 +113,7 @@ export class MainPage  {
     this.dataService.setManagerID(project.mgr_id);
     this.dataService.setProjectName(project.name);
     this.dataService.setAttendLink(project.proj_url);
-    this.navCtrl.navigateForward("/detail");
+    this.navCtrl.navigateForward("/detail/noti");
   }
   goGenerateProject(){
     this.navCtrl.navigateForward("/generate-project");
