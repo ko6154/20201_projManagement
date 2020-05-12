@@ -26,7 +26,7 @@
 <script type="text/javascript">
   var project = JSON.parse('<%- pro %>');
   var size = Number('<%= len %>');    
-  console.log(typeof(size));  
+  //console.log(typeof(size));  
   var today = new Date();
   var date = new Date();
   var table=document.getElementById("customers"); 
@@ -38,17 +38,67 @@
     console.log(table_len);
     var proj = project[i];
     console.log(proj);
-    var year = project[i].PROJ_END.substring(0,4);
-    var month = project[i].PROJ_END.substring(5,7);
-    var day = project[i].PROJ_END.substring(8,10);
+    //var year = project[i].PROJ_END.substring(0,4);
+    //var month = project[i].PROJ_END.substring(5,7);
+    //var day = project[i].PROJ_END.substring(8,10);
     //console.log(year+" "+month+" "+day);
-    date.setFullYear(year,month-1,day);
-    console.log(date.getTime());
+    //
+    var startDate = new Date(proj.PROJ_START);
+    var year = startDate.getFullYear();
+    var month = startDate.getMonth();
+    var day = startDate.getDate();
+    var startDateToStr = year + "-" +
+                         (( (month+1) < 10) ? "0"+ (month+1) : month+1) + "-" + 
+                         (( (day) < 10) ? "0"+ (day) : day);
+    console.log(startDateToStr);
 
+    var endDate = new Date(proj.PROJ_END);
+    year = endDate.getFullYear();
+    month = endDate.getMonth();
+    day = endDate.getDate();
+    endDate = new Date(year, month, day, 23, 59, 59); // 종료일 오후 11시 59분 59초로 변경
+    var endDateToStr = year + "-" + 
+                          (( (month+1) < 10 ) ? "0"+ (month+1) : month+1) + "-" + 
+                          (( (day) < 10) ? "0"+ (day) : day);
+    console.log(endDateToStr);
+
+    //console.log(d.getFullYear());
+    //console.log(d.getMonth());
+    //console.log(d.getDate());
+    console.log(startDate);
+    console.log(endDate); 
+    //
+
+    //console.log(date.getTime());
+    
+    if(endDate.getTime() > today.getTime())  // 종료일 이전의 프로젝트만 출력한다.
+    {
+      var table_len=(table.rows.length);
+      var row = table.insertRow(table_len);
+      var col0= row.insertCell(0).innerHTML="<td>"+proj.PROJ_NAME+"</td>";
+      var col1= row.insertCell(1).innerHTML="<td>"+proj.PROJ_PROGRESS+"</td>";
+      //var col2= row.insertCell(2).innerHTML="<td>"+proj.PROJ_START.substring(0,10)+"</td>";
+      //var col3= row.insertCell(3).innerHTML="<td>"+proj.PROJ_END.substring(0,10)+"</td>";
+      var col2= row.insertCell(2).innerHTML="<td>"+startDateToStr+"</td>";
+      var col3= row.insertCell(3).innerHTML="<td>"+endDateToStr+"</td>";
+      var col4= row.insertCell(4).innerHTML="<td>"+proj.PROJ_DESC+"</td>";
+      var obj = new Object();
+      obj.proj_name = proj.PROJ_NAME;
+      obj.proj_prog = proj.PROJ_PROGRESS;
+      obj.proj_start = proj.PROJ_START.substring(0,10);
+      obj.proj_end = proj.PROJ_END.substring(0,10);
+      obj.proj_desc = proj.PROJ_DESC;
+      ary.push(obj);
+      row.id = table_len;
+      //console.log(row);
+    }
+
+    
     $('tr').off('click').on('click',function(){
       var target =  $(this).attr('id');
       var index = Number(target);      
       if(target != "title"){
+        console.log('index : ' + index);
         console.log(ary[index-1].proj_name);
         openWin = window.open("/projPage", "popForm", "width=600,height=400,top=100,left=300");
         openWin.document.write("<p>"+ary[index-1].proj_name+"</p>");
@@ -61,26 +111,6 @@
      
 
     });
-    
-    if(date.getTime() > today.getTime())
-    {
-      var table_len=(table.rows.length);
-      var row = table.insertRow(table_len);
-      var col0= row.insertCell(0).innerHTML="<td>"+proj.PROJ_NAME+"</td>";
-      var col1= row.insertCell(1).innerHTML="<td>"+proj.PROJ_PROGRESS+"</td>";
-      var col2= row.insertCell(2).innerHTML="<td>"+proj.PROJ_START.substring(0,10)+"</td>";
-      var col3= row.insertCell(3).innerHTML="<td>"+proj.PROJ_END.substring(0,10)+"</td>";
-      var col4= row.insertCell(4).innerHTML="<td>"+proj.PROJ_DESC+"</td>";
-      var obj = new Object();
-      obj.proj_name = proj.PROJ_NAME;
-      obj.proj_prog = proj.PROJ_PROGRESS;
-      obj.proj_start = proj.PROJ_START.substring(0,10);
-      obj.proj_end = proj.PROJ_END.substring(0,10);
-      obj.proj_desc = proj.PROJ_DESC;
-      ary.push(obj);
-      row.id = table_len;
-      //console.log(row);
-    }
    // console.log(table);
     
    
