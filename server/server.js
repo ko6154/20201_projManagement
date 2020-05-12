@@ -110,7 +110,7 @@ router.route("/table").get(function(req,res){
            // console.log(rows[0]);
           //  console.log(JSON.stringify(rows[0]));
             var project = JSON.stringify(rows);   
-            var size = rows.length;            
+            var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
             console.log(project);         
             res.render("table.html",{pro:project,len:size});
@@ -674,6 +674,7 @@ router.route("/project/create").post(function (req, res) {
     var end_date = req.body.end_date;
     var desc = req.body.desc;
     var user_id = req.body.user_id;
+    var pm_id = req.body.pm_id;
     var p_salt = Math.round((new Date().valueOf() * Math.random())) + "";
     var hashURL = crypto.createHash("sha512").update(mgr_id + p_salt).digest("hex");
     console.log(req.body);
@@ -698,31 +699,58 @@ router.route("/project/create").post(function (req, res) {
                 fs.mkdirSync(dir);
             
             console.log("PROJECT create success");
+            console.log(results);
 
+            // 현재 프로젝트 생성하는 유저는 반드시 이 프로젝트에 참가한다. PM 자격도 가진다.
+            data = {
+                PROJ_ID: results.insertId,
+                USER_ID: mgr_id,
+                ISPM: true
+            };
+            console.log(data);
+
+            mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
+                var admit;
+                if (!err) {
+                    console.log("mgr_id ATTENDENCE create success");
+                }else {
+                    console.log("mgr_id ATTENDENCE create fail");
+                    admit = { "create": "mgr_id ATTENDENE create fail." };
+                    res.write(JSON.stringify(admit));
+                    res.end();
+                }
+            })
             
-            if (Array.isArray(user_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
-                // user_id 배열 요소 하나씩 attendence db에 넣는다.
+            /****************************
+             * user invite table insert
+             ****************************/
+            console.log('user_id :'+user_id);
+            if ( typeof(user_id) === 'undefined' ) {   // 참가할 팀원에 한명도 추가 안했을 시
+                console.log('user_id: undefined');
+            }
+            else if (Array.isArray(user_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
+                // user_id 배열 요소 하나씩 Invite db에 넣는다.
                 for(var i=0; i<user_id.length; i++) {
                     data = {
                         PROJ_ID: results.insertId,
-                        USER_ID: user_id[i]
+                        SEND_USER_ID: mgr_id,
+                        RECV_USER_ID: user_id[i],
+                        ISPM: false
                     };
                     console.log(data); 
 
-                    mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
+                    mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
                         var admit;
                         if (!err) {
-                            sess = req.session;
-                            console.log("ATTENDENCE create success");
-                            res.render('main.html', {username:sess.name})
+                            console.log("INVITE user create success");
                             /*if (i == user_id.length-1) {
                                 admit = { "create": "success" };
                                 res.write(JSON.stringify(admit));
                                 res.end();
                             }*/
                         }else {
-                            console.log("ATTENDENCE create fail");
-                            admit = { "create": "ATTENDENE create fail." };
+                            console.log("INVITE user create fail");
+                            admit = { "create": "INVITE user create fail." };
                             res.write(JSON.stringify(admit));
                             res.end();
                         }
@@ -731,15 +759,84 @@ router.route("/project/create").post(function (req, res) {
             }else { // user_id가 배열이 아닌 경우 입력이 1개만 된 경우이므로 따로 처리한다.
                 data = {
                     PROJ_ID: results.insertId,
-                    USER_ID: user_id
+                    SEND_USER_ID: mgr_id,
+                    RECV_USER_ID: user_id,
+                    ISPM: false
                 };
                 console.log(data); 
 
-                mysqlDB.query('INSERT INTO ATTENDENCE set ?', data, function (err, results) {
+                mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
+                    var admit;
+                    if (!err) {
+                        console.log("INVITE user create success");
+                        /*if (i == user_id.length-1) {
+                            admit = { "create": "success" };
+                            res.write(JSON.stringify(admit));
+                            res.end();
+                        }*/
+                    }else {
+                        console.log("INVITE user create fail");
+                        admit = { "create": "INVITE user create fail." };
+                        res.write(JSON.stringify(admit));
+                        res.end();
+                    }
+                })
+            }
+
+            /********************
+             * pm invite insert
+             ********************/
+            console.log('pm_id :'+pm_id);
+            if ( typeof(pm_id) === 'undefined' ) {   // 참가할 팀원에 한명도 추가 안했을 시
+                sess = req.session;
+                console.log('pm_id: undefined');
+                res.render('main.html', {username:sess.name});
+                return 0;
+            }
+            else if (Array.isArray(pm_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
+                // user_id 배열 요소 하나씩 INVITE db에 넣는다.
+                for(var i=0; i<pm_id.length; i++) {
+                    data = {
+                        PROJ_ID: results.insertId,
+                        SEND_USER_ID: mgr_id,
+                        RECV_USER_ID: pm_id[i],
+                        ISPM: true
+                    };
+                    console.log(data); 
+
+                    mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
+                        var admit;
+                        if (!err) {
+                            sess = req.session;
+                            console.log("INVITE pm create success");
+                            res.render('main.html', {username:sess.name});
+                            /*if (i == user_id.length-1) {
+                                admit = { "create": "success" };
+                                res.write(JSON.stringify(admit));
+                                res.end();
+                            }*/
+                        }else {
+                            console.log("INVITE pm create fail");
+                            admit = { "create": "INVITE pm create fail." };
+                            res.write(JSON.stringify(admit));
+                            res.end();
+                        }
+                    })
+                }
+            }else { // user_id가 배열이 아닌 경우 입력이 1개만 된 경우이므로 따로 처리한다.
+                data = {
+                    PROJ_ID: results.insertId,
+                    SEND_USER_ID: mgr_id,
+                    RECV_USER_ID: pm_id,
+                    ISPM: true
+                };
+                console.log(data); 
+
+                mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
                     var admit;
                     if (!err) {
                         sess = req.session;
-                        console.log("ATTENDENCE create success");
+                        console.log("INVITE pm create success");
                         res.render('main.html', {username:sess.name})
                         /*if (i == user_id.length-1) {
                             admit = { "create": "success" };
@@ -747,8 +844,8 @@ router.route("/project/create").post(function (req, res) {
                             res.end();
                         }*/
                     }else {
-                        console.log("ATTENDENCE create fail");
-                        admit = { "create": "ATTENDENE create fail." };
+                        console.log("INVITE pm create fail");
+                        admit = { "create": "INVITE pm create fail." };
                         res.write(JSON.stringify(admit));
                         res.end();
                     }
