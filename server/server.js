@@ -327,7 +327,7 @@ router.route("/user_pc/login").post(function (req, res) {
                     console.log(results);
                 })
                 req.session.save(function(){
-                    res.render('main.html',{username:sess.name});
+                    res.render('main2.html',{username:sess.name});
                 });           
                
                 
@@ -790,7 +790,7 @@ router.route("/project/create").post(function (req, res) {
             if ( typeof(pm_id) === 'undefined' ) {   // 참가할 팀원에 한명도 추가 안했을 시
                 sess = req.session;
                 console.log('pm_id: undefined');
-                res.render('main.html', {username:sess.name});
+                res.render('main2.html', {username:sess.name});
                 return 0;
             }
             else if (Array.isArray(pm_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
@@ -809,7 +809,7 @@ router.route("/project/create").post(function (req, res) {
                         if (!err) {
                             sess = req.session;
                             console.log("INVITE pm create success");
-                            res.render('main.html', {username:sess.name});
+                            res.render('main2.html', {username:sess.name});
                             /*if (i == user_id.length-1) {
                                 admit = { "create": "success" };
                                 res.write(JSON.stringify(admit));
@@ -837,7 +837,7 @@ router.route("/project/create").post(function (req, res) {
                     if (!err) {
                         sess = req.session;
                         console.log("INVITE pm create success");
-                        res.render('main.html', {username:sess.name})
+                        res.render('main2.html', {username:sess.name})
                         /*if (i == user_id.length-1) {
                             admit = { "create": "success" };
                             res.write(JSON.stringify(admit));
