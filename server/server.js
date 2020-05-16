@@ -327,7 +327,7 @@ router.route("/user_pc/login").post(function (req, res) {
                     console.log(results);
                 })
                 req.session.save(function(){
-                    res.render('main2.html',{username:sess.name});
+                    res.render('main.html',{username:sess.name});
                 });           
                
                 
@@ -790,7 +790,8 @@ router.route("/project/create").post(function (req, res) {
             if ( typeof(pm_id) === 'undefined' ) {   // 참가할 팀원에 한명도 추가 안했을 시
                 sess = req.session;
                 console.log('pm_id: undefined');
-                res.render('main2.html', {username:sess.name});
+                //res.render('main.html', {username:sess.name});
+                res.redirect('/table');
                 return 0;
             }
             else if (Array.isArray(pm_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
@@ -809,7 +810,8 @@ router.route("/project/create").post(function (req, res) {
                         if (!err) {
                             sess = req.session;
                             console.log("INVITE pm create success");
-                            res.render('main2.html', {username:sess.name});
+                           //res.render('main.html', {username:sess.name});
+                            res.redirect('/table');
                             /*if (i == user_id.length-1) {
                                 admit = { "create": "success" };
                                 res.write(JSON.stringify(admit));
@@ -819,6 +821,7 @@ router.route("/project/create").post(function (req, res) {
                             console.log("INVITE pm create fail");
                             admit = { "create": "INVITE pm create fail." };
                             res.write(JSON.stringify(admit));
+                            res.send('<script type="text/javascript">alert("프로젝트 생성에 실패했습니다.");</script>');
                             res.end();
                         }
                     })
@@ -837,7 +840,8 @@ router.route("/project/create").post(function (req, res) {
                     if (!err) {
                         sess = req.session;
                         console.log("INVITE pm create success");
-                        res.render('main2.html', {username:sess.name})
+                        //res.render('main.html', {username:sess.name});
+                         res.redirect('/table');
                         /*if (i == user_id.length-1) {
                             admit = { "create": "success" };
                             res.write(JSON.stringify(admit));
@@ -845,8 +849,9 @@ router.route("/project/create").post(function (req, res) {
                         }*/
                     }else {
                         console.log("INVITE pm create fail");
-                        admit = { "create": "INVITE pm create fail." };
+                        admit = { "create": "INVITE pm create fail." };                        
                         res.write(JSON.stringify(admit));
+                        res.send('<script type="text/javascript">alert("프로젝트 생성에 실패했습니다.");</script>');
                         res.end();
                     }
                 })

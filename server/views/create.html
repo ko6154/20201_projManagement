@@ -38,13 +38,6 @@
     </script>
  </head>
  <body>
-    <br>
-    <header>    
-        <p><strong>&nbsp;&nbsp;프로젝트 생성</strong>
-            <small><span style="float: right;"><%= username %>님 환영합니다.&nbsp;<input id = "logout_btn" type="button" value="로그아웃" onclick="location.href = '/'"></span></small>
-        </p>
-        
-    </header>
     <article>
         <form action = "/project/create" method="POST" id="create_proj">
             <input type = "hidden" name="mgr_id" value= "<%= useremail %>">
