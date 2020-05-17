@@ -46,7 +46,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: '',
+    path: 'detail',
     redirectTo: '/detail/noti',
     pathMatch: 'full'
   }

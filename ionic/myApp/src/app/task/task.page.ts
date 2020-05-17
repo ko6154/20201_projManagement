@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-task',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private navCtrl : NavController,
+  ) { }
 
   ngOnInit() {
   }
-
+  go_create_page(val: string){ 
+    this.navCtrl.navigateForward(`/create-${val}`);
+  }
 }
