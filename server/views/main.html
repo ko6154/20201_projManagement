@@ -116,9 +116,7 @@
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" id="alarm_tab" aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                  알림
-                </h6>
+                
                 
               </div>
             </li>
@@ -238,17 +236,18 @@
       var size = Number('<%= len %>');
       console.log(invite);
       console.log(size);
-      
+      $("#alarm_tab").empty();
+      $("#alarm_tab").append("<h6 class='dropdown-header'> 알림            </h6>");
       for(var i=0;i<size;i++){
         var pm = invite[i].ISPM;
         if(pm =="1")
           {
             
-            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='#''><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-file-alt text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에"+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 PM으로 초대하였습니다.</span></div></a>");
+            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='/' style='pointer-events: none;'><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 PM으로 초대하였습니다.</span></div></a>");
           
           }
           else{
-            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='#''><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-file-alt text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에"+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 팀원으로 초대하였습니다.</span></div></a>");
+            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='/' style='pointer-events: none;'><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 팀원으로 초대하였습니다.</span></div></a>");
           
           }
         }
