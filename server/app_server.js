@@ -459,20 +459,14 @@ router.route("/task/createMID").post(upload.array('userFiles', 12), function (re
     var BigID = req.body.BigID;
     var MidLevel = req.body.MidLevel;
     var MidTitle = req.body.MidTitle;
-    var MidStart = req.body.MidStart;
-    var MidEnd = req.body.MidEnd;
     var MidDesc = req.body.MidDesc;
     var MidAttach = req.body.MidAttach;
-    var MidStatus = req.body.MidStatus;
     var MidAuthor = req.body.MidAuthor;
-    var MidCreated = req.body.MidCreated;
 
-    console.log(`BigID : ${BigID} , MidLevel : ${MidLevel}, MidTitle : ${MidTitle}, MidStart : ${MidStart} , MidEnd : ${MidEnd}, MidDesc : ${MidDesc}, `
-        + `MidAttach : ${MidAttach} , MidStatus : ${MidStatus}, MidAuthor : ${MidAuthor}, MidCreated : ${MidCreated}`);
+    console.log(`BigID : ${BigID} , MidLevel : ${MidLevel}, MidTitle : ${MidTitle}, MidDesc : ${MidDesc}, `+ `MidAttach : ${MidAttach} , MidAuthor : ${MidAuthor}`);
 
     var data = {
-        BIG_ID: BigID, MID_LEVEL: MidLevel, MID_TITLE: MidTitle, MID_START: MidStart, MID_END: MidEnd, MID_DESC: MidDesc,
-        MID_ATTACHMENT: MidAttach, MID_STATUS: MidStatus, MID_AUTHOR: MidAuthor, MID_CREATED: MidCreated
+        BIG_ID: BigID, MID_LEVEL: MidLevel, MID_TITLE: MidTitle, MID_DESC: MidDesc,MID_ATTACHMENT: MidAttach, MID_AUTHOR: MidAuthor
     };
     mysqlDB.query('INSERT INTO POST_MID set ?', data, function (err, results) {
         var admit;
@@ -761,7 +755,7 @@ router.route("/taskView/Big/select").get(function (req, res) {
     var proj_id = req.query.proj_id;
     console.log("======= Big Task Select =======\n");
 
-    mysqlDB.query('select * from POST_BIG where PROJ_ID = ? and (BIG_STATUS=0 or BIG_STATUS=1) order by BIG_LEVEL', [proj_id], function (err, rows, fields) {
+    mysqlDB.query('select * from POST_BIG where PROJ_ID = ? order by BIG_LEVEL', [proj_id], function (err, rows, fields) {
         if (err) {
             console.log(err);
             res.end();

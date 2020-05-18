@@ -83,7 +83,7 @@ export class CreateBigPage implements OnInit{
               buttons: [{
                 text: '확인',
                 handler: () => {
-                  this.navCtrl.navigateForward('/task-list');
+                  this.navCtrl.navigateForward('/task');
                 }
               }]
             }).then(alert => {

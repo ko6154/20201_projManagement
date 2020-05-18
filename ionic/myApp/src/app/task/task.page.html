@@ -9,6 +9,41 @@
     <ion-fab-button color="secondary">
         <ion-icon name="add"></ion-icon>
     </ion-fab-button>
+      <ion-list class="big-list" *ngFor="let big of tasks">
+          <!-- BIG -->
+          <ion-item class="big-title">
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+              <ion-icon [name]="bigIsOpen[big.id] ? 'arrow-dropdown' : 'arrow-dropright'"
+                  (click)="bigIsOpen[big.id] = toggle(bigIsOpen[big.id])" style="padding-right:5px">
+              </ion-icon>
+              <ion-label class="ion-text-wrap" (click)="go_board('big', big)">{{ big.title }}</ion-label>
+              <ion-icon *ngIf="big.status == 1" name="checkmark-circle"></ion-icon>
+          </ion-item>
+          <ng-container *ngIf="bigIsOpen[big.id]">
+              <ion-list class="mid-list" *ngFor="let mid of big['mids']">
+                  <!-- MID -->
+                  <ion-item class="mid-title">
+                      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                      <ion-icon [name]="midIsOpen[mid.id] ? 'arrow-dropdown' : 'arrow-dropright'"
+                          (click)="midIsOpen[mid.id]= toggle(midIsOpen[mid.id])" style="padding-right:5px">
+                      </ion-icon>
+                      <ion-label class="ion-text-wrap" (click)="go_board('mid', big, mid)">{{ mid.title}}
+                      </ion-label>
+                      <ion-icon *ngIf="mid.status == 1" name="checkmark-circle"></ion-icon>
+                  </ion-item>
+                  <ng-container *ngIf="midIsOpen[mid.id]">
+                      <ion-item class="sml-title" *ngFor="let sml of mid['smls']"
+                          (click)="go_board('sml', big, mid, sml)">
+                          <!-- SML -->
+                          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          </p>
+                          <ion-label class="ion-text-wrap">{{ sml.title }}</ion-label>
+                          <ion-icon *ngIf="sml.status == 1" name="checkmark-circle"></ion-icon>
+                      </ion-item> <!-- SML -->
+                  </ng-container>
+              </ion-list> <!-- MID -->
+          </ng-container>
+      </ion-list> <!-- BIG -->
     <ion-fab-list side="start">
         <ion-fab-button color="light" (click)="go_create_page('small')">
             <ion-label>업무</ion-label>
