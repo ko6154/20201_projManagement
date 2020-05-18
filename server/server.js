@@ -322,13 +322,33 @@ router.route("/user_pc/login").post(function (req, res) {
                 sess.name = user.NAME;  
                 console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
-                 
-                mysqlDB.query('select * from INVITE where RECV_USER_ID=?', [sess.email], function (err, results) {
-                    console.log(results);
+              
+                
+                mysqlDB.query('SELECT PROJECT.PROJ_NAME, INVITE.SEND_USER_ID, INVITE.RECV_USER_ID, INVITE.ISPM FROM INVITE, PROJECT, USER WHERE INVITE.RECV_USER_ID = ? AND INVITE.PROJ_ID = PROJECT.PROJ_ID;', [sess.email], function (err, results) {
+                    if (err) {
+                        console.log(err);
+                        res.end();
+                    }
+                    else {                   
+                        
+                       // console.log(rows[0]);
+                      //  console.log(JSON.stringify(rows[0]));
+                        
+                      console.log(results);   
+                        var invite = JSON.stringify(results);   
+                        var size = results.length;     
+                        //console.log(size);   
+                        invite = invite.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
+                       
+                        console.log(invite);       
+                       req.session.save(function(){
+                        res.render('main.html',{username:sess.name,len:size,invite:invite});
+                        });     
+                       
+                    }        
                 })
-                req.session.save(function(){
-                    res.render('main.html',{username:sess.name});
-                });           
+
+                       
                
                 
             } else {

@@ -30,7 +30,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="main2.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/" style="pointer-events: none;">
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
@@ -101,7 +101,7 @@
             <i class="fa fa-bars"></i>
           </button>
           
-            <div class="mr-2 d-none d-lg-inline text-gray-600" style="margin-left: 2%;" id="mid_title">
+            <div class="mr-2 d-none d-lg-inline text-gray-600" style="margin-left: 2%;cursor: default;" id="mid_title">
             <strong>진행중인 프로젝트</strong>
             </div>
           </form>
@@ -112,25 +112,14 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">알림개수</span>
+                <span class="badge badge-danger badge-counter" id="invite_num"><%= len %></span>
               </a>
               <!-- Dropdown - Alerts -->
-              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" id="alarm_tab" aria-labelledby="alertsDropdown">
                 <h6 class="dropdown-header">
                   알림
                 </h6>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-primary">
-                      <i class="fas fa-file-alt text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">날짜</div>
-                    <span class="font-weight-bold">알림내용</span>
-                  </div>
-                </a>               
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                
               </div>
             </li>
 
@@ -244,7 +233,28 @@
       $("#customers").attr("src","http://52.55.31.29:3000/search/table");
       $("#mid_title").html("<strong>프로젝트 검색</strong>");
     })
-    
+    $("#alertsDropdown").off("click").on("click",function(){
+      var invite = JSON.parse('<%- invite %>');
+      var size = Number('<%= len %>');
+      console.log(invite);
+      console.log(size);
+      
+      for(var i=0;i<size;i++){
+        var pm = invite[i].ISPM;
+        if(pm =="1")
+          {
+            
+            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='#''><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-file-alt text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에"+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 PM으로 초대하였습니다.</span></div></a>");
+          
+          }
+          else{
+            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='#''><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-file-alt text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에"+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 팀원으로 초대하였습니다.</span></div></a>");
+          
+          }
+        }
+        //$("#alarm_tab").append("<a class='dropdown-item text-center small text-gray-500' href='#''>Show All Alerts</a>")  ;      
+        
+    })
   })
   </script>
 
