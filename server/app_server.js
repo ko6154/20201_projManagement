@@ -772,7 +772,7 @@ router.route("/taskView/Mid/select").get(function (req, res) {
     var big_id = req.query.big_id;
     console.log("======= Mid Task Select =======\n");
 
-    mysqlDB.query('select * from POST_MID where BIG_ID = ? and (MID_STATUS=0 or MID_STATUS=1) order by MID_LEVEL', [big_id], function (err, rows, fields) {
+    mysqlDB.query('select * from POST_MID where BIG_ID = ? order by MID_LEVEL', [big_id], function (err, rows, fields) {
         if (err) {
             console.log(err);
             res.end();

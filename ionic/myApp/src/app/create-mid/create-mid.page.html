@@ -1,5 +1,10 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+  </ion-buttons>
     <ion-title>중분류 생성</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -22,7 +27,7 @@
       <ion-item>
         <ion-label position="floating">중분류</ion-label>
         <ion-input min="1" formControlName="MidLevel" placeholder="중분류 수준을 입력하세요" type="number" required></ion-input>
-      </ion-item>5
+      </ion-item>
       <ion-item>
         <ion-label position="floating">내용</ion-label>
         <ion-textarea formControlName="MidDesc" rows="10"></ion-textarea>

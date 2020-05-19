@@ -45,6 +45,7 @@ export class CreateSmallPage implements OnInit {
       SmlTitle: new FormControl(),
       SmlStart: new FormControl(),
       SmlEnd: new FormControl(),
+      SmlWeight : new FormControl(),
       SmlDesc: new FormControl(),
       userFiles: new FormControl([''])
     });
@@ -56,11 +57,8 @@ export class CreateSmallPage implements OnInit {
           tmp_post_big.push({
             BigID: value["BIG_ID"],
             level: value["BIG_LEVEL"],
-            title: value["BIG_TITLE"],
-            status: value["BIG_STATUS"]
+            title: value["BIG_TITLE"]
           });
-          if(tmp_post_big[tmp_post_big.length-1]['status'] == '1')
-            tmp_post_big.pop();
         });
         this.post_bigs = tmp_post_big;
       }
@@ -103,6 +101,11 @@ export class CreateSmallPage implements OnInit {
     this.formData.set('SmlAuthor', this.author);
     this.formData.set('SmlCreated', created);
     this.formData.set('SmlAttach', original_names);
+    this.formData.set('SmlWeight', this.uploadForm.get('SmlWeight').value);
+    let valid = this.uploadForm.get('SmlWeight').value  // 중요도 값이 정상 범위가 아닌 경우 5로 설정.
+    if(valid < 1 || valid > 10){
+      this.formData.set('SmlWeight', '5');
+    }
 
     this.http.create_sml_task(this.formData).then(
       ret => {
@@ -114,7 +117,7 @@ export class CreateSmallPage implements OnInit {
             buttons: [{
               text: '확인',
               handler: () => {
-                this.navCtrl.navigateForward('/task-list');
+                this.navCtrl.navigateForward('/task');
               }
             }]
           }).then(alert => {

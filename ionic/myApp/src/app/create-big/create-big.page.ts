@@ -39,9 +39,6 @@ export class CreateBigPage implements OnInit{
     this.uploadForm = this.formBuilder.group({
       BigTitle: new FormControl(),
       BigLevel: new FormControl(),
-      BigStart: new FormControl(),
-      BigEnd: new FormControl(),
-      BigWeight: new FormControl(),
       BigDesc: new FormControl(),
       userFiles: new FormControl([''])
     });

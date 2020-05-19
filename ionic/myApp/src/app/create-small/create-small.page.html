@@ -1,5 +1,10 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+  </ion-buttons>
     <ion-title>과업 작성</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -30,6 +35,10 @@
         <ion-item>
           <ion-label>종료날짜</ion-label>
           <ion-datetime formControlName="SmlEnd" displayFormat="YYYY-MM-DD" max="2050-12-31" placeholder="Select Date" (ionChange)="date_validate()"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-label>중요도</ion-label>
+          <ion-range min="1" max="10" value="5" formControlName="SmlWeight" color="secondary" pin="true"></ion-range>
         </ion-item>
         <ion-item>
           <ion-label position="floating">내용</ion-label>
