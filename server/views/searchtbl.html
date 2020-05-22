@@ -54,7 +54,28 @@
       var table_len=(table.rows.length);
       var row = table.insertRow(table_len).innerHTML="<tr id = 'no.'"+table_len+"><td>"+proj.PROJ_NAME+"</td><td>"+proj.PROJ_PROGRESS+"</td><td>"+proj.PROJ_START.substring(0,10)+"</td><td>"+proj.PROJ_END.substring(0,10)+"</td><td>"+proj.PROJ_DESC+"</td></tr>";
     }
+
    } 
+   $(document).ready(function(){
+      $('tr').off('click').on('click',function(){
+      var target =  $(this).attr('id');
+      var index = Number(target);      
+      
+      if(target != "title"){
+        var popform=document.myform;
+     
+        $("#proj_name").attr("value",ary[index-1].proj_name);
+        $("#proj_prog").attr("value",ary[index-1].proj_prog+"%");
+        $("#proj_start").attr("value",ary[index-1].proj_start);
+        $("#proj_end").attr("value",ary[index-1].proj_end);
+        $("#proj_desc").attr("value",ary[index-1].proj_desc);
+        var openWin = window.open("/projPage", "myform", "width=520,height=350,top=200,left=500");
+        console.log('index : ' + index);
+        console.log(ary[index-1].proj_name); 
+       
+        return;
+      }
+    })
   </script>
 </body>
 </html>

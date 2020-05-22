@@ -74,6 +74,13 @@ router.route("/login").get(function (req, res){
 	res.render("login.html");
 })
 
+router.route("/logout").get(function (req, res){
+	req.session.destroy(function(){
+        req.session;
+    });
+    res.redirect('/');
+})
+
 router.route("/projPage").get(function (req, res){
 	res.render("projPage.html");
 })
@@ -113,7 +120,7 @@ router.route("/table").get(function(req,res){
             var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
             console.log(project);         
-            res.render("table.html",{pro:project,len:size});
+            res.render("table.html",{pro:project,len:size,session:sess});
         }        
     }); 
   

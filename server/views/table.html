@@ -1,6 +1,7 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="../stylesheet/vendor/jquery/jquery.min.js"></script>
+<script src="../stylesheet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
  
 <!------ Include the above in your HEAD tag ---------->
@@ -25,6 +26,13 @@
     </tr>
     
 </table>
+<form name="myform" >
+  <input type="hidden" name="proj_name" id="proj_name">
+  <input type="hidden" name="proj_prog" id="proj_prog">
+  <input type="hidden" name="proj_start" id="proj_start">
+  <input type="hidden" name="proj_end" id="proj_end">
+  <input type="hidden" name="proj_desc" id="proj_desc">
+</form>
 <script type="text/javascript">
   var project = JSON.parse('<%- pro %>');
   var size = Number('<%= len %>');    
@@ -93,21 +101,26 @@
       ary.push(obj);
       row.id = table_len;
       //console.log(row);
+      
     }
 
     $(document).ready(function(){
       $('tr').off('click').on('click',function(){
       var target =  $(this).attr('id');
       var index = Number(target);      
+      
       if(target != "title"){
+        var popform=document.myform;
+     
+        $("#proj_name").attr("value",ary[index-1].proj_name);
+        $("#proj_prog").attr("value",ary[index-1].proj_prog+"%");
+        $("#proj_start").attr("value",ary[index-1].proj_start);
+        $("#proj_end").attr("value",ary[index-1].proj_end);
+        $("#proj_desc").attr("value",ary[index-1].proj_desc);
+        var openWin = window.open("/projPage", "myform", "width=520,height=350,top=200,left=500");
         console.log('index : ' + index);
-        console.log(ary[index-1].proj_name);        
-        openWin = window.open("/projPage", "popForm", "width=600,height=400,top=200,left=500");
-        openWin.document.write("<p style='margin-left:5%;'>프로젝트명: "+"<input type='text' readOnly value='"+ary[index-1].proj_name+"'></p>");
-        openWin.document.write("<p style='margin-left:5%;'>진행률: "+"<input type='text' readOnly value='"+ary[index-1].proj_prog+"'></p>");
-        openWin.document.write("<p style='margin-left:5%;'>시작일: "+"<input type='text' readOnly value='"+ary[index-1].proj_start+"'></p>");
-        openWin.document.write("<p style='margin-left:5%;'>종료일: "+"<input type='text' readOnly value='"+ary[index-1].proj_end+"'></p>");
-        openWin.document.write("<p style='margin-left:5%;'>비고: </p>"+"<textarea readOnly style='margin-left:5%;resize:none;width:90%;height:40%;'>"+ary[index-1].proj_desc+"</textarea>");
+        console.log(ary[index-1].proj_name); 
+       
         return;
       }
     })
