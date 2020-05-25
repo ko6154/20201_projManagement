@@ -1,6 +1,9 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="../stylesheet/vendor/jquery/jquery.min.js"></script>
+<script src="../stylesheet/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+ 
 <!------ Include the above in your HEAD tag ---------->
 
 <!DOCTYPE html>
@@ -8,20 +11,11 @@
 <head>
     <title>PMD</title>
     <link type="text/css" rel="stylesheet" href="../stylesheet/table.css">
-   
+    <script type="text/javascript">
+		
+		</script>
  </head>
-<body>
-    <p id = "search">
-        <form  action="/search/project" method="POST" >            
-            프로젝트 명:&nbsp;<input name = "p_name" type="text" placeholder="프로젝트 명">
-                &nbsp;|&nbsp;
-                담당자 명:&nbsp;<input name="m_name" type="search" placeholder="담당자 명">
-                &nbsp;|&nbsp;
-                기간:&nbsp;<input name="s_date" type="date">&nbsp;~<input name="e_date" type="date">
-                &nbsp;|&nbsp;
-                <input type="submit" value="검색">            
-        </form>
-    </p>
+<body>  
   <table id="customers">
     <tr id ="title">
       <th>프로젝트 명</th>
@@ -40,10 +34,7 @@
   <input type="hidden" name="proj_desc" id="proj_desc">
 </form>
 <script type="text/javascript">
-
-  
-    $(document).ready(function(){
-      var project = JSON.parse('<%- pro %>');
+  var project = JSON.parse('<%- pro %>');
   var size = Number('<%= len %>');    
   //console.log(typeof(size));  
   var today = new Date();
@@ -106,12 +97,12 @@
       obj.proj_start = proj.PROJ_START.substring(0,10);
       obj.proj_end = proj.PROJ_END.substring(0,10);
       obj.proj_desc = proj.PROJ_DESC;
-      obj.proj_status = proj.PROJ_STATUS;
       ary.push(obj);
       row.id = table_len;
       //console.log(row);
    
-  }
+
+    $(document).ready(function(){
       $('tr').off('click').on('click',function(){
       var target =  $(this).attr('id');
       var index = Number(target);      
@@ -120,12 +111,7 @@
         var popform=document.myform;
      
         $("#proj_name").attr("value",ary[index-1].proj_name);
-        if(ary[index-1].proj_status == 0){
-          $("#proj_prog").attr("value",ary[index-1].proj_prog+"%"+" (진행중)");
-        }
-       else{
         $("#proj_prog").attr("value",ary[index-1].proj_prog+"%"+" (완료)");
-       }
         $("#proj_start").attr("value",ary[index-1].proj_start);
         $("#proj_end").attr("value",ary[index-1].proj_end);
         $("#proj_desc").attr("value",ary[index-1].proj_desc);
@@ -143,7 +129,7 @@
    // console.log(table);
     
    
-   
+   } 
   </script>
 </body>
 </html>
