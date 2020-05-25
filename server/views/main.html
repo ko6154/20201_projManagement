@@ -18,6 +18,14 @@
   <!-- Custom styles for this template-->
   <link href="../stylesheet/sb-admin-2.min.css" rel="stylesheet">
   <link type="text/css" rel="stylesheet" href="../stylesheet/main.css">
+  <script>
+    function check_true(){
+      alert("수락");
+    }
+    function check_false(){
+      alert("거절");
+    }
+  </script>
 
 </head>
 
@@ -112,7 +120,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter" id="invite_num"><%= len %></span>
+                <span class="badge badge-danger badge-counter" id="invite_num"></span>
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" id="alarm_tab" aria-labelledby="alertsDropdown">
@@ -170,7 +178,7 @@
                   Activity Log
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="/logout">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                   Logout
                 </a>
@@ -208,6 +216,8 @@
 
   <script>
   $(document).ready(function(){
+    var size = Number('<%= len %>');
+    $("#invite_num").html(size);
     $("#proc_proj").off("click").on("click",function(){
       console.log("click proc");
       $("#customers").attr("src","http://52.55.31.29:3000/table");
@@ -216,7 +226,7 @@
 
     $("#end_proj").off("click").on("click",function(){
       console.log("click end");
-      $("#customers").attr("src","http://52.55.31.29:3000/table");
+      $("#customers").attr("src","http://52.55.31.29:3000/finish");
       $("#mid_title").html("<strong>완료한 프로젝트</strong>");
     })
 
@@ -233,7 +243,7 @@
     })
     $("#alertsDropdown").off("click").on("click",function(){
       var invite = JSON.parse('<%- invite %>');
-      var size = Number('<%= len %>');
+      
       console.log(invite);
       console.log(size);
       $("#alarm_tab").empty();
@@ -243,18 +253,21 @@
         if(pm =="1")
           {
             
-            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='/' style='pointer-events: none;'><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 PM으로 초대하였습니다.</span></div></a>");
+            $("#alarm_tab").append("<div class='dropdown-item d-flex align-items-center' ><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400'></div><span class='strong text-black-500' style='cursor:default'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 PM으로 초대하였습니다.</span><div><a onclick='check_true();' style='cursor:pointer'><i class='far fa-check-circle' style='color:green'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='check_false();' style='cursor:pointer;'><i class='fas fa-times-circle' style='color:red'></i></a></div></div></div>");
           
           }
           else{
-            $("#alarm_tab").append("<a class='dropdown-item d-flex align-items-center' href='/' style='pointer-events: none;'><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400' id='date'></div><span class='strong text-black-500' id='invite_content'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 팀원으로 초대하였습니다.</span></div></a>");
+            $("#alarm_tab").append("<div class='dropdown-item d-flex align-items-center' ><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400'></div><span class='strong text-black-500' style='cursor:default'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 팀원으로 초대하였습니다.</span><div><a onclick='check_true();' style='cursor:pointer'><i class='far fa-check-circle' style='color:green'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='check_false();' style='cursor:pointer;'><i class='fas fa-times-circle' style='color:red'></i></a></div></div></div>");
           
-          }
+          }          
+        
         }
+          
         //$("#alarm_tab").append("<a class='dropdown-item text-center small text-gray-500' href='#''>Show All Alerts</a>")  ;      
         
     })
   })
+ 
   </script>
 
 </body>

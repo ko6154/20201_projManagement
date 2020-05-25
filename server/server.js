@@ -74,6 +74,13 @@ router.route("/login").get(function (req, res){
 	res.render("login.html");
 })
 
+router.route("/logout").get(function (req, res){
+	req.session.destroy(function(){
+        req.session;
+    });
+    res.redirect('/');
+})
+
 router.route("/projPage").get(function (req, res){
 	res.render("projPage.html");
 })
@@ -98,7 +105,7 @@ router.route("/search").get(function(req,res){
 
 router.route("/table").get(function(req,res){
     sess = req.session; 
-    mysqlDB.query('SELECT PROJ_NAME, PROJECT.PROJ_MGR_UID, PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJECT.PROJ_DESC FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME= ? AND USER.USER_ID=ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID', [sess.name], function (err,rows, fields) {
+    mysqlDB.query('SELECT PROJECT.*FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=0', [sess.name], function (err,rows, fields) {
         if (err) {
             console.log(err);
             res.end();
@@ -113,7 +120,31 @@ router.route("/table").get(function(req,res){
             var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
             console.log(project);         
-            res.render("table.html",{pro:project,len:size});
+            res.render("table.html",{pro:project,len:size,session:sess});
+        }        
+    }); 
+  
+    
+})
+
+router.route("/finish").get(function(req,res){
+    sess = req.session; 
+    mysqlDB.query('SELECT PROJECT.*FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=1', [sess.name], function (err,rows, fields) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+       
+            console.log(rows);
+            console.log(rows.length);
+           // console.log(rows[0]);
+          //  console.log(JSON.stringify(rows[0]));
+            var project = JSON.stringify(rows);   
+            var size = rows.length;        
+            project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
+            console.log(project);         
+            res.render("finish.html",{pro:project,len:size,session:sess});
         }        
     }); 
   
@@ -128,7 +159,7 @@ router.route("/search/project").post(function(req,res){
     var inputIsNothing =1;   // 검색조건이 하나도 안 들어왔음을 체크하는 변수,   1이면 empty, 0이면 입력 있음
     console.log(pid+""+mname+""+sdate+""+edate);
  
-     var sql="SELECT PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJ_DESC FROM PROJECT WHERE 1=1 ";
+     var sql="SELECT * FROM PROJECT WHERE 1=1 ";
      if (pid !== '') {sql = sql.concat("AND PROJ_NAME = '" + pid + "' "); inputIsNothing=0;}
      if (mname !== '') {sql = sql.concat("AND PROJ_MGR_UID = '" + mname + "' "); inputIsNothing=0;}
      if (sdate !== '') {sql = sql.concat("AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= '" + sdate + "' "); inputIsNothing=0;}
