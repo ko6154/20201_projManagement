@@ -117,7 +117,7 @@ export class CreateSmallPage implements OnInit {
             buttons: [{
               text: '확인',
               handler: () => {
-                this.navCtrl.navigateForward('/task');
+                this.navCtrl.navigateForward('/detail/task');
               }
             }]
           }).then(alert => {

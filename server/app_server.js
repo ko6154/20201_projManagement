@@ -324,17 +324,20 @@ router.route("/task/createBIG").post(upload.array('userFiles', 12), function (re
     var projectID = req.body.ProjectID;
     var BigLevel = req.body.BigLevel;
     var BigTitle = req.body.BigTitle;
+    var BigStart = req.body.BigStart;
+    var BigEnd = req.body.BigEnd;
     var BigDesc = req.body.BigDesc;
     var BigAttach = req.body.BigAttach;
+    var BigStatus = req.body.BigStatus;
     var BigAuthor = req.body.BigAuthor;
+    var BigCreated = req.body.BigCreated;
     var BigProgress = req.body.BigProgress;
 
-    console.log(`projectID : ${projectID} , BigLevel : ${BigLevel}, BigTitle : ${BigTitle}, BigDesc : ${BigDesc}, BigAuthor : ${BigAuthor}, BigProgress : ${BigProgress}`);
-
+    console.log(`projectID : ${projectID} , BigLevel : ${BigLevel}, BigTitle : ${BigTitle}, BigStart : ${BigStart} , BigEnd : ${BigEnd}, BigDesc : ${BigDesc}, 
+            BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated} , BigProgress : ${BigProgress}`);
     var data = {
-        PROJ_ID: projectID, BIG_LEVEL: BigLevel, BIG_TITLE: BigTitle, BIG_DESC: BigDesc, BIG_ATTACHMENT: BigAttach,
-        BIG_AUTHOR: BigAuthor, BIG_PROGRESS: BigProgress
-    };
+        PROJ_ID: projectID, BIG_LEVEL: BigLevel, BIG_TITLE: BigTitle, BIG_START: BigStart, BIG_END: BigEnd, BIG_DESC: BigDesc, BIG_ATTACHMENT: BigAttach,
+        BIG_STATUS: BigStatus, BIG_AUTHOR: BigAuthor, BIG_CREATED: BigCreated, BIG_PROGRESS: BigProgress};
 
     mysqlDB.query('INSERT INTO POST_BIG set ?', data, async function (err, results) {
         var admit;
