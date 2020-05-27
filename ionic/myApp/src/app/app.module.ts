@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { StorageServiceModule } from  './storage_service_module/storage.module';
 import { HttpServiceModule } from  './http_service_module/http.module';
 
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +22,8 @@ import { HttpServiceModule } from  './http_service_module/http.module';
     IonicModule.forRoot(),
     AppRoutingModule,
     StorageServiceModule,
-    HttpServiceModule
+    HttpServiceModule,
+    IonicStorageModule.forRoot()
   ],
   providers: [
     StatusBar,

@@ -35,7 +35,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: '',
+        path: 'detail',
         redirectTo: '/detailproject/noti',
         pathMatch: 'full'
       }
