@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-title>대시보드</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-slides>
+    <ion-slide>
+      <ion-card style="height:420px;width:400px">
+        <ion-card-header>
+          <ion-card-subtitle>{{user_id}}님 참여한 전체프로젝트 - {{projects.length}}건</ion-card-subtitle>
+          
+        </ion-card-header>
+      
+        <ion-card-content>
+          <ion-button color="secondary" vertical="bottom" (click)="DrawPieChart()">상세보기</ion-button>
+          <div style="margin:auto" id="div_pie">
+          </div>
+          
+        </ion-card-content>
+      </ion-card>
+      
+    </ion-slide>
+    <ion-slide>
+      <ion-card style="height:420px;width:400px">
+        <ion-card-header>
+          <ion-card-title>진행중</ion-card-title>
+        </ion-card-header>
+      
+        <ion-card-content>
+          <ion-button color="secondary" vertical="bottom" (click)="goMain()">상세보기</ion-button>
+          <h2 style="text-align: left;" *ngFor="let project of ongoingProjects">{{project.name}}</h2>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-card style="height:420px;width:400px">
+        <ion-card-header>
+          <ion-card-title>완료</ion-card-title>
+        </ion-card-header>
+      
+        <ion-card-content>
+          <ion-button color="secondary" (click)="goHistory()">상세보기</ion-button>
+          <h2 style="text-align: left;" *ngFor="let project of doneProjects">{{project.name}}</h2>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
