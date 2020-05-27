@@ -120,7 +120,7 @@ router.route("/table").get(function(req,res){
             var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
             console.log(project);         
-            res.render("table.html",{pro:project,len:size,session:sess});
+            res.render("table.html",{pro:project,len:size,username:sess.name});
         }        
     }); 
   
