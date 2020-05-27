@@ -32,11 +32,14 @@
   <input type="hidden" name="proj_start" id="proj_start">
   <input type="hidden" name="proj_end" id="proj_end">
   <input type="hidden" name="proj_desc" id="proj_desc">
+  <!--<input type="hidden" name="proj_pm" id="proj_pm">-->
+  <input type="hidden" name="user" id="user">
 </form>
 <script type="text/javascript">
   var project = JSON.parse('<%- pro %>');
-  var size = Number('<%= len %>');    
-  //console.log(typeof(size));  
+  var size = Number('<%= len %>');   
+  var username='<%= username %>';
+    //console.log(typeof(size));  
   var today = new Date();
   var date = new Date();
   var table=document.getElementById("customers"); 
@@ -117,9 +120,9 @@
         $("#proj_start").attr("value",ary[index-1].proj_start);
         $("#proj_end").attr("value",ary[index-1].proj_end);
         $("#proj_desc").attr("value",ary[index-1].proj_desc);
-        var openWin = window.open("/projPage", "myform", "width=520,height=350,top=200,left=500");
-        console.log('index : ' + index);
-        console.log(ary[index-1].proj_name); 
+        $("#user").attr("value",username);
+        var openWin = window.open("/projPage", "myform", "width=1000,height=350,top=200,left=300");
+       
        
         return;
       }

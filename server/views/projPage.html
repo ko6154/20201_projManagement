@@ -2,6 +2,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link href="../stylesheet/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
 <!------ Include the above in your HEAD tag ---------->
 
 <!DOCTYPE html>
@@ -10,34 +11,118 @@
     <title>PMD</title>
       <style>
          
-        #box{        
-            margin-left: 3%;
-            margin-right:3%;
-            width:94%;
-            height:90%;           
+        #box{     
+           
+            margin-left: 3%!important;   
+            
         }
         #proj_desc{
             width: 100%;
             resize: none;
-            height:30%;
+            height:70%;
         }
         #info_link{
             border-bottom:none;
         }
+        table{
+            border:black solid 1px;
+            width:100%;
+            height:85%;
+            margin-bottom:2px;
+        }
+        table tr:nth-child(even){
+             background-color: #f2f2f2;
+        }
+        
+        table tr:hover {
+            cursor: pointer;
+            background-color: #ddd;  
+        }
+        
       </style>
  </head>
 <body>
    
 <form name="myform">
     <br>
-    <div id="box">
-        <p>프로젝트명:&nbsp;<input type="text" name="proj_name" id="proj_name" value="name" readonly><a id="setting" style="float:right;cursor: pointer;"><i class="fas fa-users-cog fa-3x"></i></a></p>
-        <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" readonly></p>
-        <p>시작일:&nbsp;<input type="text" name="proj_start" id="proj_start" value="start" readonly></p>
-        <p>종료일:&nbsp;<input type="text" name="proj_end" id="proj_end" value="end" readonly></p>
-        <p>비고:&nbsp;<textarea name="proj_desc" id="proj_desc" readonly></textarea></p>
+    
+        <div class="row">
+            <div class="col-md-5" id="box" >
+                <p>프로젝트명:&nbsp;<input type="text" name="proj_name" id="proj_name" value="name" readonly><a id="setting" style="float:right;cursor: pointer;"><i class="fas fa-users-cog fa-3x"></i></a></p>
+                <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" readonly></p>
+                <p>시작일:&nbsp;<input type="text" name="proj_start" id="proj_start" value="start" readonly></p>
+                <p>종료일:&nbsp;<input type="text" name="proj_end" id="proj_end" value="end" readonly></p>
+                <p>비고:&nbsp;<textarea name="proj_desc" id="proj_desc" readonly></textarea></p>
+                <input type="hidden" name="user" id="user">
+                
+            </div>
+            
+            <div class="col-md-2">
+                <p align="center">JOBS</p>
+                <table id="job">
+                    <tr>
+                        <td>
+                            JOB1
+                        </td>                        
+                    </tr>   <tr>
+                        <td>
+                           JOB2
+                        </td>                        
+                    </tr>   
+                    <tr>
+                        <td>
+                        JOB3
+                        </td>                        
+                    </tr>
+                </table>
+            <a id="insert_job" class="btn btn-outline-secondary btn-block" role="button">추가</a>
+            </div>
         
-    </div>
+            <div class="col-md-2">
+                <p align="center">TAKS</p>
+                <table id="task">
+                    <tr>
+                        <td>
+                           TASK1
+                        </td>                        
+                    </tr>   <tr>
+                        <td>
+                           TASK2
+                        </td>                        
+                    </tr>   <tr>
+                        <td>
+                           TASK3
+                        </td>                        
+                    </tr>
+                </table>
+                <a id="insert_task" class="btn btn-outline-secondary btn-block" role="button">추가</a>
+            </div>
+        
+        
+            <div class="col-md-2">
+                <p align="center">ACTIVITIES</p>
+                <table id="activity">
+                    <tr>
+                        <td>
+                            ACTIVITY1
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>
+                            ACTIVITY2
+                        </td>                        
+                    </tr>   <tr>
+                        <td>
+                            ACTIVITY3
+                        </td>                        
+                    </tr>
+                </table>
+                <a id="insert_activity"  class="btn btn-outline-secondary btn-block" role="button">추가</a>
+           
+        </div>
+            
+   
+</div>
     
 </form>
 <script>
@@ -46,10 +131,23 @@
     document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
     document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
     document.myform.proj_end.value = window.opener.document.myform.proj_end.value;
+    document.myform.user.value = window.opener.document.myform.user.value;
+    var username = $("#user").attr("value");
+    console.log(username);
     $("#proj_desc").html(window.opener.document.myform.proj_desc.value);
 
     $("#setting").off("click").on("click",function(){
+        alert(username+"의 project info setting");
         
+    })
+    $("#job").off("click").on("click",function(){
+        alert(username+"의job table");
+    })
+    $("#task").off("click").on("click",function(){
+        alert(username+"의task table");
+    })
+    $("#activity").off("click").on("click",function(){
+        alert(username+"의activity table");
     })
    })
 </script>
