@@ -128,4 +128,7 @@ export class MainPage  {
   goInviteList(){
     this.navCtrl.navigateForward("/invite-list");
   }
+  goBack(){
+    this.navCtrl.pop();
+  }
 }

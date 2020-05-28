@@ -83,7 +83,7 @@ export class HomePage implements OnInit {
     this.navCtrl.navigateForward('/signup');
   }
   goMainPage(){
-    this.navCtrl.navigateForward('/main');
+    this.navCtrl.navigateForward('/dashboard');
   }
 
 }

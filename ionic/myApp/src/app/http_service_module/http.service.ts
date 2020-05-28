@@ -338,4 +338,9 @@ export class HttpService {
       })
     );
   }
+
+  get_allproj(user_id: string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/select/allproj?user_id=${user_id}`;
+    return this.httpClient.get(URL, {headers: this.header});
+  }
 }
