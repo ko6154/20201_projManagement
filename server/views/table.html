@@ -116,13 +116,12 @@
         var popform=document.myform;
      
         $("#proj_name").attr("value",ary[index-1].proj_name);
-        $("#proj_prog").attr("value",ary[index-1].proj_prog+"% (진행중)");
+        $("#proj_prog").attr("value",ary[index-1].proj_prog);
         $("#proj_start").attr("value",ary[index-1].proj_start);
         $("#proj_end").attr("value",ary[index-1].proj_end);
         $("#proj_desc").attr("value",ary[index-1].proj_desc);
         $("#user").attr("value",username);
-        var openWin = window.open("/projPage", "myform", "width=1000,height=350,top=200,left=300");
-       
+        var openWin = window.open("/projPage", "myform", "width=1000,height=350,top=200,left=300");    
        
         return;
       }

@@ -19,10 +19,10 @@
         #proj_desc{
             width: 100%;
             resize: none;
-            height:70%;
+            height:70px;
         }
         #info_link{
-            border-bottom:none;
+            border-bottom:0;
         }
         table{
             border:black solid 1px;
@@ -38,7 +38,10 @@
             cursor: pointer;
             background-color: #ddd;  
         }
-        
+        input{
+            border:none;
+            
+        }
       </style>
  </head>
 <body>
@@ -49,7 +52,7 @@
         <div class="row">
             <div class="col-md-5" id="box" >
                 <p>프로젝트명:&nbsp;<input type="text" name="proj_name" id="proj_name" value="name" readonly><a id="setting" style="float:right;cursor: pointer;"><i class="fas fa-users-cog fa-3x"></i></a></p>
-                <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" readonly></p>
+                <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" style="width: 20px;" readonly>%</p>
                 <p>시작일:&nbsp;<input type="text" name="proj_start" id="proj_start" value="start" readonly></p>
                 <p>종료일:&nbsp;<input type="text" name="proj_end" id="proj_end" value="end" readonly></p>
                 <p>비고:&nbsp;<textarea name="proj_desc" id="proj_desc" readonly></textarea></p>
@@ -127,6 +130,7 @@
 </form>
 <script>
    $(document).ready(function(){
+    var flag = 0;
     document.myform.proj_name.value = window.opener.document.myform.proj_name.value;
     document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
     document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
@@ -137,7 +141,14 @@
     $("#proj_desc").html(window.opener.document.myform.proj_desc.value);
 
     $("#setting").off("click").on("click",function(){
-        alert(username+"의 project info setting");
+        if(flag == 0){
+            $("input").attr("readonly","false");
+            flag = 1;
+        }else{
+            $("input").attr("readonlny","true");
+            flag =0;
+        }
+          
         
     })
     $("#job").off("click").on("click",function(){
