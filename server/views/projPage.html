@@ -2,7 +2,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link href="../stylesheet/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!------ Include the above in your HEAD tag ---------->
 
 <!DOCTYPE html>
@@ -45,7 +45,9 @@
       </style>
  </head>
 <body>
-   
+   <input type="hidden" id="flag" value="false">
+   <input type="hidden" id="child">
+   <input type="hidden" id="parent">
 <form name="myform">
     <br>
     
@@ -61,7 +63,7 @@
             </div>
             
             <div class="col-md-2">
-                <p align="center">JOBS</p>
+                <p align="center">JOB</p>
                 <table id="job">
                     <tr>
                         <td>
@@ -82,7 +84,7 @@
             </div>
         
             <div class="col-md-2">
-                <p align="center">TAKS</p>
+                <p align="center">TASK</p>
                 <table id="task">
                     <tr>
                         <td>
@@ -103,7 +105,7 @@
         
         
             <div class="col-md-2">
-                <p align="center">ACTIVITIES</p>
+                <p align="center">ACTIVITY</p>
                 <table id="activity">
                     <tr>
                         <td>
@@ -130,7 +132,6 @@
 </form>
 <script>
    $(document).ready(function(){
-    var flag = 0;
     document.myform.proj_name.value = window.opener.document.myform.proj_name.value;
     document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
     document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
@@ -139,18 +140,53 @@
     var username = $("#user").attr("value");
     console.log(username);
     $("#proj_desc").html(window.opener.document.myform.proj_desc.value);
-
+    
     $("#setting").off("click").on("click",function(){
-        if(flag == 0){
-            $("input").attr("readonly","false");
-            flag = 1;
+        var flag = $("#flag");
+        //프로젝트 pm인지 판별 해야함
+        if(flag.attr("value") == "false"){
+            $("input").attr("readonly", false);
+            $("textarea").attr("readonly", false);
+            $("#setting").css("color","red");
+            $("#proj_name").focus();
+            flag.attr("value","true");
+            //수정한 내용 서버로 보내야함
         }else{
-            $("input").attr("readonlny","true");
-            flag =0;
+            $("input").attr("readonly", true);
+            $("textarea").attr("readonly", true);
+            $("#setting").css("color","black");
+            flag.attr("value","false");
         }
           
         
     })
+    
+    $("#insert_job").off("click").on("click",function(){
+
+        const { value: text } =  Swal.fire({
+        title: 'new job',
+        input: 'text',
+        inputPlaceholder: 'Enter new job'
+        })
+        if(text){
+            Swal.fire(text);
+        }
+        
+             
+/*
+if (ipAddress) {
+  Swal.fire(`Your IP address is ${ipAddress}`)
+}
+        var new_job = prompt("insert new job");
+                if(new_job != null){
+                    var table = $("#job");
+                console.log(table);
+                var table_len=$("#job tr").length;
+                console.log(table_len);
+                $("#job").append("<tr><td id='"+table_len+"'>"+new_job+"</td></tr>");
+                }*/
+    })
+
     $("#job").off("click").on("click",function(){
         alert(username+"의job table");
     })

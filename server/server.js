@@ -11,6 +11,7 @@ var mysql = require('mysql');
 var crypto = require('crypto'); //비밀번호 암호화
 var mysqlDB = require('./mysql-db');
 var hostname = '0.0.0.0';
+const swal = require('sweetalert2');
 let {PythonShell} = require('python-shell')
 //var PythonShell = require('python-shell'); 
 var session = require('express-session');
@@ -73,6 +74,8 @@ http.createServer(app).listen(app.get('port'),  function () {
 router.route("/login").get(function (req, res){
 	res.render("login.html");
 })
+
+
 
 router.route("/logout").get(function (req, res){
 	req.session.destroy(function(){
@@ -334,7 +337,7 @@ router.route("/user_pc/login").post(function (req, res) {
             login = { "login": "error" };
             console.log("LOGIN ERROR");
             console.log(err);
-            console.log(JSON.stringify(login));
+            console.log(JSON.stringify(login));         
             res.redirect('/login');
             return;
         }
@@ -346,6 +349,7 @@ router.route("/user_pc/login").post(function (req, res) {
             if (hashPassword === user.USER_PW) {
                 console.log("login success");
                 login = { "login": "success" };    
+               
                  //세션 처리 해야한다// 
                 sess = req.session;
                 sess.email = email;
@@ -373,6 +377,7 @@ router.route("/user_pc/login").post(function (req, res) {
                        
                         console.log(invite);       
                        req.session.save(function(){
+                        
                         res.render('main.html',{username:sess.name,len:size,invite:invite});
                         });     
                        
@@ -385,6 +390,7 @@ router.route("/user_pc/login").post(function (req, res) {
             } else {
                 console.log("WRONG ID or PASSWORD");
                 login = { "login": "wrong" };
+              
                 res.redirect('/login');
             }
             
@@ -392,6 +398,7 @@ router.route("/user_pc/login").post(function (req, res) {
         else {
             login = { "login": "wrong" };
             console.log("WRONG ID");
+         
             res.redirect('/login'); 
         }
     })
