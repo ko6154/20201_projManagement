@@ -5,6 +5,7 @@ import { NavController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
 import { MenuController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-main',
@@ -19,9 +20,10 @@ export class MainPage  {
     private storage : StorageService,
     private navCtrl : NavController,
     private dataService: DataService,
-	private menu: MenuController,
-	public toastController: ToastController
-  ) {  }
+	  private menu: MenuController,
+    public toastController: ToastController,
+    public alertController: AlertController
+  ) {}
   
 
  
@@ -130,5 +132,8 @@ export class MainPage  {
   }
   goBack(){
     this.navCtrl.pop();
+  }
+  goCheckPassword() {
+    this.navCtrl.navigateForward("/check-password");
   }
 }

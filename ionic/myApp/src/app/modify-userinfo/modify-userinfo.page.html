@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>회원정보 수정</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card style="height:300px">
+    <form #form="ngForm" (ngSubmit)="checkPassword()">
+      <ion-item>
+        <ion-label>{{userId}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" style="font-size:0.8em">비밀번호</ion-label>
+        <ion-input name="password" [(ngModel)]="userInfo.userInputPassword1" required type="password"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" style="font-size:0.8em">비밀번호 확인</ion-label>
+        <ion-input name="password" [(ngModel)]="userInfo.userInputPassword2" required type="password"></ion-input>
+      </ion-item>
+      <br>
+      <ion-button style="margin:auto;width:90%;height:40px" color="secondary" expand="block" type="submit">확인
+      </ion-button>
+    </form>
+  </ion-card>
+</ion-content>

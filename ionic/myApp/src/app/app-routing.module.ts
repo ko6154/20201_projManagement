@@ -54,6 +54,14 @@ const routes: Routes = [
     path: 'dashboard',
     loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
   },
+  {
+    path: 'check-password',
+    loadChildren: () => import('./check-password/check-password.module').then( m => m.CheckPasswordPageModule)
+  },
+  {
+    path: 'modify-userinfo',
+    loadChildren: () => import('./modify-userinfo/modify-userinfo.module').then( m => m.ModifyUserinfoPageModule)
+  },
   
 ];
 

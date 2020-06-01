@@ -343,4 +343,9 @@ export class HttpService {
     let URL = `${this.SERVER_ADDRESS}/select/allproj?user_id=${user_id}`;
     return this.httpClient.get(URL, {headers: this.header});
   }
+
+  modify_userInfo(info) : Promise<{}> {
+    let URL = `${this.SERVER_ADDRESS}/POST/modify_user_info`;
+    return this.httpClient.post(URL, info).toPromise();
+  }  
 }
