@@ -57,21 +57,23 @@ export class HomePage implements OnInit {
   login(){
     this.http.login(this.user).subscribe(
       res => {
-        if(res["login"] === "success"){
+        if(res["login"] != "wrong"){
           console.log("loginpage success");
           this.storage.set_uid(this.user.email);
           this.storage.set_pw(this.user.password);
+          this.storage.set_name(res["login"]);
           this.goMainPage();
         }else{
 			this.presentAlertMultipleButtons();
           console.log("loginpage fail");
-		  
+          
         }
       },
       error => {
 		
         this.storage.del_uid();
         this.storage.del_pw();
+        this.storage.del_name();
         console.log(error.status);
         console.log(error.error);
         console.log(error.headers);

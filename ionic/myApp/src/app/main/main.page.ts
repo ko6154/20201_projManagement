@@ -93,22 +93,9 @@ export class MainPage  {
     }
   }
 
-  async presentToast() {
-    const toast = await this.toastController.create({
-      message: '로그아웃 되었습니다.',
-      duration: 2000,
-	  color: 'dark'
-    });
-    toast.present();
-  }
+  
 
-  logout(){
-	this.presentToast();
-    this.storage.del_uid();
-    this.storage.del_pw();
-    
-    this.navCtrl.navigateForward("/home");
-  }
+  
   project_click(project){
     this.dataService.setProjectID(project.id);
     console.log(project.id);

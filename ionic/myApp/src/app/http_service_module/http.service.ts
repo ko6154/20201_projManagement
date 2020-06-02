@@ -347,5 +347,10 @@ export class HttpService {
   modify_userInfo(info) : Promise<{}> {
     let URL = `${this.SERVER_ADDRESS}/POST/modify_user_info`;
     return this.httpClient.post(URL, info).toPromise();
-  }  
+  }
+
+  modify_role(projId: string, userId: string, newRole: string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/POST/modify_role?userId=${userId}&projId=${projId}&newRole=${newRole}`;
+    return this.httpClient.get(URL, {headers: this.header});
+  }
 }

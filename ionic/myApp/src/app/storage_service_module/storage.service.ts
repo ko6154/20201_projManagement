@@ -25,4 +25,13 @@ export class StorageService {
   get_pw() {
     return this.storage.get("USER_PW");
   }
+  set_name(name : string){
+    this.storage.set("USER_NAME", name);
+  }
+  del_name(){
+    this.storage.remove("USER_NAME");
+  }
+  get_name() {
+    return this.storage.get("USER_NAME");
+  }
 }

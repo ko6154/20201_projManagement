@@ -62,6 +62,10 @@ const routes: Routes = [
     path: 'modify-userinfo',
     loadChildren: () => import('./modify-userinfo/modify-userinfo.module').then( m => m.ModifyUserinfoPageModule)
   },
+  {
+    path: 'manage-project-role',
+    loadChildren: () => import('./manage-project-role/manage-project-role.module').then( m => m.ManageProjectRolePageModule)
+  },
   
 ];
 

@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>역할 관리</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h2 style="text-align:center;"><{{projectName}}></h2>
+
+  <ion-item *ngFor="let member of members">
+    <ion-avatar slot="start">
+      <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">  
+    </ion-avatar>
+    <ion-label>
+      <h3>{{member.name}} {{member.userId}}</h3>
+      <p *ngIf="member.role != NULL">역할 : {{member.role}}</p>
+      <p *ngIf="member.role == NULL">역할 : 미정</p>
+    </ion-label>
+    <ion-input [(ngModel)]="member.newRole" *ngIf="isPM == true || member.userId == userId" placeholder="입력"></ion-input>
+    <ion-button *ngIf="isPM == true || member.userId == userId" color="success" (click)="updateUserRole(projectId, member.userId, member.newRole)">수정</ion-button>
+  </ion-item>
+  
+</ion-content> 

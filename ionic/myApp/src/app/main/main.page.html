@@ -7,44 +7,11 @@
 
             </ion-button>
         </ion-buttons>
-        <ion-buttons slot="primary">
-            <ion-button (click)="openCustom()">
-                <ion-icon slot="end" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-            </ion-button>
-        </ion-buttons>
         <ion-title style="font-size:0.9em">진행중인 프로젝트</ion-title>
     </ion-toolbar>
 </ion-header>
 
-<ion-menu side="end" menuId="first" contentId="ma">
-    <ion-header>
-        <ion-toolbar color="secondary">
-            <ion-title style="font-size:0.9em">{{user_id}}님 안녕하세요!</ion-title>
-        </ion-toolbar>
-    </ion-header>
-    <ion-content>
-        <ion-list>
-            <ion-item (click)="goHistory()">
-                <ion-icon slot="start" name="document-outline"></ion-icon>
-                <ion-label>완료한 프로젝트 보기</ion-label>
-            </ion-item>
-            <ion-item (click)="goInviteList()">
-                <ion-icon slot="start" name="mail-open-outline"></ion-icon>
-                <ion-label>프로젝트 초대 보기</ion-label>
-            </ion-item>
-            <ion-item (click)="goCheckPassword()">
-                <ion-icon slot="start" name="person-outline"></ion-icon>
-                <ion-label>회원정보 수정</ion-label>
-            </ion-item>
 
-
-
-        </ion-list>
-
-    </ion-content>
-    <ion-button size="large" style="padding:10px;" color="danger" (click)="logout()">로그아웃</ion-button>
-</ion-menu>
-<ion-router-outlet id="ma"></ion-router-outlet>
 
 <ion-content fullscreen>
 

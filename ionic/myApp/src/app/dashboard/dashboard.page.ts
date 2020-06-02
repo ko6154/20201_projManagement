@@ -6,6 +6,7 @@ import { NavController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
 import { MenuController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 declare var google;
 
 @Component({
@@ -21,13 +22,17 @@ export class DashboardPage {
   ongoingCnt : number;
   doneCnt : number;
   cancelCnt : number;
+  userName: string;
+  flag: boolean;
+
   constructor(
     public platfrom: Platform,
     private httpService : HttpService,
     private storage : StorageService,
     private navCtrl : NavController,
     private dataService: DataService,
-	  private menu: MenuController,
+    private menu: MenuController,
+    
 	  public toastController: ToastController
   ) {}
 
@@ -35,9 +40,15 @@ export class DashboardPage {
     this.initalize();
   }
   async initalize() {
+    this.flag = false;
     await this.storage.get_uid()
     .then(val => {
       this.user_id = val;
+    });
+
+    await this.storage.get_name()
+    .then(val => {
+      this.userName = val;
     });
 
     this.httpService.get_allproj(this.user_id).subscribe(
@@ -90,6 +101,15 @@ export class DashboardPage {
     
   }
 
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: '로그아웃 되었습니다.',
+      duration: 2000,
+	  color: 'dark'
+    });
+    toast.present();
+  }
+
   DrawPieChart() {
     this.ongoingCnt = 0;
     this.doneCnt = 0;
@@ -118,6 +138,7 @@ export class DashboardPage {
     }
     var chart = new google.visualization.PieChart(document.getElementById('div_pie'));
     chart.draw(data, options);
+    this.flag = true;
   }
   goMain(){
     this.navCtrl.navigateForward("/main");
@@ -125,4 +146,21 @@ export class DashboardPage {
   goHistory(){
     this.navCtrl.navigateForward("/history");
   }
+  goInviteList(){
+    this.navCtrl.navigateForward("/invite-list");
+  }
+  goCheckPassword() {
+    this.navCtrl.navigateForward("/check-password");
+  }
+  logout(){
+    this.presentToast();
+      this.storage.del_uid();
+      this.storage.del_pw();
+      this.storage.del_name();
+      this.navCtrl.navigateForward("/home");
+    }
+    openCustom() {
+      this.menu.enable(true, 'first');
+        this.menu.open('first');
+      }
 }

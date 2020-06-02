@@ -138,4 +138,8 @@ export class DetailPage {
 
     this.navCtrl.navigateForward('/board');
   }
+
+  goManageProjectRole() {
+    this.navCtrl.navigateForward('/manage-project-role');
+  }
 }
