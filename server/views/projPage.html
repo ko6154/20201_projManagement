@@ -161,32 +161,151 @@
         
     })
     
-    $("#insert_job").off("click").on("click",function(){
+    $("#insert_job").off("click").on("click",async function(){
 
-        const { value: text } =  Swal.fire({
-        title: 'new job',
+        const { value: new_job } = await Swal.fire({
+        title: 'Input new JOB',
         input: 'text',
-        inputPlaceholder: 'Enter new job'
         })
-        if(text){
-            Swal.fire(text);
+
+        if (new_job) {
+            var table = $("#job");
+            
+            var table_len=$("#job tr").length;
+                
+            $("#job").append("<tr><td id='"+table_len+"'>"+new_job+"</td></tr>");
         }
-        
-             
-/*
-if (ipAddress) {
-  Swal.fire(`Your IP address is ${ipAddress}`)
-}
-        var new_job = prompt("insert new job");
-                if(new_job != null){
-                    var table = $("#job");
-                console.log(table);
-                var table_len=$("#job tr").length;
-                console.log(table_len);
-                $("#job").append("<tr><td id='"+table_len+"'>"+new_job+"</td></tr>");
-                }*/
+
     })
 
+    $("#insert_task").off("click").on("click",async function(){
+
+        ///select에 들어갈 job 넣을 변수///
+        var inputOptions = {}; // Define like this!
+
+		// Instead of sample variables,
+		// your data handling here
+
+		var vREGISTRY_ID = "JOB1";
+		var vACCOUNT_NAME = "JOB1";
+
+   
+       
+       // Add the Variables like this
+       // This will create '500' : 'Peter',
+       inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
+       inputOptions["JOB2"] = "JOB2";  
+       
+    
+        const { value: select_job } = await Swal.fire({
+            title: 'Select JOB',
+            input: 'select',
+            inputOptions: inputOptions,
+            inputPlaceholder: 'Select a JOB',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                    return new Promise((resolve) => {           
+                        resolve()          
+                    })
+                    }
+            })
+
+             if (select_job) {
+
+                const { value: new_task } = await Swal.fire({
+                title: 'Input new TASK',
+                input: 'text',
+                })   
+
+                if (new_task) {
+                        var table = $("#task");
+                        
+                        var table_len=$("#task tr").length;
+                        
+                        $("#task").append("<tr><td id='"+table_len+"'>"+new_task+"</td></tr>");
+                    }    
+                    console.log(select_job);
+                    console.log(new_task);                
+            }
+           
+                    
+    })
+
+    $("#insert_activity").off("click").on("click",async function(){
+
+///select에 들어갈 job 넣을 변수///
+var inputOptions = {}; // Define like this!
+
+// Instead of sample variables,
+// your data handling here
+
+var vREGISTRY_ID = "TASK1";
+var vACCOUNT_NAME = "TASK1";
+
+
+
+// Add the Variables like this
+// This will create '500' : 'Peter',
+inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
+inputOptions["TASK2"] = "TASK2";  
+
+
+const { value: select_task } = await Swal.fire({
+    title: 'Select TASK',
+    input: 'select',
+    inputOptions: inputOptions,
+    inputPlaceholder: 'Select a TASK',
+    showCancelButton: true,
+    inputValidator: (value) => {
+            return new Promise((resolve) => {           
+                resolve()          
+            })
+            }
+    })
+
+     if (select_task) {
+
+        const { value: new_activity } = await Swal.fire({
+        title: 'Input new activity',
+        input: 'text',
+        })   
+
+        if (new_activity) {
+               
+
+                const {value: importance} = await Swal.fire({
+                title: 'importance?',               
+                input: 'range',               
+                inputAttributes: {
+                    min: 0,
+                    max: 100,
+                    step: 10
+                },
+                inputValue: 50
+            })
+            if(importance){
+                const { value: info } = await Swal.fire({
+                input: 'textarea',
+                inputPlaceholder: 'Type your message here...',
+                inputAttributes: {
+                    'aria-label': 'Type your message here'
+                },
+                showCancelButton: true
+                })
+            }
+
+            var table = $("#activity");
+                
+                var table_len=$("#activity tr").length;
+                
+                $("#activity").append("<tr><td id='"+table_len+"'>"+new_activity+"</td></tr>");
+            }    
+            console.log(select_task);
+            console.log(new_activity);                
+    }
+   
+            
+})
     $("#job").off("click").on("click",function(){
         alert(username+"의job table");
     })
