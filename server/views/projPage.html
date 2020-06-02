@@ -7,316 +7,426 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>PMD</title>
-      <style>
-         
-        #box{     
-           
-            margin-left: 3%!important;   
-            
+    <style>
+        #box {
+
+            margin-left: 3% !important;
+
         }
-        #proj_desc{
+
+        #proj_desc {
             width: 100%;
             resize: none;
-            height:70px;
+            height: 70px;
         }
-        #info_link{
-            border-bottom:0;
+
+        #info_link {
+            border-bottom: 0;
         }
-        table{
-            border:black solid 1px;
-            width:100%;
-            height:85%;
-            margin-bottom:2px;
+
+        table {
+            border: black solid 1px;
+            width: 100%;
+            height: 85%;
+            margin-bottom: 2px;
         }
-        table tr:nth-child(even){
-             background-color: #f2f2f2;
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
-        
+
         table tr:hover {
             cursor: pointer;
-            background-color: #ddd;  
+            background-color: #ddd;
         }
-        input{
-            border:none;
-            
+
+        input {
+            border: none;
+
         }
-      </style>
- </head>
+    </style>
+</head>
+
 <body>
-   <input type="hidden" id="flag" value="false">
-   <input type="hidden" id="child">
-   <input type="hidden" id="parent">
-<form name="myform">
-    <br>
-    
+    <input type="hidden" id="flag" value="false">
+    <input type="hidden" id="child">
+    <input type="hidden" id="parent">
+    <form name="myform">
+        <br>
+
         <div class="row">
-            <div class="col-md-5" id="box" >
-                <p>프로젝트명:&nbsp;<input type="text" name="proj_name" id="proj_name" value="name" readonly><a id="setting" style="float:right;cursor: pointer;"><i class="fas fa-users-cog fa-3x"></i></a></p>
-                <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" style="width: 20px;" readonly>%</p>
+            <div class="col-md-5" id="box">
+                <p>프로젝트명:&nbsp;<input type="text" name="proj_name" id="proj_name" value="name" readonly><a id="setting"
+                        style="float:right;cursor: pointer;"><i class="fas fa-users-cog fa-3x"></i></a></p>
+                <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" style="width: 20px;"
+                        readonly>%</p>
                 <p>시작일:&nbsp;<input type="text" name="proj_start" id="proj_start" value="start" readonly></p>
                 <p>종료일:&nbsp;<input type="text" name="proj_end" id="proj_end" value="end" readonly></p>
                 <p>비고:&nbsp;<textarea name="proj_desc" id="proj_desc" readonly></textarea></p>
                 <input type="hidden" name="user" id="user">
-                
+
             </div>
-            
+
             <div class="col-md-2">
                 <p align="center">JOB</p>
                 <table id="job">
                     <tr>
                         <td>
                             JOB1
-                        </td>                        
-                    </tr>   <tr>
-                        <td>
-                           JOB2
-                        </td>                        
-                    </tr>   
+                        </td>
+                    </tr>
                     <tr>
                         <td>
-                        JOB3
-                        </td>                        
+                            JOB2
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            JOB3
+                        </td>
                     </tr>
                 </table>
-            <a id="insert_job" class="btn btn-outline-secondary btn-block" role="button">추가</a>
+                <a id="insert_job" class="btn btn-outline-secondary btn-block" role="button">추가</a>
             </div>
-        
+
             <div class="col-md-2">
                 <p align="center">TASK</p>
                 <table id="task">
                     <tr>
                         <td>
-                           TASK1
-                        </td>                        
-                    </tr>   <tr>
+                            TASK1
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
-                           TASK2
-                        </td>                        
-                    </tr>   <tr>
+                            TASK2
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
-                           TASK3
-                        </td>                        
+                            TASK3
+                        </td>
                     </tr>
                 </table>
                 <a id="insert_task" class="btn btn-outline-secondary btn-block" role="button">추가</a>
             </div>
-        
-        
+
+
             <div class="col-md-2">
                 <p align="center">ACTIVITY</p>
                 <table id="activity">
                     <tr>
                         <td>
                             ACTIVITY1
-                        </td>                        
+                        </td>
                     </tr>
                     <tr>
                         <td>
                             ACTIVITY2
-                        </td>                        
-                    </tr>   <tr>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>
                             ACTIVITY3
-                        </td>                        
+                        </td>
                     </tr>
                 </table>
-                <a id="insert_activity"  class="btn btn-outline-secondary btn-block" role="button">추가</a>
-           
+                <a id="insert_activity" class="btn btn-outline-secondary btn-block" role="button">추가</a>
+
+            </div>
+
+
         </div>
-            
-   
-</div>
-    
-</form>
-<script>
-   $(document).ready(function(){
-    document.myform.proj_name.value = window.opener.document.myform.proj_name.value;
-    document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
-    document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
-    document.myform.proj_end.value = window.opener.document.myform.proj_end.value;
-    document.myform.user.value = window.opener.document.myform.user.value;
-    var username = $("#user").attr("value");
-    console.log(username);
-    $("#proj_desc").html(window.opener.document.myform.proj_desc.value);
-    
-    $("#setting").off("click").on("click",function(){
-        var flag = $("#flag");
-        //프로젝트 pm인지 판별 해야함
-        if(flag.attr("value") == "false"){
-            $("input").attr("readonly", false);
-            $("textarea").attr("readonly", false);
-            $("#setting").css("color","red");
-            $("#proj_name").focus();
-            flag.attr("value","true");
-            //수정한 내용 서버로 보내야함
-        }else{
-            $("input").attr("readonly", true);
-            $("textarea").attr("readonly", true);
-            $("#setting").css("color","black");
-            flag.attr("value","false");
-        }
-          
-        
-    })
-    
-    $("#insert_job").off("click").on("click",async function(){
 
-        const { value: new_job } = await Swal.fire({
-        title: 'Input new JOB',
-        input: 'text',
-        })
+    </form>
+    <script>
+        $(document).ready(function () {
+            document.myform.proj_name.value = window.opener.document.myform.proj_name.value;
+            document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
+            document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
+            document.myform.proj_end.value = window.opener.document.myform.proj_end.value;
+            document.myform.user.value = window.opener.document.myform.user.value;
+            var username = $("#user").attr("value");
+            console.log(username);
+            $("#proj_desc").html(window.opener.document.myform.proj_desc.value);
 
-        if (new_job) {
-            var table = $("#job");
-            
-            var table_len=$("#job tr").length;
-                
-            $("#job").append("<tr><td id='"+table_len+"'>"+new_job+"</td></tr>");
-        }
+            $("#setting").off("click").on("click", function () {
+                var flag = $("#flag");
+                //프로젝트 pm인지 판별 해야함
+                if (flag.attr("value") == "false") {
+                    $("input").attr("readonly", false);
+                    $("textarea").attr("readonly", false);
+                    $("#setting").css("color", "red");
+                    $("#proj_name").focus();
+                    flag.attr("value", "true");
+                    //수정한 내용 서버로 보내야함
+                } else {
+                    $("input").attr("readonly", true);
+                    $("textarea").attr("readonly", true);
+                    $("#setting").css("color", "black");
+                    flag.attr("value", "false");
+                }
 
-    })
 
-    $("#insert_task").off("click").on("click",async function(){
-
-        ///select에 들어갈 job 넣을 변수///
-        var inputOptions = {}; // Define like this!
-
-		// Instead of sample variables,
-		// your data handling here
-
-		var vREGISTRY_ID = "JOB1";
-		var vACCOUNT_NAME = "JOB1";
-
-   
-       
-       // Add the Variables like this
-       // This will create '500' : 'Peter',
-       inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
-       inputOptions["JOB2"] = "JOB2";  
-       
-    
-        const { value: select_job } = await Swal.fire({
-            title: 'Select JOB',
-            input: 'select',
-            inputOptions: inputOptions,
-            inputPlaceholder: 'Select a JOB',
-            showCancelButton: true,
-            inputValidator: (value) => {
-                    return new Promise((resolve) => {           
-                        resolve()          
-                    })
-                    }
             })
 
-             if (select_job) {
+            $("#insert_job").off("click").on("click", async function () {
 
-                const { value: new_task } = await Swal.fire({
-                title: 'Input new TASK',
-                input: 'text',
-                })   
-
-                if (new_task) {
-                        var table = $("#task");
-                        
-                        var table_len=$("#task tr").length;
-                        
-                        $("#task").append("<tr><td id='"+table_len+"'>"+new_task+"</td></tr>");
-                    }    
-                    console.log(select_job);
-                    console.log(new_task);                
-            }
-           
-                    
-    })
-
-    $("#insert_activity").off("click").on("click",async function(){
-
-///select에 들어갈 job 넣을 변수///
-var inputOptions = {}; // Define like this!
-
-// Instead of sample variables,
-// your data handling here
-
-var vREGISTRY_ID = "TASK1";
-var vACCOUNT_NAME = "TASK1";
-
-
-
-// Add the Variables like this
-// This will create '500' : 'Peter',
-inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
-inputOptions["TASK2"] = "TASK2";  
-
-
-const { value: select_task } = await Swal.fire({
-    title: 'Select TASK',
-    input: 'select',
-    inputOptions: inputOptions,
-    inputPlaceholder: 'Select a TASK',
-    showCancelButton: true,
-    inputValidator: (value) => {
-            return new Promise((resolve) => {           
-                resolve()          
-            })
-            }
-    })
-
-     if (select_task) {
-
-        const { value: new_activity } = await Swal.fire({
-        title: 'Input new activity',
-        input: 'text',
-        })   
-
-        if (new_activity) {
-               
-
-                const {value: importance} = await Swal.fire({
-                title: 'importance?',               
-                input: 'range',               
-                inputAttributes: {
-                    min: 0,
-                    max: 100,
-                    step: 10
-                },
-                inputValue: 50
-            })
-            if(importance){
-                const { value: info } = await Swal.fire({
-                input: 'textarea',
-                inputPlaceholder: 'Type your message here...',
-                inputAttributes: {
-                    'aria-label': 'Type your message here'
-                },
-                showCancelButton: true
+                const { value: new_job } = await Swal.fire({
+                    title: 'Input new JOB',
+                    input: 'text',
                 })
-            }
 
-            var table = $("#activity");
-                
-                var table_len=$("#activity tr").length;
-                
-                $("#activity").append("<tr><td id='"+table_len+"'>"+new_activity+"</td></tr>");
-            }    
-            console.log(select_task);
-            console.log(new_activity);                
-    }
-   
-            
-})
-    $("#job").off("click").on("click",function(){
-        alert(username+"의job table");
-    })
-    $("#task").off("click").on("click",function(){
-        alert(username+"의task table");
-    })
-    $("#activity").off("click").on("click",function(){
-        alert(username+"의activity table");
-    })
-   })
-</script>
+                if (new_job) {
+                    const { value: formValues } = await Swal.fire({
+                        title: 'setting date',
+                        html:
+                            '시작날짜 <input id="swal-input1"  type="date"><br>' +
+                            '종료날짜 <input id="swal-input2"  type="date">',
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            return [
+                                document.getElementById('swal-input1').value,
+                                document.getElementById('swal-input2').value
+                            ]
+                        }
+                    })
+
+                    if (formValues) {
+                        const { value: info } = await Swal.fire({
+                            input: 'textarea',
+                            inputPlaceholder: 'Type your message here...',
+                            inputAttributes: {
+                                'aria-label': 'Type your message here'
+                            },
+                            showCancelButton: true
+                        })
+
+                        const { value: file } = await Swal.fire({
+                            title: 'Select image',
+                            input: 'file',
+                            showCancelButton: true,
+                            inputAttributes: {
+                                'accept': 'image/hwp/doc/pdf*',
+                                'aria-label': 'Upload your profile picture'
+                            }
+                        })
+                        var table = $("#job");
+
+                        var table_len = $("#job tr").length;
+
+                        $("#job").append("<tr><td id='" + table_len + "'>" + new_job + "</td></tr>");
+                    }
+                }
+
+            })
+
+            $("#insert_task").off("click").on("click", async function () {
+
+                ///select에 들어갈 job 넣을 변수///
+                var inputOptions = {}; // Define like this!
+
+                // Instead of sample variables,
+                // your data handling here
+
+                var vREGISTRY_ID = "JOB1";
+                var vACCOUNT_NAME = "JOB1";
+
+
+
+                // Add the Variables like this
+                // This will create '500' : 'Peter',
+                inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
+                inputOptions["JOB2"] = "JOB2";
+
+
+                const { value: select_job } = await Swal.fire({
+                    title: 'Select JOB',
+                    input: 'select',
+                    inputOptions: inputOptions,
+                    inputPlaceholder: 'Select a JOB',
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        return new Promise((resolve) => {
+                            resolve()
+                        })
+                    }
+                })
+
+                if (select_job) {
+
+                    const { value: new_task } = await Swal.fire({
+                        title: 'Input new TASK',
+                        input: 'text',
+                    })
+                    if (new_task) {
+                        // Swal.fire(JSON.stringify(formValues))
+                        const { value: formValues } = await Swal.fire({
+                            title: 'setting date',
+                            html:
+                                '시작날짜 <input id="swal-input1"  type="date"><br>' +
+                                '종료날짜 <input id="swal-input2"  type="date">',
+                            focusConfirm: false,
+                            preConfirm: () => {
+                                return [
+                                    document.getElementById('swal-input1').value,
+                                    document.getElementById('swal-input2').value
+                                ]
+                            }
+                        })
+
+                        if (formValues) {
+                            const { value: info } = await Swal.fire({
+                                input: 'textarea',
+                                inputPlaceholder: 'Type your message here...',
+                                inputAttributes: {
+                                    'aria-label': 'Type your message here'
+                                },
+                                showCancelButton: true
+                            })
+
+                            const { value: file } = await Swal.fire({
+                                title: 'Select image',
+                                input: 'file',
+                                showCancelButton: true,
+                                inputAttributes: {
+                                    'accept': 'image/hwp/doc/pdf*',
+                                    'aria-label': 'Upload your profile picture'
+                                }
+                            })
+                            var table = $("#task");
+
+                            var table_len = $("#task tr").length;
+
+                            $("#task").append("<tr><td id='" + table_len + "'>" + new_task + "</td></tr>");
+                        }
+                        console.log(select_job);
+                        console.log(new_task);
+                    }
+                }
+
+
+
+
+            })
+
+            $("#insert_activity").off("click").on("click", async function () {
+
+                ///select에 들어갈 job 넣을 변수///
+                var inputOptions = {}; // Define like this!
+
+                // Instead of sample variables,
+                // your data handling here
+
+                var vREGISTRY_ID = "TASK1";
+                var vACCOUNT_NAME = "TASK1";
+
+
+
+                // Add the Variables like this
+                // This will create '500' : 'Peter',
+                inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
+                inputOptions["TASK2"] = "TASK2";
+
+
+                const { value: select_task } = await Swal.fire({
+                    title: 'Select TASK',
+                    input: 'select',
+                    inputOptions: inputOptions,
+                    inputPlaceholder: 'Select a TASK',
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        return new Promise((resolve) => {
+                            resolve()
+                        })
+                    }
+                })
+
+                if (select_task) {
+
+                    const { value: new_activity } = await Swal.fire({
+                        title: 'Input new activity',
+                        input: 'text',
+                    })
+                    if (new_activity) {
+                        const { value: formValues } = await Swal.fire({
+                            title: 'Multiple inputs',
+                            html:
+                                '시작날짜 <input id="swal-input1"  type="date"><br>' +
+                                '종료날짜 <input id="swal-input2"  type="date">',
+                            focusConfirm: false,
+                            preConfirm: () => {
+                                return [
+                                    document.getElementById('swal-input1').value,
+                                    document.getElementById('swal-input2').value
+                                ]
+                            }
+                        })
+
+                        if (formValues) {
+
+
+
+                            const { value: importance } = await Swal.fire({
+                                title: 'importance?',
+                                input: 'range',
+                                inputAttributes: {
+                                    min: 0,
+                                    max: 100,
+                                    step: 10
+                                },
+                                inputValue: 50
+                            })
+                            if (importance) {
+                                const { value: info } = await Swal.fire({
+                                    input: 'textarea',
+                                    inputPlaceholder: 'Type your message here...',
+                                    inputAttributes: {
+                                        'aria-label': 'Type your message here'
+                                    },
+                                    showCancelButton: true
+                                })
+
+
+                                const { value: file } = await Swal.fire({
+                                    title: 'Select image',
+                                    input: 'file',
+                                    showCancelButton: true,
+                                    inputAttributes: {
+                                        'accept': 'image/hwp/doc/pdf*',
+                                        'aria-label': 'Upload your profile picture'
+                                    }
+                                })
+                            }
+
+                            var table = $("#activity");
+
+                            var table_len = $("#activity tr").length;
+
+                            $("#activity").append("<tr><td id='" + table_len + "'>" + new_activity + "</td></tr>");
+                        }
+                        console.log(select_task);
+                        console.log(new_activity);
+                    }
+                }
+
+
+            })
+            $("#job").off("click").on("click", function () {
+                alert(username + "의job table");
+            })
+            $("#task").off("click").on("click", function () {
+                alert(username + "의task table");
+            })
+            $("#activity").off("click").on("click", function () {
+                alert(username + "의activity table");
+            })
+        })
+    </script>
 
 </body>
+
 </html>
