@@ -85,7 +85,71 @@ router.route("/logout").get(function (req, res){
 })
 
 router.route("/projPage").get(function (req, res){
+    console.log("GET projPage.html");
+
 	res.render("projPage.html");
+})
+
+router.route("/projPage").post(function (req,res){
+    sess=req.session;
+    console.log("POST projPage.html");
+
+    var proj = new Object();
+    proj.proj_id = req.body.proj_id;
+    proj.proj_name = req.body.proj_name;
+    proj.proj_prog = req.body.proj_prog;
+    proj.proj_start = req.body.proj_start;
+    proj.proj_end = req.body.proj_end;
+    proj.proj_desc = req.body.proj_desc;
+    proj = JSON.stringify(proj);
+    console.log(proj);
+
+    var user = req.body.user;
+
+    var proj_id = req.body.proj_id;
+    mysqlDB.query('SELECT ISPM FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID = ? AND ATTENDENCE.USER_ID = ?;', [proj_id, sess.email], function (err, rows, results) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            var isPM = JSON.stringify(rows);
+            res.render("projPage.html", {isPM:isPM, proj:proj, user:user});
+        }
+    });
+})
+
+router.route("/projPage/update/projInfo").post(function (req,res){
+    sess=req.session;
+    console.log("POST projPage/update/projInfo");
+
+    console.log(req.body);
+    var proj_name = req.body.proj_name;
+    var proj_start = req.body.proj_start;
+    var proj_end = req.body.proj_end;
+    var proj_desc = req.body.proj_desc;
+    var proj_id = req.body.proj_id;
+
+    var sql = 'UPDATE PROJECT SET';
+    sql += " PROJ_NAME = '" + proj_name + "'";
+    sql += ", PROJ_START = '" + proj_start + "'";
+    sql += ", PROJ_END = '" + proj_end + "'";
+    sql += ", PROJ_DESC = '" + proj_desc + "'";
+    sql += ' WHERE PROJ_ID = ' + proj_id + ';';
+
+    mysqlDB.query(sql, function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            console.log("update 성공");
+            // route('/projPage').post() ...의 효과
+            res.redirect(307, '/projPage');
+        }
+    });
+
+
 })
 
 router.route("/signup").get(function (req, res){
@@ -108,7 +172,7 @@ router.route("/search").get(function(req,res){
 
 router.route("/table").get(function(req,res){
     sess = req.session; 
-    mysqlDB.query('SELECT PROJECT.*FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=0', [sess.name], function (err,rows, fields) {
+    mysqlDB.query('SELECT PROJECT.* FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=0', [sess.name], function (err,rows, fields) {
         if (err) {
             console.log(err);
             res.end();
@@ -184,7 +248,6 @@ router.route("/search/project").post(function(req,res){
      console.log("edate !== '' : " +(edate !== ''));
  
      console.log(sql);
-     //mysqlDB.query("SELECT PROJECT.PROJ_NAME, PROJECT.PROJ_PROGRESS, PROJECT.PROJ_START, PROJECT.PROJ_END, PROJ_DESC FROM PROJECT WHERE PROJ_NAME = ? AND PROJ_MGR_UID = ? AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= ? AND DATE_FORMAT(PROJ_END, '%Y-%m-%d') <= ?", [pid,mname,sdate,edate], function (err,rows, fields) {
      mysqlDB.query(sql, function(err, rows) {
      if (err) {
          console.log(err);

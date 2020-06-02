@@ -67,6 +67,7 @@
                 <p>종료일:&nbsp;<input type="text" name="proj_end" id="proj_end" value="end" readonly></p>
                 <p>비고:&nbsp;<textarea name="proj_desc" id="proj_desc" readonly></textarea></p>
                 <input type="hidden" name="user" id="user">
+                <input type="hidden" name="proj_id" id="proj_id">
 
             </div>
 
@@ -144,33 +145,110 @@
     </form>
     <script>
         $(document).ready(function () {
-            document.myform.proj_name.value = window.opener.document.myform.proj_name.value;
-            document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
-            document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
-            document.myform.proj_end.value = window.opener.document.myform.proj_end.value;
-            document.myform.user.value = window.opener.document.myform.user.value;
-            var username = $("#user").attr("value");
+            //
+            // pm 정보 받아오기: pm 변수에 저장
+            //
+
+            var proj = JSON.parse('<%- proj %>');
+            console.log(proj.proj_id);
+            var username = '<%- user%>';
             console.log(username);
-            $("#proj_desc").html(window.opener.document.myform.proj_desc.value);
+            var pm = JSON.parse('<%- isPM %>');
+            pm = pm[0].ISPM;
+
+            if (pm == true) {
+                console.log("pm입니다");
+            }
+            else {
+                console.log("pm이 아닙니다");
+            }
+
+            //document.myform.proj_id.value = window.opener.document.myform.proj_id.value;
+            //document.myform.proj_name.value = window.opener.document.myform.proj_name.value;
+            //document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
+            //document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
+            //document.myform.proj_end.value = window.opener.document.myform.proj_end.value;
+            //document.myform.user.value = window.opener.document.myform.user.value;
+            //document.myform.proj_desc.value = window.opener.document.myform.proj_desc.value;
+
+            document.myform.proj_id.value = proj.proj_id;
+            document.myform.proj_name.value = proj.proj_name;
+            document.myform.proj_prog.value = proj.proj_prog;
+            document.myform.proj_start.value = proj.proj_start;
+            document.myform.proj_end.value = proj.proj_end;
+            document.myform.user.value = username;
+            document.myform.proj_desc.value = proj.proj_desc;
+            //$("#proj_desc").html(window.opener.document.myform.proj_desc.value);
+
+           
+
+            var proj_name = document.myform.proj_name.value;
+            var proj_prog = document.myform.proj_prog.value;
+            var proj_start = document.myform.proj_start.value;
+            var proj_end = document.myform.proj_end.value;
+            var proj_desc = document.myform.proj_desc.value;
+            
 
             $("#setting").off("click").on("click", function () {
                 var flag = $("#flag");
                 //프로젝트 pm인지 판별 해야함
-                if (flag.attr("value") == "false") {
-                    $("input").attr("readonly", false);
-                    $("textarea").attr("readonly", false);
-                    $("#setting").css("color", "red");
-                    $("#proj_name").focus();
-                    flag.attr("value", "true");
+                if (pm == false) {
+                    alert("수정할 권한이 없습니다.");
+                }
+                else {
+                    if (flag.attr("value") == "false") {
+                        alert("수정할 정보를 입력해주세요.");
+                        //
+                        // 현재 상태의 proj 정보를 저장
+                        //
+                        proj_name = document.myform.proj_name.value;
+                        proj_prog = document.myform.proj_prog.value;
+                        proj_start = document.myform.proj_start.value;
+                        proj_end = document.myform.proj_end.value;
+                        proj_desc = document.myform.proj_desc.value;
+                        
+                        $("input").attr("readonly", false);
+                        $("textarea").attr("readonly", false);
+                        $("#setting").css("color", "red");
+                        $("#proj_name").focus();
+                        flag.attr("value", "true");
+
+                        var modify_btn = "<input type='button' id='modify_btn' name='modify_btn' class='btn btn-outline-secondary btn-block' value='수정하기'>";
+                        $("#box").append(modify_btn);
                     //수정한 내용 서버로 보내야함
-                } else {
-                    $("input").attr("readonly", true);
-                    $("textarea").attr("readonly", true);
-                    $("#setting").css("color", "black");
-                    flag.attr("value", "false");
+                    } else {
+                        alert("수정 취소");
+                        
+                        document.myform.proj_name.value = proj_name;
+                        document.myform.proj_prog.value = proj_prog;
+                        document.myform.proj_start.value = proj_start;
+                        document.myform.proj_end.value = proj_end;
+                        document.myform.proj_desc.value = proj_desc
+                        $("input").attr("readonly", true);
+                        $("textarea").attr("readonly", true);
+                        $("#setting").css("color", "black");
+                        flag.attr("value", "false");
+                    }
                 }
 
+            
 
+            })
+
+            //$('#modify_btn').off("click").on("click", function () {
+            $(document).on("click", "#modify_btn", function() {
+
+                console.log("버튼 눌림");
+                alert("수정 완료");
+
+                $("input").attr("readonly", true);
+                $("textarea").attr("readonly", true);
+                $("#setting").css("color", "black");
+                $("#flag").attr("value", "false");
+
+                document.myform.action="/projPage/update/projInfo"
+                document.myform.method="POST";
+                document.myform.submit();
             })
 
             $("#insert_job").off("click").on("click", async function () {

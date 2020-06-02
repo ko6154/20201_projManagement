@@ -27,6 +27,7 @@
     
 </table>
 <form name="myform" >
+  <input type="hidden" name="proj_id" id="proj_id">
   <input type="hidden" name="proj_name" id="proj_name">
   <input type="hidden" name="proj_prog" id="proj_prog">
   <input type="hidden" name="proj_start" id="proj_start">
@@ -96,6 +97,8 @@
       var col3= row.insertCell(3).innerHTML="<td>"+endDateToStr+"</td>";
       var col4= row.insertCell(4).innerHTML="<td>"+proj.PROJ_DESC+"</td>";
       var obj = new Object();
+      
+      obj.proj_id = proj.PROJ_ID;
       obj.proj_name = proj.PROJ_NAME;
       obj.proj_prog = proj.PROJ_PROGRESS;
       obj.proj_start = proj.PROJ_START.substring(0,10);
@@ -114,16 +117,23 @@
       
       if(target != "title"){
         var popform=document.myform;
-     
+        
+        $("#proj_id").attr("value",ary[index-1].proj_id);
         $("#proj_name").attr("value",ary[index-1].proj_name);
         $("#proj_prog").attr("value",ary[index-1].proj_prog);
         $("#proj_start").attr("value",ary[index-1].proj_start);
         $("#proj_end").attr("value",ary[index-1].proj_end);
         $("#proj_desc").attr("value",ary[index-1].proj_desc);
         $("#user").attr("value",username);
-        var openWin = window.open("/projPage", "myform", "width=1000,height=350,top=200,left=300");    
-       
-        return;
+
+        popform.action="/projPage";
+        popform.target="myform";
+        popform.method="POST";
+
+        var openWin = window.open("", "myform", "width=1000,height=350,top=200,left=300");    
+        
+        popform.submit();
+
       }
     })
 
