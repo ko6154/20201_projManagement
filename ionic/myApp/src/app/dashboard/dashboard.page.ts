@@ -6,7 +6,7 @@ import { NavController } from '@ionic/angular';
 import { DataService } from '../services/data.service';
 import { MenuController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
-import { ToastController } from '@ionic/angular';
+
 declare var google;
 
 @Component({
