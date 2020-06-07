@@ -11,22 +11,15 @@
 <head>
     <title>PMD</title>
     <style>
-        #box {
-
-            margin-left: 3% !important;
-
-        }
-
         #proj_desc {
             width: 100%;
             resize: none;
-            height: 70px;
+            height: 50%;
         }
 
         #info_link {
             border-bottom: 0;
         }
-
         table {
             border: black solid 1px;
             width: 100%;
@@ -38,111 +31,102 @@
             background-color: #f2f2f2;
         }
 
-        table tr:hover {
+        table td:hover {
             cursor: pointer;
             background-color: #ddd;
         }
 
         input {
             border: none;
-
         }
     </style>
 </head>
 
 <body>
     <input type="hidden" id="flag" value="false">
-    <input type="hidden" id="child">
-    <input type="hidden" id="parent">
-    <form name="myform">
-        <br>
-
-        <div class="row">
-            <div class="col-md-5" id="box">
-                <p>프로젝트명:&nbsp;<input type="text" name="proj_name" id="proj_name" value="name" readonly><a id="setting"
-                        style="float:right;cursor: pointer;"><i class="fas fa-users-cog fa-3x"></i></a></p>
-                <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" style="width: 20px;"
-                        readonly>%</p>
-                <p>시작일:&nbsp;<input type="text" name="proj_start" id="proj_start" value="start" readonly></p>
-                <p>종료일:&nbsp;<input type="text" name="proj_end" id="proj_end" value="end" readonly></p>
-                <p>비고:&nbsp;<textarea name="proj_desc" id="proj_desc" readonly></textarea></p>
-                <input type="hidden" name="user" id="user">
-                <input type="hidden" name="proj_id" id="proj_id">
-
-            </div>
-
-            <div class="col-md-2">
-                <p align="center">JOB</p>
-                <table id="job">
-                    <tr>
-                        <td>
-                            JOB1
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            JOB2
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            JOB3
-                        </td>
-                    </tr>
-                </table>
-                <a id="insert_job" class="btn btn-outline-secondary btn-block" role="button">추가</a>
-            </div>
-
-            <div class="col-md-2">
-                <p align="center">TASK</p>
-                <table id="task">
-                    <tr>
-                        <td>
-                            TASK1
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            TASK2
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            TASK3
-                        </td>
-                    </tr>
-                </table>
-                <a id="insert_task" class="btn btn-outline-secondary btn-block" role="button">추가</a>
-            </div>
-
-
-            <div class="col-md-2">
-                <p align="center">ACTIVITY</p>
-                <table id="activity">
-                    <tr>
-                        <td>
-                            ACTIVITY1
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            ACTIVITY2
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            ACTIVITY3
-                        </td>
-                    </tr>
-                </table>
-                <a id="insert_activity" class="btn btn-outline-secondary btn-block" role="button">추가</a>
-
-            </div>
-
-
+    <div class="container" id="info">
+        <div style="float:right;margin-top:1%;">
+            <a href="#info" style="color:black!important;text-decoration: none!important;"><i class="fas fa-info-circle fa-2x"></i>정보</a>&nbsp;&nbsp;
+            <a href="#work" style="color:black!important;text-decoration: none!important;"><i class="fas fa-network-wired fa-2x"></i>작업</a>&nbsp;&nbsp;
+            <a id="back" style="cursor:pointer"><i class="fas fa-arrow-circle-left fa-2x"></i>뒤로가기</a>&nbsp;
         </div>
-
+        <br>
+        <br>
+        <br>
+        <form name="myform">
+            <br>
+            <p>프로젝트명:&nbsp;<input type="text" name="proj_name" id="proj_name" value="name" readonly><a id="setting"
+                    style="float:right;cursor: pointer;"><i class="fas fa-users-cog fa-3x"></i>수정</a>
+            </p>
+            <p>진행률:&nbsp;<input type="text" name="proj_prog" id="proj_prog" value="prog" style="width: 20px;" readonly>%
+            </p>
+            <p>시작일:&nbsp;<input type="text" name="proj_start" id="proj_start" value="start" readonly></p>
+            <p>종료일:&nbsp;<input type="text" name="proj_end" id="proj_end" value="end" readonly></p>
+            <p>비고:&nbsp;<textarea name="proj_desc" id="proj_desc" readonly></textarea></p>
+        
+        <input type="hidden" name="proj_user" id="proj_user">
+        <input type="hidden" name="proj_id" id="proj_id">
     </form>
+    
+    </div>
+  <br>
+  
+    <div class="container" id="work">
+            
+        <div style="float:right;">
+            <a href="#info" style="color:black!important;text-decoration: none!important;"><i class="fas fa-info-circle fa-2x"></i>정보</a>&nbsp;&nbsp;
+            <a href="#work" style="color:black!important;text-decoration: none!important;"><i class="fas fa-network-wired fa-2x"></i>작업</a>&nbsp;&nbsp;
+            <a id="back" style="cursor:pointer"><i class="fas fa-arrow-circle-left fa-2x"></i>뒤로가기</a>&nbsp;
+        </div>
+        <br>
+    <table border="1">
+        <tr>
+            <td>JOB1</td>
+            <td>JOB2</td>
+            <td>JOB3</td>
+        </tr>
+        <tr>
+            <td>
+                JOB1-task1
+            </td>         
+            <td>
+                JOB2-task1
+            </td>  
+            <td>
+                JOB3-task1
+            </td>  
+        </tr>
+        <tr>
+            <td>
+                JOB1-task2
+            </td>           
+            <td>
+                JOB2-task2
+            </td>  
+            <td>
+                JOB3-task3
+            </td>  
+        </tr>
+        <tr>
+            <td>
+                JOB1-task3
+            </td>  
+            <td>
+               
+            </td>  
+            <td>
+                JOB3-task3
+            </td>  
+                     
+        </tr>
+        </table>
+
+            <a id="insert_job" class="btn btn-outline-secondary btn-block" role="button">추가</a>
+    
+   
+    </div>
+
+
     <script>
         $(document).ready(function () {
             //
@@ -150,9 +134,9 @@
             //
 
             var proj = JSON.parse('<%- proj %>');
-            console.log(proj.proj_id);
+
             var username = '<%- user%>';
-            console.log(username);
+
             var pm = JSON.parse('<%- isPM %>');
             pm = pm[0].ISPM;
 
@@ -163,32 +147,28 @@
                 console.log("pm이 아닙니다");
             }
 
-            //document.myform.proj_id.value = window.opener.document.myform.proj_id.value;
-            //document.myform.proj_name.value = window.opener.document.myform.proj_name.value;
-            //document.myform.proj_prog.value = window.opener.document.myform.proj_prog.value;
-            //document.myform.proj_start.value = window.opener.document.myform.proj_start.value;
-            //document.myform.proj_end.value = window.opener.document.myform.proj_end.value;
-            //document.myform.user.value = window.opener.document.myform.user.value;
-            //document.myform.proj_desc.value = window.opener.document.myform.proj_desc.value;
+            var proj_name = $("#proj_name");
+            var proj_prog = $("#proj_prog");
+            var proj_start = $("#proj_start");
+            var proj_end = $("#proj_end");
+            var proj_desc = $("#proj_desc");
+            var proj_id = $("#proj_id");
+            var proj_user = $("#proj_user");
 
-            document.myform.proj_id.value = proj.proj_id;
-            document.myform.proj_name.value = proj.proj_name;
-            document.myform.proj_prog.value = proj.proj_prog;
-            document.myform.proj_start.value = proj.proj_start;
-            document.myform.proj_end.value = proj.proj_end;
-            document.myform.user.value = username;
-            document.myform.proj_desc.value = proj.proj_desc;
-            //$("#proj_desc").html(window.opener.document.myform.proj_desc.value);
-
-           
-
-            var proj_name = document.myform.proj_name.value;
-            var proj_prog = document.myform.proj_prog.value;
-            var proj_start = document.myform.proj_start.value;
-            var proj_end = document.myform.proj_end.value;
-            var proj_desc = document.myform.proj_desc.value;
-            
-
+            proj_name.attr("value", proj.proj_name);
+            proj_id.attr("value", proj.proj_id);
+            proj_prog.attr("value", proj.proj_prog);
+            proj_start.attr("value", proj.proj_start);
+            proj_end.attr("value", proj.proj_end);
+            proj_desc.html(proj.proj_desc);
+            proj_id.attr("value", proj.proj_id);
+            proj_user.attr("value", proj.proj_user);
+            //뒤로가기
+            $("#back").off("click").on("click", function (){
+                var propage = $(top.document).find("#customers");
+                propage.attr("src","http://52.55.31.29:3000/table");
+            })
+            //프로젝트 정보 수정
             $("#setting").off("click").on("click", function () {
                 var flag = $("#flag");
                 //프로젝트 pm인지 판별 해야함
@@ -197,59 +177,34 @@
                 }
                 else {
                     if (flag.attr("value") == "false") {
-                        alert("수정할 정보를 입력해주세요.");
-                        //
-                        // 현재 상태의 proj 정보를 저장
-                        //
-                        proj_name = document.myform.proj_name.value;
-                        proj_prog = document.myform.proj_prog.value;
-                        proj_start = document.myform.proj_start.value;
-                        proj_end = document.myform.proj_end.value;
-                        proj_desc = document.myform.proj_desc.value;
                         
+                        $("#setting").html('<i class="fas fa-users-cog fa-3x"></i>완료');
                         $("input").attr("readonly", false);
+                        $("#proj_prog").attr("readonly", true);
                         $("textarea").attr("readonly", false);
                         $("#setting").css("color", "red");
                         $("#proj_name").focus();
                         flag.attr("value", "true");
 
-                        var modify_btn = "<input type='button' id='modify_btn' name='modify_btn' class='btn btn-outline-secondary btn-block' value='수정하기'>";
-                        $("#box").append(modify_btn);
-                    //수정한 내용 서버로 보내야함
+                        //수정한 내용 서버로 보내야함
                     } else {
-                        alert("수정 취소");
-                        
-                        document.myform.proj_name.value = proj_name;
-                        document.myform.proj_prog.value = proj_prog;
-                        document.myform.proj_start.value = proj_start;
-                        document.myform.proj_end.value = proj_end;
-                        document.myform.proj_desc.value = proj_desc
+                        $("#setting").html('<i class="fas fa-users-cog fa-3x"></i>수정');
                         $("input").attr("readonly", true);
                         $("textarea").attr("readonly", true);
                         $("#setting").css("color", "black");
                         flag.attr("value", "false");
+
+                        document.myform.action = "/projPage/update/projInfo"
+                        document.myform.method = "POST";
+                        document.myform.submit();
                     }
                 }
 
-            
+
 
             })
 
-            //$('#modify_btn').off("click").on("click", function () {
-            $(document).on("click", "#modify_btn", function() {
 
-                console.log("버튼 눌림");
-                alert("수정 완료");
-
-                $("input").attr("readonly", true);
-                $("textarea").attr("readonly", true);
-                $("#setting").css("color", "black");
-                $("#flag").attr("value", "false");
-
-                document.myform.action="/projPage/update/projInfo"
-                document.myform.method="POST";
-                document.myform.submit();
-            })
 
             $("#insert_job").off("click").on("click", async function () {
 

@@ -83,16 +83,11 @@ router.route("/logout").get(function (req, res){
     });
     res.redirect('/');
 })
-
+/*
 router.route("/projPage").get(function (req, res){
-    console.log("GET projPage.html");
-
-	res.render("projPage.html");
-})
-
-router.route("/projPage").post(function (req,res){
+   
     sess=req.session;
-    console.log("POST projPage.html");
+    console.log("GET projPage.html");
 
     var proj = new Object();
     proj.proj_id = req.body.proj_id;
@@ -115,6 +110,33 @@ router.route("/projPage").post(function (req,res){
         else {
             var isPM = JSON.stringify(rows);
             res.render("projPage.html", {isPM:isPM, proj:proj, user:user});
+        }
+    });
+})
+*/
+router.route("/projPage").post(function (req,res){
+    sess=req.session;
+    console.log("POST projPage.html");
+
+    var proj = new Object();
+    proj.proj_id = req.body.proj_id;
+    proj.proj_name = req.body.proj_name;
+    proj.proj_prog = req.body.proj_prog;
+    proj.proj_start = req.body.proj_start;
+    proj.proj_end = req.body.proj_end;
+    proj.proj_desc = req.body.proj_desc;
+    proj = JSON.stringify(proj);
+    console.log(proj);
+
+    var proj_id = req.body.proj_id;
+    mysqlDB.query('SELECT ISPM FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID = ? AND ATTENDENCE.USER_ID = ?;', [proj_id, sess.email], function (err, rows, results) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            var isPM = JSON.stringify(rows);
+            res.render("projPage.html", {isPM:isPM, proj:proj, user:sess.username});
         }
     });
 })

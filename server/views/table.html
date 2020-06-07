@@ -26,7 +26,7 @@
     </tr>
     
 </table>
-<form name="myform" >
+<form name="myform" action="/projPage" method="POST">
   <input type="hidden" name="proj_id" id="proj_id">
   <input type="hidden" name="proj_name" id="proj_name">
   <input type="hidden" name="proj_prog" id="proj_prog">
@@ -87,6 +87,7 @@
     
     if(endDate.getTime() > today.getTime())  // 종료일 이전의 프로젝트만 출력한다.
     {
+      
       var table_len=(table.rows.length);
       var row = table.insertRow(table_len);
       var col0= row.insertCell(0).innerHTML="<td>"+proj.PROJ_NAME+"</td>";
@@ -96,6 +97,7 @@
       var col2= row.insertCell(2).innerHTML="<td>"+startDateToStr+"</td>";
       var col3= row.insertCell(3).innerHTML="<td>"+endDateToStr+"</td>";
       var col4= row.insertCell(4).innerHTML="<td>"+proj.PROJ_DESC+"</td>";
+      
       var obj = new Object();
       
       obj.proj_id = proj.PROJ_ID;
@@ -125,13 +127,12 @@
         $("#proj_end").attr("value",ary[index-1].proj_end);
         $("#proj_desc").attr("value",ary[index-1].proj_desc);
         $("#user").attr("value",username);
+     
 
-        popform.action="/projPage";
-        popform.target="myform";
-        popform.method="POST";
-
-        var openWin = window.open("", "myform", "width=1000,height=350,top=200,left=300");    
+        var propage = $(top.document).find("#customers");
+        propage.attr("src","http://52.55.31.29:3000/projPage");
         
+               
         popform.submit();
 
       }
