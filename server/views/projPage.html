@@ -45,11 +45,11 @@
 <body>
     <input type="hidden" id="flag" value="false">
     <div class="container" id="info">
-        <div style="float:right;margin-top:1%;">
-            <a href="#info" style="color:black!important;text-decoration: none!important;"><i class="fas fa-info-circle fa-2x"></i>정보</a>&nbsp;&nbsp;
-            <a href="#work" style="color:black!important;text-decoration: none!important;"><i class="fas fa-network-wired fa-2x"></i>작업</a>&nbsp;&nbsp;
-            <a id="back" style="cursor:pointer"><i class="fas fa-arrow-circle-left fa-2x"></i>뒤로가기</a>&nbsp;
-        </div>
+        <nav class="navbar fixed-top navbar-dark bg-primary">
+            <a href="#info" style="color:white!important;text-decoration: none!important;"><i class="fas fa-info-circle fa-2x"></i>정보</a>&nbsp;&nbsp;
+            <a href="#work" style="color:white!important;text-decoration: none!important;"><i class="fas fa-network-wired fa-2x"></i>작업</a>&nbsp;&nbsp;
+            <a id="back" style="color:white; cursor:pointer"><i class="fas fa-arrow-circle-left fa-2x"></i>뒤로가기</a>&nbsp;
+        </nav>
         <br>
         <br>
         <br>
@@ -72,12 +72,12 @@
   <br>
   
     <div class="container" id="work">
-            
+        <!--   
         <div style="float:right;">
             <a href="#info" style="color:black!important;text-decoration: none!important;"><i class="fas fa-info-circle fa-2x"></i>정보</a>&nbsp;&nbsp;
             <a href="#work" style="color:black!important;text-decoration: none!important;"><i class="fas fa-network-wired fa-2x"></i>작업</a>&nbsp;&nbsp;
             <a id="back" style="cursor:pointer"><i class="fas fa-arrow-circle-left fa-2x"></i>뒤로가기</a>&nbsp;
-        </div>
+        </div>--> 
         <br>
     <table border="1">
         <tr>
@@ -167,6 +167,7 @@
             $("#back").off("click").on("click", function (){
                 var propage = $(top.document).find("#customers");
                 propage.attr("src","http://52.55.31.29:3000/table");
+            
             })
             //프로젝트 정보 수정
             $("#setting").off("click").on("click", function () {
