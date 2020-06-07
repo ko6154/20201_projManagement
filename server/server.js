@@ -117,7 +117,7 @@ router.route("/projPage").get(function (req, res){
 */
 router.route("/projPage").post(function (req,res){
     sess=req.session;
-    console.log("POST projPage.html");
+    //console.log("POST projPage.html");
 
     var proj = new Object();
     proj.proj_id = req.body.proj_id;
@@ -127,19 +127,57 @@ router.route("/projPage").post(function (req,res){
     proj.proj_end = req.body.proj_end;
     proj.proj_desc = req.body.proj_desc;
     proj = JSON.stringify(proj);
-    console.log(proj);
-
+   // console.log(proj);
     var proj_id = req.body.proj_id;
-    mysqlDB.query('SELECT ISPM FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID = ? AND ATTENDENCE.USER_ID = ?;', [proj_id, sess.email], function (err, rows, results) {
+    var job;
+    var job_size;
+    var task_size;
+    var task = new Array();
+
+    mysqlDB.query("SELECT * FROM POST_BIG WHERE PROJ_ID = ? ORDER BY BIG_LEVEL",[proj_id],function(err,row){
         if (err) {
             console.log(err);
             res.end();
+        }else{
+            job_size = row.length;
+            job=row;
+           // console.log(job[0].BIG_ID);
+            for(var i=0;i<job_size;i++){
+                //console.log("task 출력시작");
+                mysqlDB.query("SELECT * FROM POST_MID WHERE BIG_ID = ? ORDER BY MID_LEVEL",[job[i].BIG_ID],function(err,rows){
+                    if (err) {
+                        console.log(err);
+                        res.end();
+                    }else{
+                        
+                        //console.log("task_len "+rows.length);                        
+                        //console.log("task입니다 "+JSON.stringify(rows));
+                        task.push(rows);
+                        console.log(task);
+                    }
+                })
+            } 
+
+            job = JSON.stringify(row);
+            console.log(task[0]);
+            //console.log("job_len "+row.length);
+            //console.log("job입니다 "+job);
+            mysqlDB.query('SELECT ISPM FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID = ? AND ATTENDENCE.USER_ID = ?;', [proj_id, sess.email], function (err, rows, results) {
+                if (err) {
+                    console.log(err);
+                    res.end();
+                }
+                else {
+                    var isPM = JSON.stringify(rows);
+                   
+                    res.render("projPage.html", {isPM:isPM, proj:proj, user:sess.username, Job:job, Tasks:JSON.stringify(task)});
+                }
+            });
+
         }
-        else {
-            var isPM = JSON.stringify(rows);
-            res.render("projPage.html", {isPM:isPM, proj:proj, user:sess.username});
-        }
-    });
+    })
+    
+   
 })
 
 router.route("/projPage/update/projInfo").post(function (req,res){
@@ -202,14 +240,14 @@ router.route("/table").get(function(req,res){
         }
         else {
        
-            console.log(rows);
-            console.log(rows.length);
+           // console.log(rows);
+           // console.log(rows.length);
            // console.log(rows[0]);
           //  console.log(JSON.stringify(rows[0]));
             var project = JSON.stringify(rows);   
             var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
-            console.log(project);         
+           // console.log(project);         
             res.render("table.html",{pro:project,len:size,username:sess.name});
         }        
     }); 
@@ -226,14 +264,14 @@ router.route("/finish").get(function(req,res){
         }
         else {
        
-            console.log(rows);
-            console.log(rows.length);
+           // console.log(rows);
+           // console.log(rows.length);
            // console.log(rows[0]);
           //  console.log(JSON.stringify(rows[0]));
             var project = JSON.stringify(rows);   
             var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
-            console.log(project);         
+          //  console.log(project);         
             res.render("finish.html",{pro:project,len:size,session:sess});
         }        
     }); 
@@ -455,13 +493,13 @@ router.route("/user_pc/login").post(function (req, res) {
                        // console.log(rows[0]);
                       //  console.log(JSON.stringify(rows[0]));
                         
-                      console.log(row);   
+                      //console.log(row);   
                         var invite = JSON.stringify(row);   
                         var size = row.length;     
                         //console.log(size);   
                         invite = invite.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
                        
-                        console.log(invite);       
+                       // console.log(invite);       
                        req.session.save(function(){
                         
                         res.render('main.html',{username:sess.name,len:size,invite:invite});

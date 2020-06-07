@@ -70,61 +70,29 @@
     
     </div>
   <br>
-  
+  <br>
     <div class="container" id="work">
+        
+        <div id = "work_row" class="row">
+            </div>
+
+        <br>
+  <br>
+  <br>
         <!--   
         <div style="float:right;">
             <a href="#info" style="color:black!important;text-decoration: none!important;"><i class="fas fa-info-circle fa-2x"></i>정보</a>&nbsp;&nbsp;
             <a href="#work" style="color:black!important;text-decoration: none!important;"><i class="fas fa-network-wired fa-2x"></i>작업</a>&nbsp;&nbsp;
             <a id="back" style="cursor:pointer"><i class="fas fa-arrow-circle-left fa-2x"></i>뒤로가기</a>&nbsp;
         </div>--> 
-        <br>
-    <table border="1">
-        <tr>
-            <td>JOB1</td>
-            <td>JOB2</td>
-            <td>JOB3</td>
-        </tr>
-        <tr>
-            <td>
-                JOB1-task1
-            </td>         
-            <td>
-                JOB2-task1
-            </td>  
-            <td>
-                JOB3-task1
-            </td>  
-        </tr>
-        <tr>
-            <td>
-                JOB1-task2
-            </td>           
-            <td>
-                JOB2-task2
-            </td>  
-            <td>
-                JOB3-task3
-            </td>  
-        </tr>
-        <tr>
-            <td>
-                JOB1-task3
-            </td>  
-            <td>
-               
-            </td>  
-            <td>
-                JOB3-task3
-            </td>  
-                     
-        </tr>
-        </table>
-
+       
+   
+<!--
             <a id="insert_job" class="btn btn-outline-secondary btn-block" role="button">추가</a>
     
-   
+   -->
     </div>
+    <input id="append" style="float:right;margin-right:10%" type="button" class="btn btn-outline-secondary" value="추가">
 
 
     <script>
@@ -134,8 +102,11 @@
             //
 
             var proj = JSON.parse('<%- proj %>');
-
-            var username = '<%- user%>';
+            var job = JSON.parse('<%- Job %>');
+            var job_len = job.length;
+            var task = JSON.parse('<%- Tasks %>');
+            var task_len = task.length;
+            var username= '<%- user %>';
 
             var pm = JSON.parse('<%- isPM %>');
             pm = pm[0].ISPM;
@@ -163,6 +134,25 @@
             proj_desc.html(proj.proj_desc);
             proj_id.attr("value", proj.proj_id);
             proj_user.attr("value", proj.proj_user);
+            var task_count = 0;
+            for(var i=0;i<job_len;i++){
+               
+                $("#work_row").append('<div class="col-sm-6"><table id="job" class="table table-sm "><thead class="thead-dark"><tr><th scope="col">'+job[i].BIG_TITLE+'</th><th id="td_task"></th></tr></thead><tbody></tbody></table></div>');
+                   $("#job").attr("id",i);
+                    if(job[i].BIG_ID == task[task_count][0].BIG_ID){
+                       
+                        for(var j=0;j<task[task_count].length;j++){
+                            $("#"+i+" > tbody").append('<tr><td colspan="2" scope="row">'+task[task_count][j].MID_TITLE+'</td></tr>');
+                            $("td").attr("height","30");
+                            
+                          
+                    }                                                   
+                    task_count = j-1; 
+                 }
+            }
+            $("td").off("click").on("click", function (){
+              
+            })
             //뒤로가기
             $("#back").off("click").on("click", function (){
                 var propage = $(top.document).find("#customers");
@@ -207,27 +197,51 @@
 
 
 
-            $("#insert_job").off("click").on("click", async function () {
+            $("#append").off("click").on("click", async function () {
 
-                const { value: new_job } = await Swal.fire({
-                    title: 'Input new JOB',
-                    input: 'text',
-                })
+                const inputOptions = new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                        'job': 'JOB',
+                        'task': 'TASK',
+                        'activity': 'ACTIVITY'
+                        })
+                    }, 1000)
+                    })
 
-                if (new_job) {
-                    const { value: formValues } = await Swal.fire({
-                        title: 'setting date',
+                    const { value: work } = await Swal.fire({
+                    title: '추가할 항목을 선택하세요',
+                    input: 'radio',
+                    inputOptions: inputOptions,
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        if (!value) {
+                        return '항목을 선택해주세요!'
+                        }
+                    }
+                    })
+
+                    if (work == 'job') {
+                        const { value: new_job } = await Swal.fire({
+                        title: 'JOB 추가',
                         html:
-                            '시작날짜 <input id="swal-input1"  type="date"><br>' +
-                            '종료날짜 <input id="swal-input2"  type="date">',
+                            '이름&nbsp; <input id="job_name" type="text"><br><br>'+
+                            '시작날짜&nbsp; <input id="job_start"  type="date"><br><br>' +
+                            '종료날짜&nbsp; <input id="job_end"  type="date"><br><br>'+
+                            '비고<br><textarea id="job_desc" placeholder="여기에 입력하세요" style="resize:none;width:60%"></textarea><br><br>'+
+                            '추가파일<br><input id="job_file"  type="file" style="width:60%">',
+                        showCancelButton: true,
                         focusConfirm: false,
                         preConfirm: () => {
                             return [
-                                document.getElementById('swal-input1').value,
-                                document.getElementById('swal-input2').value
+                                document.getElementById('job_name').value,
+                                document.getElementById('job_start').value
                             ]
                         }
-                    })
+                        })
+                    }
+/*
+                
 
                     if (formValues) {
                         const { value: info } = await Swal.fire({
@@ -255,7 +269,7 @@
                         $("#job").append("<tr><td id='" + table_len + "'>" + new_job + "</td></tr>");
                     }
                 }
-
+*/
             })
 
             $("#insert_task").off("click").on("click", async function () {
