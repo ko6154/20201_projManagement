@@ -83,6 +83,7 @@ router.route("/logout").get(function (req, res){
     });
     res.redirect('/');
 })
+
 /*
 router.route("/projPage").get(function (req, res){
    
@@ -177,11 +178,11 @@ router.route("/projPage/update/projInfo").post(function (req,res){
 router.route("/signup").get(function (req, res){
 	res.render("signup.html");
 })
-///
+
 //router.route("/main").get(function (req, res){
 //	res.render("main.html");
 //})
-///
+
 router.route("/create").get(function(req,res){
     sess=req.session;
     res.render("create.html",{username:sess.name,useremail:sess.email,admit:" "});
@@ -444,7 +445,7 @@ router.route("/user_pc/login").post(function (req, res) {
                 //권한 세션 입력해야한다.-> 디비처리//      
               
                 
-                mysqlDB.query('SELECT PROJECT.PROJ_NAME, INVITE.SEND_USER_ID, INVITE.RECV_USER_ID, INVITE.ISPM FROM INVITE, PROJECT WHERE INVITE.RECV_USER_ID = ? AND INVITE.PROJ_ID = PROJECT.PROJ_ID;', [sess.email], function (err, row) {
+                mysqlDB.query('SELECT PROJECT.PROJ_NAME, INVITE.PROJ_ID, INVITE.SEND_USER_ID, INVITE.RECV_USER_ID, INVITE.ISPM FROM INVITE, PROJECT WHERE INVITE.RECV_USER_ID = ? AND INVITE.PROJ_ID = PROJECT.PROJ_ID;', [sess.email], function (err, row) {
                     if (err) {
                         console.log(err);
                         res.end();
@@ -488,6 +489,82 @@ router.route("/user_pc/login").post(function (req, res) {
         }
     })
 })
+
+// 초대 수락
+router.route("/accept-invite").post(function(req, res) {
+    sess = req.session;
+    console.log(req.body);
+    //var proj_id = req.body.invite_proj_id;
+    //var send_user_id = req.body.invite_send_user_id;
+    //var recv_user_id = req.body.invite_recv_user_id;
+    //var isPM = req.body.invite_ispm;
+    var proj_id = req.body.proj_id;
+    var send_user_id = req.body.send_user_id;
+    var recv_user_id = req.body.recv_user_id;
+    var isPM = req.body.ispm;
+    //
+    // 초대 수락한 계정과 해당 프로젝트를 Attendence DB에 추가
+    //
+    var sql="INSERT INTO ATTENDENCE(PROJ_ID, USER_ID, ATTENDENCE_ROLE, ISPM) VALUES(?,?,?,?);"
+    var params=[proj_id, recv_user_id , null ,isPM];
+
+    mysqlDB.query(sql, params, function(err, rows) {
+        if (!err) {
+
+            //
+            // INVITE DB에 수락했던 정보 삭제
+            // 
+            sql = "DELETE FROM INVITE WHERE PROJ_ID=? AND SEND_USER_ID=? AND RECV_USER_ID=?;";
+            params=[proj_id, send_user_id, recv_user_id];
+
+            mysqlDB.query(sql, params, function(err, rows){
+                if (!err) {
+                    res.send("ACCEPT FINISH");  // ajax success(function()) {}으로
+                }
+                else {
+                    console.log(err);
+                    res.send(err);
+                }
+            });
+        }
+        else {
+            console.log(err);
+            res.send(err);
+        }
+    });
+})
+
+// 초대 거절
+router.route('/reject-invite').post(function(req,res) {
+    console.log(req.body);
+    //var proj_id = req.body.invite_proj_id;
+    //var send_user_id = req.body.invite_send_user_id;
+    //var recv_user_id = req.body.invite_recv_user_id;
+    //var isPM = req.body.invite_ispm;
+    var proj_id = req.body.proj_id;
+    var send_user_id = req.body.send_user_id;
+    var recv_user_id = req.body.recv_user_id;
+    var isPM = req.body.ispm;
+    console.log(proj_id);
+    console.log(send_user_id);
+    console.log(recv_user_id);
+
+    //
+    // INVITE DB에 저장했던 정보 삭제
+    //
+    var sql="DELETE FROM INVITE WHERE PROJ_ID=? AND SEND_USER_ID=? AND RECV_USER_ID=?;";
+    params=[proj_id, send_user_id, recv_user_id];
+    mysqlDB.query(sql, params, function(err, rows) {
+        if (!err) {
+            res.send("REJECT FINISH");
+        }
+        else {
+            console.log(err);
+            res.send(err);
+        }
+    });
+})
+
 
 router.route("/task/createBIG").post(upload.array('userFiles', 12), function (req, res) {
     if (req.files != null)
