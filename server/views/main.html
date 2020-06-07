@@ -19,18 +19,56 @@
   <link href="../stylesheet/sb-admin-2.min.css" rel="stylesheet">
   <link type="text/css" rel="stylesheet" href="../stylesheet/main.css">
   <script>
-    function check_true(){
-      alert("수락");
+    function check_true(proj_id, send_user_id, recv_user_id, ispm) {
+
+      var param = {
+        proj_id:proj_id,
+        send_user_id:send_user_id,
+        recv_user_id:recv_user_id,
+        ispm:ispm
+      }
+      $.ajax({
+        type:"POST",
+        url : "/accept-invite",
+        dataType : "text",
+        data : param,
+        success : function(data) {
+          alert("프로젝트에 참가하였습니다.");
+          window.location.reload(true);
+        }
+      });
     }
-    function check_false(){
-      alert("거절");
+
+    function check_false(proj_id, send_user_id, recv_user_id, ispm){
+
+      var param = {
+        proj_id:proj_id,
+        send_user_id:send_user_id,
+        recv_user_id:recv_user_id,
+        ispm:ispm
+      }
+      $.ajax({
+        type:"POST",
+        url : "/reject-invite",
+        dataType : "text",
+        data : param,
+        success : function(data) {
+          alert("프로젝트에 참가하지 않습니다.");
+          window.location.reload(true);
+        }
+      });
     }
   </script>
 
 </head>
 
 <body id="page-top">
-
+  <form id="check_alarm" name="check_alarm"> <!-- 'check_true()' or 'check_false()'에서 action, method 지정 -->
+    <input type="hidden" id="invite_proj_id" name="invite_proj_id"/>
+    <input type="hidden" id="invite_send_user_id" name="invite_send_user_id"/>
+    <input type="hidden" id="invite_recv_user_id" name="invite_recv_user_id"/>
+    <input type="hidden" id="invite_ispm" name="invite_ispm"/>
+  </form>
   <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -190,7 +228,7 @@
 
         </nav>
         </div>
-        <iframe src="http://52.55.31.29:3000/table" id="customers" scrolling="auto" frameborder="0" width="95%" height="90%" >
+        <iframe src="http://52.55.31.29:3000/table" id="customers" scrolling="auto" frameborder="0" width="95%" height="90%">
         </iframe>
         </div>
        
@@ -251,20 +289,23 @@
       $("#alarm_tab").append("<h6 class='dropdown-header'> 알림            </h6>");
       for(var i=0;i<size;i++){
         var pm = invite[i].ISPM;
+
+        // check_true or check_false에 인자로 들어갈 값들을 str로 표현해 사용
+        var invite_elements_str = invite[i].PROJ_ID + ", \"" + invite[i].SEND_USER_ID + "\",\"" + invite[i].RECV_USER_ID + "\"," + invite[i].ISPM;
+        
         if(pm =="1")
           {
             
-            $("#alarm_tab").append("<div class='dropdown-item d-flex align-items-center' ><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400'></div><span class='strong text-black-500' style='cursor:default'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 PM으로 초대하였습니다.</span><div><a onclick='check_true();' style='cursor:pointer'><i class='far fa-check-circle' style='color:green'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='check_false();' style='cursor:pointer;'><i class='fas fa-times-circle' style='color:red'></i></a></div></div></div>");
+            $("#alarm_tab").append("<div class='dropdown-item d-flex align-items-center' ><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400'></div><span class='strong text-black-500' style='cursor:default'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 PM으로 초대하였습니다.</span><div><a onclick='check_true(" + invite_elements_str + ");' style='cursor:pointer'><i class='far fa-check-circle' style='color:green'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='check_false(" + invite_elements_str + ");' style='cursor:pointer;'><i class='fas fa-times-circle' style='color:red'></i></a></div></div></div>");
           
           }
           else{
-            $("#alarm_tab").append("<div class='dropdown-item d-flex align-items-center' ><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400'></div><span class='strong text-black-500' style='cursor:default'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 팀원으로 초대하였습니다.</span><div><a onclick='check_true();' style='cursor:pointer'><i class='far fa-check-circle' style='color:green'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='check_false();' style='cursor:pointer;'><i class='fas fa-times-circle' style='color:red'></i></a></div></div></div>");
+            $("#alarm_tab").append("<div class='dropdown-item d-flex align-items-center' ><div class='mr-3'><div class='icon-circle bg-primary'><i class='fas fa-envelope text-white'></i></div></div><div><div class='small text-gray-400'></div><span class='strong text-black-500' style='cursor:default'>"+invite[i].PROJ_NAME+"에 "+invite[i].SEND_USER_ID+"님께서"+invite[i].RECV_USER_ID+"님을 팀원으로 초대하였습니다.</span><div><a onclick='check_true(" + invite_elements_str + ");' style='cursor:pointer'><i class='far fa-check-circle' style='color:green'></i></a>&nbsp;&nbsp;&nbsp;<a onclick='check_false(" + invite_elements_str + ");' style='cursor:pointer;'><i class='fas fa-times-circle' style='color:red'></i></a></div></div></div>");
           
           }          
-        
-        }
           
-        //$("#alarm_tab").append("<a class='dropdown-item text-center small text-gray-500' href='#''>Show All Alerts</a>")  ;      
+          
+      }  
         
     })
   })
