@@ -49,7 +49,6 @@ export class CreateMidPage implements OnInit{
       userFiles: new FormControl([''])
     });
 
-
     this.http.get_task_big_list(this.projectID).subscribe(
       (res: any[])  => {
         let tmp_post_big: Array<{}> = [];
@@ -57,8 +56,11 @@ export class CreateMidPage implements OnInit{
           tmp_post_big.push({
             BigID: value["BIG_ID"],
             level: value["BIG_LEVEL"],
-            title: value["BIG_TITLE"]
+            title: value["BIG_TITLE"],
+            status: value["BIG_STATUS"]
           });
+          if(tmp_post_big[tmp_post_big.length-1]['status'] == '1')
+            tmp_post_big.pop();
         });
         this.post_bigs = tmp_post_big;
       }
@@ -76,6 +78,13 @@ export class CreateMidPage implements OnInit{
   sdate: string;
   edate: string;
   create_task(){
+    let start:string, end:string, created:string;
+    this.sdate = start = this.uploadForm.get('MidStart').value;
+    start = start.substr(0, 10) + " " + start.split('T')[1].substr(0, 8);
+    this.edate = end = this.uploadForm.get('MidEnd').value;
+    end = end.substr(0, 10) + " " + end.split('T')[1].substr(0, 8);
+    let now = new Date().toISOString();
+    created = now.substr(0, 10) + " " + now.split('T')[1].substr(0, 8);
 
     let original_names = "";
     this.attaches.forEach((file : File)=>{
@@ -87,9 +96,16 @@ export class CreateMidPage implements OnInit{
     this.formData.set('BigID', this.uploadForm.get('BigID').value);
     this.formData.set('MidLevel', this.uploadForm.get('MidLevel').value);
     this.formData.set('MidTitle', this.uploadForm.get('MidTitle').value);
+    this.formData.set('MidStart', start);
+    this.formData.set('MidEnd', end);
     this.formData.set('MidDesc', this.uploadForm.get('MidDesc').value);    
+    this.formData.set('MidStatus', '0');
     this.formData.set('MidAuthor', this.author);
+    this.formData.set('MidCreated', created);
     this.formData.set('MidAttach', original_names);
+    this.formData.set('MidSmlNum', '0');
+    this.formData.set('MidSmlCom', '0');
+
 
     this.http.create_mid_task(this.formData).then(
       ret => {
@@ -117,6 +133,8 @@ export class CreateMidPage implements OnInit{
               text: '확인',
               handler: () => {
                 this.formData.delete('userFiles');
+                this.formData.set('MidStart', this.sdate);
+                this.formData.set('MidEnd', this.edate);
               }
             }]
           }).then(alert => {
@@ -127,7 +145,41 @@ export class CreateMidPage implements OnInit{
     );
   }
 
+  date_validate() : boolean{
+    let valid = this.uploadForm.get('MidStart').value < this.uploadForm.get('MidEnd').value;
+    console.log("vaild: " +valid)
+
+    if(valid)
+      return valid;
+    
+    this.alertController.create({
+      header: 'Reject!',
+      subHeader: '종료 날짜 오류',
+      message: '종료 날짜는 시작 날짜보다 이후여야 합니다',
+      buttons: [{
+        text: '확인',
+        handler:()=>{
+          this.formData.set('MidStart', '');
+          this.formData.set('MidEnd', '');
+        }
+      }]
+    }).then(alert => {
+      alert.present();
+    });
+  }
+
+  customAlertPostBig: any = {
+    header: '대분류',
+    subHeader: '대분류를 선택하세요',
+    message: '',
+    translucent: true
+  };
+
   delFile(file: any){
     this.attaches.delete(file);
+  }
+
+  goBack(){
+    this.navCtrl.pop();
   }
 }

@@ -5,7 +5,7 @@
           <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
   </ion-buttons>
-    <ion-title>과업 작성</ion-title>
+    <ion-title>ACT 작성</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -17,28 +17,22 @@
             <ion-input formControlName="SmlTitle" placeholder="제목을 입력하세요" required></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label>대분류</ion-label>
+          <ion-label>JOB</ion-label>
           <ion-select formControlName="BigID" [interfaceOptions]="customAlertPostBig" interface="alert" placeholder="Select One" (ionChange) = "getMidList()" required>
             <ion-select-option *ngFor="let post_big of post_bigs" [value]=post_big.BigID>{{post_big.level + '. ' + post_big.title}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>중분류</ion-label>
-          <ion-select formControlName="MidID" [interfaceOptions]="customAlertPostMiddle" interface="alert" placeholder="Select One" required>
+          <ion-label>TASK</ion-label>
+          <ion-select formControlName="MidID" interface="alert" placeholder="Select One" required>
             <ion-select-option *ngFor="let post_middle of post_mids" [value]=post_middle.MidID>{{post_middle.level + '. ' + post_middle.title}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label>시작날짜</ion-label>
-          <ion-datetime formControlName="SmlStart" displayFormat="YYYY-MM-DD" max="2050-12-31" placeholder="Select Date"></ion-datetime>
-        </ion-item>
-        <ion-item>
-          <ion-label>종료날짜</ion-label>
-          <ion-datetime formControlName="SmlEnd" displayFormat="YYYY-MM-DD" max="2050-12-31" placeholder="Select Date" (ionChange)="date_validate()"></ion-datetime>
-        </ion-item>
-        <ion-item>
-          <ion-label>중요도</ion-label>
-          <ion-range min="1" max="10" value="5" formControlName="SmlWeight" color="secondary" pin="true"></ion-range>
+          <ion-label>ACTOR</ion-label>
+          <ion-select formControlName="MemberList" [interfaceOptions]="customAlertPostMember" interface="alert" placeholder="Select One" required>
+            <ion-select-option *ngFor="let post_member of post_members" [value]=post_member.UserID>{{'= ' + post_member.UserID + ' ='}}</ion-select-option>
+          </ion-select>
         </ion-item>
         <ion-item>
           <ion-label position="floating">내용</ion-label>

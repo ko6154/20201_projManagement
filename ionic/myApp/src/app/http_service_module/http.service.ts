@@ -103,6 +103,11 @@ export class HttpService {
     return this.httpClient.get(URL, {headers: this.header}).toPromise();
   }
 
+  get_task_member_list(proj_id : string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/taskView/Member/select?proj_id=${proj_id}`;
+    return this.httpClient.get(URL, {headers: this.header});
+  }
+
   get_task_big_list(proj_id : string) : Observable<{}> {
     let URL = `${this.SERVER_ADDRESS}/taskView/Big/select?proj_id=${proj_id}`;
     return this.httpClient.get(URL, {headers: this.header});
