@@ -331,13 +331,15 @@ router.route("/task/createBIG").post(upload.array('userFiles', 12), function (re
     var BigStatus = req.body.BigStatus;
     var BigAuthor = req.body.BigAuthor;
     var BigCreated = req.body.BigCreated;
-    var BigProgress = req.body.BigProgress;
+    var BigMidNum = req.body.BigMidNum;
+    var BigMidCom = req.body.BigMidCom;
+
 
     console.log(`projectID : ${projectID} , BigLevel : ${BigLevel}, BigTitle : ${BigTitle}, BigStart : ${BigStart} , BigEnd : ${BigEnd}, BigDesc : ${BigDesc}, 
-            BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated} , BigProgress : ${BigProgress}`);
+            BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated} , BigMidNum : ${BigMidNum} , BigMidCom : ${BigMidCom}`);
     var data = {
         PROJ_ID: projectID, BIG_LEVEL: BigLevel, BIG_TITLE: BigTitle, BIG_START: BigStart, BIG_END: BigEnd, BIG_DESC: BigDesc, BIG_ATTACHMENT: BigAttach,
-        BIG_STATUS: BigStatus, BIG_AUTHOR: BigAuthor, BIG_CREATED: BigCreated, BIG_PROGRESS: BigProgress};
+        BIG_STATUS: BigStatus, BIG_AUTHOR: BigAuthor, BIG_CREATED: BigCreated, BIG_MID_NUM: BigMidNum, BIG_MID_COM: BigMidCom};
 
     mysqlDB.query('INSERT INTO POST_BIG set ?', data, async function (err, results) {
         var admit;
@@ -462,14 +464,22 @@ router.route("/task/createMID").post(upload.array('userFiles', 12), function (re
     var BigID = req.body.BigID;
     var MidLevel = req.body.MidLevel;
     var MidTitle = req.body.MidTitle;
+    var MidStart = req.body.MidStart;
+    var MidEnd = req.body.MidEnd;
     var MidDesc = req.body.MidDesc;
     var MidAttach = req.body.MidAttach;
+    var MidStatus = req.body.MidStatus;
     var MidAuthor = req.body.MidAuthor;
+    var MidCreated = req.body.MidCreated;
+    var MidSmlNum = req.body.MidSmlNum;
+    var MidSmlCom = req.body.MidSmlCom;
 
-    console.log(`BigID : ${BigID} , MidLevel : ${MidLevel}, MidTitle : ${MidTitle}, MidDesc : ${MidDesc}, `+ `MidAttach : ${MidAttach} , MidAuthor : ${MidAuthor}`);
+    console.log(`BigID : ${BigID} , MidLevel : ${MidLevel}, MidTitle : ${MidTitle}, MidStart : ${MidStart} , MidEnd : ${MidEnd}, MidDesc : ${MidDesc}, `
+        + `MidAttach : ${MidAttach} , MidStatus : ${MidStatus}, MidAuthor : ${MidAuthor}, MidCreated : ${MidCreated}, MidSmlNum : ${MidSmlNum}, MidSmlCom : ${MidSmlCom}`);
 
     var data = {
-        BIG_ID: BigID, MID_LEVEL: MidLevel, MID_TITLE: MidTitle, MID_DESC: MidDesc,MID_ATTACHMENT: MidAttach, MID_AUTHOR: MidAuthor
+        BIG_ID: BigID, MID_LEVEL: MidLevel, MID_TITLE: MidTitle, MID_START: MidStart, MID_END: MidEnd, MID_DESC: MidDesc,
+        MID_ATTACHMENT: MidAttach, MID_STATUS: MidStatus, MID_AUTHOR: MidAuthor, MID_CREATED: MidCreated, MID_SML_NUM : MidSmlNum, MID_SML_COM : MidSmlCom
     };
     mysqlDB.query('INSERT INTO POST_MID set ?', data, function (err, results) {
         var admit;
@@ -518,6 +528,23 @@ router.route("/task/createMID").post(upload.array('userFiles', 12), function (re
             res.write(JSON.stringify(admit));
             res.end();
         }
+        
+        //change number of mid of Big
+        mysqlDB.query('SELECT BIG_MID_NUM FROM POST_BIG WHERE BIG_ID = ?', [BigID] , function (err, results){
+            if(!err){
+            var number_of_big = results[0]['BIG_MID_NUM'] + 1;
+            console.log(number_of_big);
+            mysqlDB.query('UPDATE POST_BIG SET BIG_MID_NUM = ? WHERE BIG_ID = ?', [number_of_big, BigID], function(err,results){
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log("number update 성공");
+                }
+                })
+            }else {
+                console.log(err);
+            }
+        })
     })
 })
 
@@ -531,20 +558,19 @@ router.route("/task/createSML").post(upload.array('userFiles', 12), function (re
     var BigID = req.body.BigID;
     var MidID = req.body.MidID;
     var SmlTitle = req.body.SmlTitle;
-    var SmlStart = req.body.SmlStart;
-    var SmlEnd = req.body.SmlEnd;
     var SmlDesc = req.body.SmlDesc;
     var SmlAttach = req.body.SmlAttach;
     var SmlStatus = req.body.SmlStatus;
     var SmlAuthor = req.body.SmlAuthor;
     var SmlCreated = req.body.SmlCreated;
+    var SmlActor = req.body.SmlActor;
 
-    console.log(`MidID : ${MidID} , SmlTitle : ${SmlTitle}, SmlStart : ${SmlStart} , SmlEnd : ${SmlEnd}, SmlDesc : ${SmlDesc}, `
-        + `SmlAttach : ${SmlAttach} , SmlStatus : ${SmlStatus}, SmlAuthor : ${SmlAuthor}, SmlCreated : ${SmlCreated}`);
+    console.log(`MidID : ${MidID} , SmlTitle : ${SmlTitle}, SmlDesc : ${SmlDesc}, `
+        + `SmlAttach : ${SmlAttach} , SmlStatus : ${SmlStatus}, SmlAuthor : ${SmlAuthor}, SmlCreated : ${SmlCreated} , SmlActor : ${SmlActor}`);
 
     var data = {
-        MID_ID: MidID, SML_TITLE: SmlTitle, SML_START: SmlStart, SML_END: SmlEnd, SML_DESC: SmlDesc,
-        SML_ATTACHMENT: SmlAttach, SML_STATUS: SmlStatus, SML_AUTHOR: SmlAuthor, SML_CREATED: SmlCreated
+        MID_ID: MidID, SML_TITLE: SmlTitle, SML_DESC: SmlDesc,
+        SML_ATTACHMENT: SmlAttach, SML_STATUS: SmlStatus, SML_AUTHOR: SmlAuthor, SML_CREATED: SmlCreated, SML_ACTOR: SmlActor
     };
     mysqlDB.query('INSERT INTO POST_SML set ?', data, function (err, results) {
         var admit;
@@ -593,6 +619,22 @@ router.route("/task/createSML").post(upload.array('userFiles', 12), function (re
             res.write(JSON.stringify(admit));
             res.end();
         }
+                //change number of sml of Mid
+                mysqlDB.query('SELECT MID_SML_NUM FROM POST_MID WHERE MID_ID = ?', [MidID] , function (err, results){
+                    if(!err){
+                    var number_of_mid = results[0]['MID_SML_NUM'] + 1;
+                    console.log(number_of_mid);
+                    mysqlDB.query('UPDATE POST_MID SET MID_SML_NUM = ? WHERE MID_ID = ?', [number_of_mid, MidID], function(err,results){
+                        if(err){
+                            console.log(err);
+                        }else{
+                            console.log("number update 성공");
+                        }
+                        })
+                    }else {
+                        console.log(err);
+                    }
+                })
     })
 })
 // NOTI create
@@ -752,6 +794,23 @@ router.route("/projectInfo/select").get(function (req, res) {
 })
 
 
+//member list select alert list
+router.route("/taskView/Member/select").get(function (req, res) {
+    var proj_id = req.query.proj_id;
+    console.log("======= Member List Select =======\n");
+
+    mysqlDB.query('select * from ATTENDENCE where PROJ_ID = ? order by USER_ID', [proj_id], function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            console.log(rows);
+            res.write(JSON.stringify(rows));
+            res.end();
+        }
+    })
+})
 
 //big list select alert list
 router.route("/taskView/Big/select").get(function (req, res) {

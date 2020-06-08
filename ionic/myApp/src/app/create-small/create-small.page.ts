@@ -17,6 +17,7 @@ export class CreateSmallPage implements OnInit {
 
   post_bigs: Array<{}> = [];
   post_mids: Array<{}> = [];
+  post_members: Array<{}> = [];
 
   author: string;
   projectID: string;
@@ -47,6 +48,7 @@ export class CreateSmallPage implements OnInit {
       SmlEnd: new FormControl(),
       SmlWeight : new FormControl(),
       SmlDesc: new FormControl(),
+      MemberList : new FormControl(),
       userFiles: new FormControl([''])
     });
     
@@ -63,7 +65,21 @@ export class CreateSmallPage implements OnInit {
         this.post_bigs = tmp_post_big;
       }
     );
+
+    this.http.get_task_member_list(this.projectID).subscribe(
+      (res: any[]) => {
+        let tmp_post_members: Array<{}> = [];
+        res.forEach(function (value) {
+          tmp_post_members.push({
+            UserID: value["USER_ID"]
+          });
+        });
+        this.post_members = tmp_post_members;
+      }
+    );
   }
+
+
 
   setFiles($event) {
     let files: FileList;
@@ -73,14 +89,9 @@ export class CreateSmallPage implements OnInit {
     }
   }
 
-  sdate: string;
-  edate: string;
+
   create_task() {
-    let start: string, end: string, created: string;
-    this.sdate = start = this.uploadForm.get('SmlStart').value;
-    start = start.substr(0, 10) + " " + start.split('T')[1].substr(0, 8);
-    this.edate = end = this.uploadForm.get('SmlEnd').value;
-    end = end.substr(0, 10) + " " + end.split('T')[1].substr(0, 8);
+    let created: string;
     let now = new Date().toISOString();
     created = now.substr(0, 10) + " " + now.split('T')[1].substr(0, 8);
 
@@ -94,18 +105,12 @@ export class CreateSmallPage implements OnInit {
     this.formData.set('BigID', this.uploadForm.get('BigID').value);
     this.formData.set('MidID', this.uploadForm.get('MidID').value);
     this.formData.set('SmlTitle', this.uploadForm.get('SmlTitle').value);
-    this.formData.set('SmlStart', start);
-    this.formData.set('SmlEnd', end);
     this.formData.set('SmlDesc', this.uploadForm.get('SmlDesc').value);
     this.formData.set('SmlStatus', '0');
     this.formData.set('SmlAuthor', this.author);
     this.formData.set('SmlCreated', created);
     this.formData.set('SmlAttach', original_names);
-    this.formData.set('SmlWeight', this.uploadForm.get('SmlWeight').value);
-    let valid = this.uploadForm.get('SmlWeight').value  // 중요도 값이 정상 범위가 아닌 경우 5로 설정.
-    if(valid < 1 || valid > 10){
-      this.formData.set('SmlWeight', '5');
-    }
+    this.formData.set('SmlActor',this.uploadForm.get('MemberList').value);
 
     this.http.create_sml_task(this.formData).then(
       ret => {
@@ -132,8 +137,6 @@ export class CreateSmallPage implements OnInit {
               text: '확인',
               handler: () => {
                 this.formData.delete('userFiles');
-                this.uploadForm.setValue({'SmlStart': this.sdate});
-                this.uploadForm.setValue({'SmlEnd': this.edate});
               }
             }]
           }).then(alert => {
@@ -172,20 +175,6 @@ export class CreateSmallPage implements OnInit {
     if(valid)
       return valid;
     
-    this.alertController.create({
-      header: 'Reject!',
-      subHeader: '종료 날짜 오류',
-      message: '종료 날짜는 시작 날짜보다 이후여야 합니다',
-      buttons: [{
-        text: '확인',
-        handler:()=>{
-          this.uploadForm.setValue({'SmlStart': ''});
-          this.uploadForm.setValue({'SmlEnd': ''});
-        }
-      }]
-    }).then(alert => {
-      alert.present();
-    });
   }
 
   customAlertPostBig: any = {
@@ -206,5 +195,7 @@ export class CreateSmallPage implements OnInit {
     this.attaches.delete(file);
   }
 
-
+  goBack(){
+    this.navCtrl.pop();
+  }
 }

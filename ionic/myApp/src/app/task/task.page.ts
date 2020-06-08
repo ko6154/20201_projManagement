@@ -13,6 +13,8 @@ export class TaskPage implements OnInit {
 
   taskIsOpen: boolean;
   tasks: Array<{}> = [];
+  post_bigs: Array<{}> = [];
+  
 
   public bigIsOpen: Array<Map<string, boolean>> = [];
   public midIsOpen: Array<Map<string, boolean>> = [];
@@ -21,10 +23,15 @@ export class TaskPage implements OnInit {
     private http: HttpService,
     private navCtrl : NavController,
     private dataService : DataService
-  ) { }
+  ) { 
+
+
+  }
 
   ngOnInit() {
     this.initailize();
+
+
   }
 
 
@@ -34,6 +41,56 @@ export class TaskPage implements OnInit {
   }
 
   
+
+  go_board(type: string, ...args: any) {
+    var len = args.length-1;
+    let title  = args[len]['title'];
+    let id = args[len].id;
+    let start  = args[len].start;
+    let end  = args[len].end;
+    let author  = args[len].author;
+    let created  = args[len].created;
+    let desc  = args[len].desc;
+    let attach: any;
+    if(type != 'noti')
+     attach = args[len].attach.split("*");
+    let attaches = new Array();
+    let pre_path = `http://52.55.31.29:8000/download?path=`;
+    
+    if(type != 'noti'){
+      for(var i=0; i<attach.length-1; ++i){
+        var path = pre_path+attach[i];
+        var tmp = attach[i].split("/");
+        attaches.push({name: tmp[tmp.length-1], path: path});
+      }
+    }
+    
+    this.dataService.setType(type);
+    this.dataService.setBoardID(id);
+    this.dataService.setTitle(title);
+    this.dataService.setStart(start);
+    this.dataService.setEnd(end);
+    this.dataService.setAuthor(author);
+    this.dataService.setCreated(created);
+    this.dataService.setDesc(desc);
+    this.dataService.setAttaches(attaches);
+    
+    console.log(type)
+    console.log(title)
+    console.log(start)
+    console.log(author)
+    console.log(created)
+    console.log(desc)
+    console.log(attaches)
+
+    this.navCtrl.navigateForward('/board');
+  }
+  
+  toggle(argu: boolean) {
+    console.log(argu);
+    return argu ? false : true;
+  }
+
   async initailize() {
 
     this.project_id = this.dataService.getProjectID();
@@ -115,5 +172,22 @@ export class TaskPage implements OnInit {
         this.midIsOpen.push(new Map<string, boolean>().set(this.tasks[i]["mids"][j]["id"], false));
       }
     }
+
+    this.http.get_task_big_list(this.project_id).subscribe(
+      (res: any[])  => {
+        let tmp_post_big: Array<{}> = [];
+        res.forEach(function (value){
+          tmp_post_big.push({
+            BigID: value["BIG_ID"],
+            level: value["BIG_LEVEL"],
+            title: value["BIG_TITLE"],
+            status: value["BIG_STATUS"]
+          });
+          if(tmp_post_big[tmp_post_big.length-1]['status'] == '1')
+            tmp_post_big.pop();
+        });
+        this.post_bigs = tmp_post_big;
+      }
+    ); 
   }
 }

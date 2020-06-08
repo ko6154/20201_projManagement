@@ -5,7 +5,7 @@
           <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
   </ion-buttons>
-    <ion-title>대분류 생성</ion-title>
+    <ion-title>JOB 생성</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,12 +13,20 @@
   <form [formGroup]="uploadForm" (ngSubmit)="create_task()">
     <ion-list>
       <ion-item>
-        <ion-label position="floating">대분류</ion-label>
+        <ion-label position="floating">JOB</ion-label>
         <ion-input min="1" formControlName="BigLevel" placeholder="대분류 수준을 입력하세요" type="number" required></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="floating" required>제목</ion-label>
         <ion-input formControlName="BigTitle" placeholder="제목을 입력하세요"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>시작날짜</ion-label>
+        <ion-datetime formControlName="BigStart" displayFormat="YYYY-MM-DD" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>종료날짜</ion-label>
+        <ion-datetime formControlName="BigEnd"  displayFormat="YYYY-MM-DD" placeholder="Select Date" (ionChange)="date_validate()"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label position="floating">내용</ion-label>
