@@ -527,6 +527,44 @@ router.route("/user_pc/login").post(function (req, res) {
         }
     })
 })
+//job추가
+router.route("/insertJob").post(function(req, res) {
+    var job_name = req.body.job_name;
+    var job_start = req.body.job_start;
+    var job_end = req.body.job_end;
+    var job_desc = req.body.job_desc;
+    var job_file = req.body.job_file;
+    console.log(req.body);
+    res.send("ACCEPT FINISH");
+
+})
+
+//task추가
+router.route("/insertTask").post(function(req, res) {
+    var task_name = req.body.task_name;
+    var task_start = req.body.task_start;
+    var task_end = req.body.task_end;
+    var task_desc = req.body.task_desc;
+    var task_file = req.body.task_file;
+    var select_job = req.body.select_job;
+    console.log(req.body);
+    res.send("ACCEPT FINISH");
+
+})
+
+//activity추가
+router.route("/insertAct").post(function(req, res) {
+    var act_name = req.body.act_name;
+    var act_start = req.body.act_start;
+    var act_end = req.body.act_end;
+    var act_desc = req.body.act_desc;
+    var act_file = req.body.act_file;
+    var select_job = req.body.select_job;
+    var select_task = req.body.select_task;
+    console.log(req.body);
+    res.send("ACCEPT FINISH");
+
+})
 
 // 초대 수락
 router.route("/accept-invite").post(function(req, res) {
