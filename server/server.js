@@ -127,20 +127,23 @@ router.route("/projPage").post(function (req,res){
     proj.proj_end = req.body.proj_end;
     proj.proj_desc = req.body.proj_desc;
     proj = JSON.stringify(proj);
-   // console.log(proj);
+    //console.log(proj);
     var proj_id = req.body.proj_id;
     var job;
     var job_size;
     var task_size;
     var task = new Array();
 
-    mysqlDB.query("SELECT * FROM POST_BIG WHERE PROJ_ID = ? ORDER BY BIG_LEVEL",[proj_id],function(err,row){
+    mysqlDB.query("SELECT * FROM POST_BIG WHERE PROJ_ID = ? ORDER BY BIG_LEVEL", [proj_id] ,function(err,row, fields){
         if (err) {
             console.log(err);
             res.end();
         }else{
             job_size = row.length;
             job=row;
+
+            
+
            // console.log(job[0].BIG_ID);
             for(var i=0;i<job_size;i++){
                 //console.log("task 출력시작");
@@ -153,13 +156,11 @@ router.route("/projPage").post(function (req,res){
                         //console.log("task_len "+rows.length);                        
                         //console.log("task입니다 "+JSON.stringify(rows));
                         task.push(rows);
-                        console.log(task);
+                        //console.log(task);
                     }
                 })
             } 
-
             job = JSON.stringify(row);
-            console.log(task[0]);
             //console.log("job_len "+row.length);
             //console.log("job입니다 "+job);
             mysqlDB.query('SELECT ISPM FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID = ? AND ATTENDENCE.USER_ID = ?;', [proj_id, sess.email], function (err, rows, results) {
@@ -169,7 +170,7 @@ router.route("/projPage").post(function (req,res){
                 }
                 else {
                     var isPM = JSON.stringify(rows);
-                   
+                    //console.log("174:" + job);
                     res.render("projPage.html", {isPM:isPM, proj:proj, user:sess.username, Job:job, Tasks:JSON.stringify(task)});
                 }
             });
@@ -240,14 +241,14 @@ router.route("/table").get(function(req,res){
         }
         else {
        
-           // console.log(rows);
-           // console.log(rows.length);
+            //console.log(rows);
+            //console.log(rows.length);
            // console.log(rows[0]);
           //  console.log(JSON.stringify(rows[0]));
             var project = JSON.stringify(rows);   
             var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
-           // console.log(project);         
+            //console.log(project);         
             res.render("table.html",{pro:project,len:size,username:sess.name});
         }        
     }); 
@@ -264,14 +265,14 @@ router.route("/finish").get(function(req,res){
         }
         else {
        
-           // console.log(rows);
-           // console.log(rows.length);
+            console.log(rows);
+            console.log(rows.length);
            // console.log(rows[0]);
           //  console.log(JSON.stringify(rows[0]));
             var project = JSON.stringify(rows);   
             var size = rows.length;        
             project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
-          //  console.log(project);         
+            //console.log(project);         
             res.render("finish.html",{pro:project,len:size,session:sess});
         }        
     }); 
@@ -466,7 +467,7 @@ router.route("/user_pc/login").post(function (req, res) {
             return;
         }
         if (results.length > 0) {
-            console.log(results);
+            //console.log(results);
             var user = results[0];
             var hashPassword = crypto.createHash("sha512").update(password + user.SALT).digest("hex");
 
@@ -479,7 +480,7 @@ router.route("/user_pc/login").post(function (req, res) {
                 sess.email = email;
                 sess.state = 't'; //권한  
                 sess.name = user.NAME;  
-                console.log(sess.email + sess.name);
+                //console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
               
                 
@@ -499,7 +500,7 @@ router.route("/user_pc/login").post(function (req, res) {
                         //console.log(size);   
                         invite = invite.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
                        
-                       // console.log(invite);       
+                        //console.log(invite);       
                        req.session.save(function(){
                         
                         res.render('main.html',{username:sess.name,len:size,invite:invite});
@@ -527,28 +528,160 @@ router.route("/user_pc/login").post(function (req, res) {
         }
     })
 })
+
 //job추가
-router.route("/insertJob").post(function(req, res) {
+router.route("/insertJob").post(upload.array('job_file', 12), function(req, res) {
+
+    sess = req.session;
+
+    if (req.files != null)
+        files = req.files;
+    else
+        files = [];
+
+    var proj_id = req.body.proj_id;
+    var job_level = req.body.job_level;
     var job_name = req.body.job_name;
     var job_start = req.body.job_start;
     var job_end = req.body.job_end;
     var job_desc = req.body.job_desc;
-    var job_file = req.body.job_file;
+    var job_attachment = req.body.job_attachment;
+    var job_author = sess.email;
+    var job_created = null;
+    
     console.log(req.body);
-    res.send("ACCEPT FINISH");
+
+
+
+    //console.log(`proj_id : ${proj_id} , job_level : ${job_level}, BigTitle : ${BigTitle}, BigStart : ${BigStart} , BigEnd : ${BigEnd}, BigDesc : ${BigDesc}, 
+    //BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated}`);
+
+    var data = {
+          PROJ_ID: proj_id, BIG_LEVEL: job_level, BIG_TITLE: job_name, BIG_START: job_start, 
+          BIG_END: job_end, BIG_DESC: job_desc, BIG_ATTACHMENT: job_attachment, BIG_STATUS:0, 
+          BIG_AUTHOR: job_author, BIG_CREATED: job_created, BIG_MID_NUM:0, BIG_MID_COM:0
+    };
+    console.log(data);
+
+    mysqlDB.query('INSERT INTO POST_BIG set ?', data, async function (err, results) {
+        var admit;
+        if (!err) {
+            var result_id = results["insertId"];
+            var dir = "./public/" + proj_id + "/" +result_id;
+
+            if (!fs.existsSync(dir))
+                fs.mkdirSync(dir);
+
+            var result_attach = job_attachment.split('*');
+            console.log("result_attach" + result_attach);
+            var attaches='';
+            for(var i = 0; i<result_attach.length-1; i++){
+                attaches += dir +'/' + result_attach[i] +'*';
+            }
+            console.log("최종 attach: "+attaches);
+            mysqlDB.query('UPDATE POST_BIG set BIG_ATTACHMENT = ? where BIG_ID = ?', [attaches, result_id] , function(err,rows,field){
+                if(err){
+                    console.log(err);
+                    admit = { "create": "deny" };
+                    res.write(JSON.stringify(admit));
+                    res.end();
+                }else{
+                    console.log("post update 성공")
+                    res.send("ACCEPT FINISH");
+                }
+ 
+            });         
+  
+        } else {
+            console.log(err);
+            console.log("TASK INSERT ERROR");
+            admit = { "create": "deny" };
+            res.write(JSON.stringify(admit));
+            res.end();
+        }
+    })
+    
+
+    
 
 })
 
 //task추가
 router.route("/insertTask").post(function(req, res) {
+ 
+    sess = req.session;
+
+    if (req.files != null)
+        files = req.files;
+    else
+        files = [];
+
+    var proj_id = req.body.proj_id;
+    var task_job_id = req.body.task_job_id;
+    var task_level = req.body.task_level;
     var task_name = req.body.task_name;
     var task_start = req.body.task_start;
     var task_end = req.body.task_end;
     var task_desc = req.body.task_desc;
-    var task_file = req.body.task_file;
-    var select_job = req.body.select_job;
+    var task_attachment = req.body.task_attachment;
+    var task_author = sess.email;
+    var task_created = null;
+    
     console.log(req.body);
-    res.send("ACCEPT FINISH");
+
+
+
+    //console.log(`proj_id : ${proj_id} , job_level : ${job_level}, BigTitle : ${BigTitle}, BigStart : ${BigStart} , BigEnd : ${BigEnd}, BigDesc : ${BigDesc}, 
+    //BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated}`);
+
+    var data = {
+          BIG_ID: task_job_id, MID_LEVEL: task_level, MID_TITLE: task_name, MID_START: task_start, 
+          MID_END: task_end, MID_DESC: task_desc, MID_ATTACHMENT: task_attachment, MID_STATUS:0, 
+          MID_AUTHOR: task_author, MID_CREATED: task_created, MID_SML_NUM:0, MID_SML_COM:0
+    };
+    console.log(data);
+
+    mysqlDB.query('INSERT INTO POST_MID set ?', data, async function (err, results) {
+        var admit;
+        if (!err) {
+            var result_id = results["insertId"];
+            var dir = "./public/" + proj_id + "/" +result_id;
+            var dir = `./public/${proj_id}/${task_job_id}/${result_id}`;
+
+            if (!fs.existsSync(dir))
+                fs.mkdirSync(dir);
+
+            var result_attach = task_attachment.split('*');
+            console.log("result_attach" + result_attach);
+            var attaches='';
+            for(var i = 0; i<result_attach.length-1; i++){
+                attaches += dir +'/' + result_attach[i] +'*';
+            }
+            console.log("최종 attach: "+attaches);
+            mysqlDB.query('UPDATE POST_MID set MID_ATTACHMENT = ? where MID_ID = ?', [attaches, result_id] , function(err,rows,field){
+                if(err){
+                    console.log(err);
+                    admit = { "create": "deny" };
+                    res.write(JSON.stringify(admit));
+                    res.end();
+                }else{
+                    console.log("TASK update 성공")
+                    res.send("TASK INSERT FINISH");
+                }
+ 
+            });         
+  
+        } else {
+            console.log(err);
+            console.log("TASK INSERT ERROR");
+            admit = { "create": "deny" };
+            res.write(JSON.stringify(admit));
+            res.end();
+        }
+    })
+    
+
+    
 
 })
 
@@ -642,7 +775,7 @@ router.route('/reject-invite').post(function(req,res) {
 })
 
 
-router.route("/task/createBIG").post(upload.array('userFiles', 12), function (req, res) {
+router.route("/createBIG").post(upload.array('userFiles', 12), function (req, res) {
     if (req.files != null)
         files = req.files;
     else
@@ -657,15 +790,13 @@ router.route("/task/createBIG").post(upload.array('userFiles', 12), function (re
     var BigStatus = req.body.BigStatus;
     var BigAuthor = req.body.BigAuthor;
     var BigCreated = req.body.BigCreated;
-    var BigWeight = req.body.BigWeight;
-    var BigProgress = req.body.BigProgress;
 
     console.log(`projectID : ${projectID} , BigLevel : ${BigLevel}, BigTitle : ${BigTitle}, BigStart : ${BigStart} , BigEnd : ${BigEnd}, BigDesc : ${BigDesc}, 
-            BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated} , BigWeight : ${BigWeight}, BigProgress : ${BigProgress}`);
+            BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated}`);
 
     var data = {
         PROJ_ID: projectID, BIG_LEVEL: BigLevel, BIG_TITLE: BigTitle, BIG_START: BigStart, BIG_END: BigEnd, BIG_DESC: BigDesc, BIG_ATTACHMENT: BigAttach,
-        BIG_STATUS: BigStatus, BIG_AUTHOR: BigAuthor, BIG_CREATED: BigCreated, BIG_WEIGHT: BigWeight, BIG_PROGRESS: BigProgress
+        BIG_STATUS: BigStatus, BIG_AUTHOR: BigAuthor, BIG_CREATED: BigCreated, BIG_MID_NUM:0, BIG_MID_COM:0
     };
 
     mysqlDB.query('INSERT INTO POST_BIG set ?', data, async function (err, results) {
@@ -677,7 +808,7 @@ router.route("/task/createBIG").post(upload.array('userFiles', 12), function (re
             if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
                 
-            for (var i = 0; i < files.length; ++i) {
+            /*for (var i = 0; i < files.length; ++i) {
                 fs.renameSync("./public/" + files[i].originalname, dir + "/" + files[i].originalname);
                 var extension = path.extname(files[i].originalname);    // move
 
@@ -691,7 +822,7 @@ router.route("/task/createBIG").post(upload.array('userFiles', 12), function (re
                     };
                 var fpath = dir + '/' + files[i].originalname;
                 pythonShell(fpath, options, projectID);
-            }
+            }*/
 
             var result_attach = BigAttach.split('*');
             console.log("result_attach" + result_attach);
@@ -783,7 +914,7 @@ function searchQueries(fpath, word, projectID){
 
 
 // GENERATE-TASK-Middle
-router.route("/task/createMID").post(upload.array('userFiles', 12), function (req, res) {
+router.route("/createMID").post(upload.array('userFiles', 12), function (req, res) {
     if (req.files != null)
         files = req.files;
     else
@@ -805,7 +936,7 @@ router.route("/task/createMID").post(upload.array('userFiles', 12), function (re
 
     var data = {
         BIG_ID: BigID, MID_LEVEL: MidLevel, MID_TITLE: MidTitle, MID_START: MidStart, MID_END: MidEnd, MID_DESC: MidDesc,
-        MID_ATTACHMENT: MidAttach, MID_STATUS: MidStatus, MID_AUTHOR: MidAuthor, MID_CREATED: MidCreated
+        MID_ATTACHMENT: MidAttach, MID_STATUS: MidStatus, MID_AUTHOR: MidAuthor, MID_CREATED: MidCreated, MID_SML_NUM:0, MID_SML_COM:0
     };
     mysqlDB.query('INSERT INTO POST_MID set ?', data, function (err, results) {
         var admit;
@@ -816,7 +947,7 @@ router.route("/task/createMID").post(upload.array('userFiles', 12), function (re
             if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
                 
-            for (var i = 0; i < files.length; ++i){
+            /*for (var i = 0; i < files.length; ++i){
                 fs.rename("./public/" + files[i].originalname, dir + "/" + files[i].originalname, function (err) { });
                 var extension = path.extname(files[i].originalname);    // move
 
@@ -830,7 +961,7 @@ router.route("/task/createMID").post(upload.array('userFiles', 12), function (re
                     };
                 var fpath = dir + '/' + files[i].originalname;
                 pythonShell(fpath, options, projectID);
-            }
+            }*/
 
             var result_attach = MidAttach.split('*');
             var attaches='';
@@ -858,7 +989,7 @@ router.route("/task/createMID").post(upload.array('userFiles', 12), function (re
 })
 
 // GENERATE-TASK-Small
-router.route("/task/createSML").post(upload.array('userFiles', 12), function (req, res) {
+router.route("/createSML").post(upload.array('userFiles', 12), function (req, res) {
     if (req.files != null)
         files = req.files;
     else
@@ -867,20 +998,19 @@ router.route("/task/createSML").post(upload.array('userFiles', 12), function (re
     var BigID = req.body.BigID;
     var MidID = req.body.MidID;
     var SmlTitle = req.body.SmlTitle;
-    var SmlStart = req.body.SmlStart;
-    var SmlEnd = req.body.SmlEnd;
     var SmlDesc = req.body.SmlDesc;
     var SmlAttach = req.body.SmlAttach;
     var SmlStatus = req.body.SmlStatus;
     var SmlAuthor = req.body.SmlAuthor;
     var SmlCreated = req.body.SmlCreated;
+    var SmlActor = req.body.SmlActor;
 
-    console.log(`MidID : ${MidID} , SmlTitle : ${SmlTitle}, SmlStart : ${SmlStart} , SmlEnd : ${SmlEnd}, SmlDesc : ${SmlDesc}, `
+    console.log(`MidID : ${MidID} , SmlTitle : ${SmlTitle}, SmlDesc : ${SmlDesc}, `
         + `SmlAttach : ${SmlAttach} , SmlStatus : ${SmlStatus}, SmlAuthor : ${SmlAuthor}, SmlCreated : ${SmlCreated}`);
 
     var data = {
-        MID_ID: MidID, SML_TITLE: SmlTitle, SML_START: SmlStart, SML_END: SmlEnd, SML_DESC: SmlDesc,
-        SML_ATTACHMENT: SmlAttach, SML_STATUS: SmlStatus, SML_AUTHOR: SmlAuthor, SML_CREATED: SmlCreated
+        MID_ID: MidID, SML_TITLE: SmlTitle, SML_DESC: SmlDesc, SML_ATTACHMENT: SmlAttach, 
+        SML_STATUS: SmlStatus, SML_AUTHOR: SmlAuthor, SML_CREATED: SmlCreated, SML_ACTOR: SmlActor
     };
     mysqlDB.query('INSERT INTO POST_SML set ?', data, function (err, results) {
         var admit;
@@ -891,7 +1021,7 @@ router.route("/task/createSML").post(upload.array('userFiles', 12), function (re
             if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
                 
-            for (var i = 0; i < files.length; ++i){
+            /*for (var i = 0; i < files.length; ++i){
                 fs.rename("./public/" + files[i].originalname, dir + "/" + files[i].originalname, function (err) { });
                 var extension = path.extname(files[i].originalname);    // move
                 
@@ -905,7 +1035,7 @@ router.route("/task/createSML").post(upload.array('userFiles', 12), function (re
                     };
                 var fpath = dir + '/' + files[i].originalname;
                 pythonShell(fpath, options, projectID);
-            }
+            }*/
 
             var result_attach = SmlAttach.split('*');
             var attaches='';
@@ -1164,27 +1294,6 @@ router.route("/project/create").post(function (req, res) {
     })
 })
 
-//project list select
-router.route("/project/select").get(function (req, res) {
-    var user_id = req.query.user_id;
-    console.log("======= Proejct Select =======\n");
-    console.log("user_id: " + user_id);
-
-    mysqlDB.query('select * from PROJECT pj where PROJ_STATUS=0 AND EXISTS ( select * from ATTENDENCE at where at.USER_ID = ? AND pj.PROJ_ID = at.PROJ_ID)', [user_id], function (err, rows, fields) {
-        if (err) {
-            console.log(err);
-            res.end();
-        }
-        else {
-            console.log(rows);
-            res.write(JSON.stringify(rows));
-            res.end();
-        }
-    })
-})
-
-
-
 
 //get Project name
 router.route("/projectName/select").get(function (req, res) {
@@ -1226,7 +1335,6 @@ router.route("/projectInfo/select").get(function (req, res) {
 })
 
 
-
 //big list select alert list
 router.route("/taskView/Big/select").get(function (req, res) {
     var proj_id = req.query.proj_id;
@@ -1248,8 +1356,8 @@ router.route("/taskView/Big/select").get(function (req, res) {
 router.route("/taskView/Mid/select").get(function (req, res) {
     var big_id = req.query.big_id;
     console.log("======= Mid Task Select =======\n");
-
-    mysqlDB.query('select * from POST_MID where BIG_ID = ? and (MID_STATUS=0 or MID_STATUS=1) order by MID_LEVEL', [big_id], function (err, rows, fields) {
+    // and (MID_STATUS=0 or MID_STATUS=1)
+    mysqlDB.query('select * from POST_MID where BIG_ID = ? order by MID_LEVEL', [big_id], function (err, rows, fields) {
         if (err) {
             console.log(err);
             res.end();
@@ -1266,8 +1374,8 @@ router.route("/taskView/Mid/select").get(function (req, res) {
 router.route("/taskView/Sml/select").get(function (req, res) {
     var mid_id = req.query.mid_id;
     console.log("======= Sml Task Select =======\n");
-
-    mysqlDB.query('select * from POST_SML where MID_ID = ? and (SML_STATUS=0 or SML_STATUS=1) order by SML_CREATED', [mid_id], function (err, rows, fields) {
+    // and (SML_STATUS=0 or SML_STATUS=1)
+    mysqlDB.query('select * from POST_SML where MID_ID = ?  order by SML_CREATED', [mid_id], function (err, rows, fields) {
         if (err) {
             console.log(err);
             res.end();
