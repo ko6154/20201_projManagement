@@ -141,21 +141,85 @@
             var task_count = 0;
             for (var i = 0; i < job_len; i++) {
 
-                $("#work_row").append('<div class="col-sm-6"><table id="job" class="table table-sm "><thead class="thead-dark"><tr><th scope="col">' + job[i].BIG_TITLE + '</th><th id="td_task"></th></tr></thead><tbody></tbody></table></div>');
-                $("#job").attr("id", i);
+                $("#work_row").append('<div class="col-sm-6"><table id="job" class="table table-sm "><thead class="thead-dark"><tr><th scope="col" id="th" style="cursor:hand!important">' + job[i].BIG_TITLE + '</th></tr></thead><tbody></tbody></table></div>');
+                $("#job").attr("id", "job"+i);
+                $("#th").attr("id", "th"+i);
                 if (job[i].BIG_ID == task[task_count][0].BIG_ID) {
 
                     for (var j = 0; j < task[task_count].length; j++) {
-                        $("#" + i + " > tbody").append('<tr><td colspan="2" scope="row">' + task[task_count][j].MID_TITLE + '</td></tr>');
-                        $("td").attr("height", "30");
+                        $("#job" + i + " > tbody").append('<tr><td scope="row" id = "temp">' + task[task_count][j].MID_TITLE + '</td></tr>');
+                        $("#temp").attr("height", "30");
+                        $("#temp").attr("id", j);
 
 
                     }
                     task_count = j - 1;
                 }
             }
-            $("td").off("click").on("click", function () {
+            $("th").off("click").on("click", async function () {
+                var item = $(this).attr("id");
+               
+                item = item.substring(2,3);
+                item = Number(item);
+                
+                var job_name = job[item].BIG_TITLE;
+                var job_start = job[item].BIG_START.substring(0,10);
+                var job_end = job[item].BIG_END.substring(0,10);
+                var job_desc = job[item].BIG_DESC;
+                var job_author = job[item].BIG_AUTHOR;
+                var job_act = job[item].BIG_MID_NUM;
+                var task_finish = job[item].BIG_MID_COM;
 
+                const { value: job_info } = await Swal.fire({
+                        title: 'JOb 정보',
+                        html:
+
+                            '<div class="input-group-prepend"><span class="input-group-text"> 이름 </span><input id="job_name" type="text" value="'+job_name+'" class="form-control" readonly></div><br>' +
+                            '<div class="input-group-prepend"><span class="input-group-text">시작날짜</span><input id="job_start" class="form-control" type="text" value='+job_start+' readonly></div><br>' +
+                            '<div class="input-group-prepend"><span class="input-group-text">종료날짜</span><input id="job_end" class="form-control" type="text" value='+job_end+' readonly></div><br>' +
+                            '<div class="input-group-prepend"><div class="input-group-text">작업내용</div><textarea id="job_desc" placeholder="여기에 입력하세요" style="resize:none;width:90%" readonly>'+job_desc+'</textarea></div><br>' +
+                            '<div class="input-group-prepend"><span class="input-group-text">생성자</span> <input type="text" class="form-control" id="job_author" value='+job_author+'></div>',
+
+                        showCancelButton: false,
+                        focusConfirm: false,
+                        confirmButtonText: '확인',
+                        preConfirm: () => {
+                        }
+                    })
+
+            })
+            $("td").off("click").on("click", async function () {
+                var item = $(this).attr("id");
+                var parent = $(this).closest("table").attr("id");
+                parent = parent.substring(3,4);
+                parent = Number(parent);
+                console.log(parent);
+                console.log(item);
+                item = Number(item);
+                var task_name = task[parent][item].MID_TITLE;
+                var task_start = task[parent][item].MID_START.substring(0,10);
+                var task_end = task[parent][item].MID_END.substring(0,10);
+                var task_desc = task[parent][item].MID_DESC;
+                var task_author = task[parent][item].MID_AUTHOR;
+                var task_act = task[parent][item].MID_SML_NUM;
+                var act_finish = task[parent][item].MID_SML_COM;
+
+                const { value: task_info } = await Swal.fire({
+                        title: 'task 정보',
+                        html:
+
+                            '<div class="input-group-prepend"><span class="input-group-text"> 이름 </span><input id="task_name" type="text" value="'+task_name+'" class="form-control" readonly></div><br>' +
+                            '<div class="input-group-prepend"><span class="input-group-text">시작날짜</span><input id="task_start" class="form-control" type="text" value='+task_start+' readonly></div><br>' +
+                            '<div class="input-group-prepend"><span class="input-group-text">종료날짜</span><input id="task_end" class="form-control" type="text" value='+task_end+' readonly></div><br>' +
+                            '<div class="input-group-prepend"><div class="input-group-text">작업내용</div><textarea id="task_desc" placeholder="여기에 입력하세요" style="resize:none;width:90%" readonly>'+task_desc+'</textarea></div><br>' +
+                            '<div class="input-group-prepend"><span class="input-group-text">생성자</span> <input type="text" class="form-control" id="task_author" value='+task_author+'></div>',
+
+                        showCancelButton: false,
+                        focusConfirm: false,
+                        confirmButtonText: '확인',
+                        preConfirm: () => {
+                        }
+                    })
             })
             //뒤로가기
             $("#back").off("click").on("click", function () {
@@ -194,9 +258,6 @@
                         document.myform.submit();
                     }
                 }
-
-
-
             })
 
 
@@ -218,6 +279,8 @@
                     input: 'radio',
                     inputOptions: inputOptions,
                     showCancelButton: true,
+                    confirmButtonText: '추가',
+                    cancelButtonText: '취소',
                     inputValidator: (value) => {
                         if (!value) {
                             return '항목을 선택해주세요!'
@@ -226,7 +289,7 @@
                 })
                 var param;
                 if (work == 'job') {
-                   var flag = false;
+                    var flag = false;
                     const { value: new_job } = await Swal.fire({
                         title: 'JOB 추가',
                         html:
@@ -239,57 +302,59 @@
 
                         showCancelButton: true,
                         focusConfirm: false,
+                        confirmButtonText: '추가',
+                        cancelButtonText: '취소',
                         preConfirm: () => {
                             return [
-                                param={
-                                   job_name:document.getElementById('job_name').value,
-                                   job_start: document.getElementById('job_start').value,
-                                   job_end: document.getElementById('job_end').value,
-                                   job_desc: document.getElementById('job_desc').value,
-                                   job_file: document.getElementById('job_file').value
-                                }              
-                                ,                                          
-                                flag=true
+                                param = {
+                                    job_name: document.getElementById('job_name').value,
+                                    job_start: document.getElementById('job_start').value,
+                                    job_end: document.getElementById('job_end').value,
+                                    job_desc: document.getElementById('job_desc').value,
+                                    job_file: document.getElementById('job_file').value
+                                }
+                                ,
+                                flag = true
                             ]
-                            
+
                         }
 
-                        
+
                     })
 
-                    if(flag == true){
+                    if (flag == true) {
                         $.ajax({
-                        type: "POST",
-                        url: "/insertJob",
-                        dataType: "text",
-                        data: param,
-                        success: function (data) {                            
+                            type: "POST",
+                            url: "/insertJob",
+                            dataType: "text",
+                            data: param,
+                            success: function (data) {
                                 Swal.fire({
-                                icon: 'success',
-                                title: '성공',
-                                text: '성공적으로 추가하였습니다!',
-                                timer: 3000,
-                                timerProgressBar: true,
-                                preConfirm: () => {
-                                    window.location.reload(true);
-                                }
+                                    icon: 'success',
+                                    title: '성공',
+                                    text: '성공적으로 추가하였습니다!',
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    preConfirm: () => {
+                                        window.location.reload(true);
+                                    }
                                 })
-                            
-                        }
-                    });
-                               
+
+                            }
+                        });
+
                     }
-                    
+
 
 
                 }
 
                 if (work == 'task') {
                     //job list생성
-                   var flag = false;
-                    var list ="" ;
-                    for(var i=0;i<job_len;i++){
-                        list = list + "<option value='"+job[i].BIG_TITLE+"'>"+job[i].BIG_TITLE+"</option>";
+                    var flag = false;
+                    var list = "";
+                    for (var i = 0; i < job_len; i++) {
+                        list = list + "<option value='" + job[i].BIG_TITLE + "'>" + job[i].BIG_TITLE + "</option>";
                     }
 
                     const { value: new_task } = await Swal.fire({
@@ -305,44 +370,46 @@
 
                         showCancelButton: true,
                         focusConfirm: false,
+                        confirmButtonText: '추가',
+                        cancelButtonText: '취소',
                         preConfirm: () => {
                             return [
-                            param={
-                                    select_job:document.getElementById('select_job').value,
-                                    task_name:document.getElementById('task_name').value,
-                                   task_start: document.getElementById('task_start').value,
-                                   task_end: document.getElementById('task_end').value,
-                                   task_desc: document.getElementById('task_desc').value,
-                                   task_file: document.getElementById('task_file').value
-                                }     ,
-                                flag = true 
-                               
+                                param = {
+                                    select_job: document.getElementById('select_job').value,
+                                    task_name: document.getElementById('task_name').value,
+                                    task_start: document.getElementById('task_start').value,
+                                    task_end: document.getElementById('task_end').value,
+                                    task_desc: document.getElementById('task_desc').value,
+                                    task_file: document.getElementById('task_file').value
+                                },
+                                flag = true
+
                             ]
-                           
+
                         }
                     })
 
-                    if(flag == true){
-                                 
+                    if (flag == true) {
+
                         $.ajax({
-                                type: "POST",
-                                url: "/insertTask",
-                                dataType: "text",
-                                data: param,
-                                success: function (data) {                            
-                                        Swal.fire({
-                                        icon: 'success',
-                                        title: '성공',
-                                        text: '성공적으로 추가하였습니다!',
-                                        timer: 3000,
-                                        timerProgressBar: true,
-                                        preConfirm: () => {
-                                            window.location.reload(true);
-                                        }
-                                        })
-                                    
-                                }
-                            });
+                            type: "POST",
+                            url: "/insertTask",
+                            dataType: "text",
+                            data: param,
+                            success: function (data) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '성공',
+                                    text: '성공적으로 추가하였습니다!',
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    preConfirm: () => {
+                                        window.location.reload(true);
+                                    }
+                                })
+
+                            }
+                        });
                     }
 
                 }
@@ -350,17 +417,17 @@
                 if (work == 'activity') {
                     //job list생성
                     var flag = false;
-                    var list_job ="" ;
-                    var list_task="";
-                    for(var i=0;i<job_len;i++){
-                        list_job = list_job + "<option value='"+job[i].BIG_TITLE+"'>"+job[i].BIG_TITLE+"</option>";     
-                        for(var j=0;j<task[i].length;j++){
-                            list_task = list_task + "<option value='"+task[i][j].MID_TITLE+"'>"+task[i][j].MID_TITLE+"</option>"; 
-                        }           
-                    
+                    var list_job = "";
+                    var list_task = "";
+                    for (var i = 0; i < job_len; i++) {
+                        list_job = list_job + "<option value='" + job[i].BIG_TITLE + "'>" + job[i].BIG_TITLE + "</option>";
+                        for (var j = 0; j < task[i].length; j++) {
+                            list_task = list_task + "<option value='" + task[i][j].MID_TITLE + "'>" + task[i][j].MID_TITLE + "</option>";
+                        }
+
                     }
-                  
-                   
+
+
                     const { value: new_activity } = await Swal.fire({
                         title: 'ACTIVITY 추가',
                         html:
@@ -376,277 +443,52 @@
 
                         showCancelButton: true,
                         focusConfirm: false,
+                        confirmButtonText: '추가',
+                        cancelButtonText: '취소',
                         preConfirm: () => {
                             return [
-                                
-                            param={
-                                    select_job:document.getElementById('select_job').value,
-                                    select_task:document.getElementById('select_task').value,
-                                    act_name:document.getElementById('act_name').value,
-                                   act_start: document.getElementById('act_start').value,
-                                   act_end: document.getElementById('act_end').value,
-                                   act_desc: document.getElementById('act_desc').value,
-                                   act_file: document.getElementById('act_file').value
-                                }      ,
+
+                                param = {
+                                    select_job: document.getElementById('select_job').value,
+                                    select_task: document.getElementById('select_task').value,
+                                    act_name: document.getElementById('act_name').value,
+                                    act_start: document.getElementById('act_start').value,
+                                    act_end: document.getElementById('act_end').value,
+                                    act_desc: document.getElementById('act_desc').value,
+                                    act_file: document.getElementById('act_file').value
+                                },
                                 flag = true
                             ]
-                           
+
                         }
                     })
-                    if(flag == true){
+                    if (flag == true) {
                         $.ajax({
-                        type: "POST",
-                        url: "/insertAct",
-                        dataType: "text",
-                        data: param,
-                        success: function (data) {                            
+                            type: "POST",
+                            url: "/insertAct",
+                            dataType: "text",
+                            data: param,
+                            success: function (data) {
                                 Swal.fire({
-                                icon: 'success',
-                                title: '성공',
-                                text: '성공적으로 추가하였습니다!',
-                                timer: 3000,
-                                timerProgressBar: true,
-                                preConfirm: () => {
-                                    window.location.reload(true);
-                                }
-                                })
-                            
-                        }
-                    });
-                    }
-                }
-                /*
-                                
-                
-                                    if (formValues) {
-                                        const { value: info } = await Swal.fire({
-                                            input: 'textarea',
-                                            inputPlaceholder: 'Type your message here...',
-                                            inputAttributes: {
-                                                'aria-label': 'Type your message here'
-                                            },
-                                            showCancelButton: true
-                                        })
-                
-                                        const { value: file } = await Swal.fire({
-                                            title: 'Select image',
-                                            input: 'file',
-                                            showCancelButton: true,
-                                            inputAttributes: {
-                                                'accept': 'image/hwp/doc/pdf*',
-                                                'aria-label': 'Upload your profile picture'
-                                            }
-                                        })
-                                        var table = $("#job");
-                
-                                        var table_len = $("#job tr").length;
-                
-                                        $("#job").append("<tr><td id='" + table_len + "'>" + new_job + "</td></tr>");
-                                    }
-                                }
-                */
-            })
-
-            $("#insert_task").off("click").on("click", async function () {
-
-                ///select에 들어갈 job 넣을 변수///
-                var inputOptions = {}; // Define like this!
-
-                // Instead of sample variables,
-                // your data handling here
-
-                var vREGISTRY_ID = "JOB1";
-                var vACCOUNT_NAME = "JOB1";
-
-
-
-                // Add the Variables like this
-                // This will create '500' : 'Peter',
-                inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
-                inputOptions["JOB2"] = "JOB2";
-
-
-                const { value: select_job } = await Swal.fire({
-                    title: 'Select JOB',
-                    input: 'select',
-                    inputOptions: inputOptions,
-                    inputPlaceholder: 'Select a JOB',
-                    showCancelButton: true,
-                    inputValidator: (value) => {
-                        return new Promise((resolve) => {
-                            resolve()
-                        })
-                    }
-                })
-
-                if (select_job) {
-
-                    const { value: new_task } = await Swal.fire({
-                        title: 'Input new TASK',
-                        input: 'text',
-                    })
-                    if (new_task) {
-                        // Swal.fire(JSON.stringify(formValues))
-                        const { value: formValues } = await Swal.fire({
-                            title: 'setting date',
-                            html:
-                                '시작날짜 <input id="swal-input1"  type="date"><br>' +
-                                '종료날짜 <input id="swal-input2"  type="date">',
-                            focusConfirm: false,
-                            preConfirm: () => {
-                                return [
-                                    document.getElementById('swal-input1').value,
-                                    document.getElementById('swal-input2').value
-                                ]
-                            }
-                        })
-
-                        if (formValues) {
-                            const { value: info } = await Swal.fire({
-                                input: 'textarea',
-                                inputPlaceholder: 'Type your message here...',
-                                inputAttributes: {
-                                    'aria-label': 'Type your message here'
-                                },
-                                showCancelButton: true
-                            })
-
-                            const { value: file } = await Swal.fire({
-                                title: 'Select image',
-                                input: 'file',
-                                showCancelButton: true,
-                                inputAttributes: {
-                                    'accept': 'image/hwp/doc/pdf*',
-                                    'aria-label': 'Upload your profile picture'
-                                }
-                            })
-                            var table = $("#task");
-
-                            var table_len = $("#task tr").length;
-
-                            $("#task").append("<tr><td id='" + table_len + "'>" + new_task + "</td></tr>");
-                        }
-                        console.log(select_job);
-                        console.log(new_task);
-                    }
-                }
-
-
-
-
-            })
-
-            $("#insert_activity").off("click").on("click", async function () {
-
-                ///select에 들어갈 job 넣을 변수///
-                var inputOptions = {}; // Define like this!
-
-                // Instead of sample variables,
-                // your data handling here
-
-                var vREGISTRY_ID = "TASK1";
-                var vACCOUNT_NAME = "TASK1";
-
-
-
-                // Add the Variables like this
-                // This will create '500' : 'Peter',
-                inputOptions[vREGISTRY_ID] = vACCOUNT_NAME;
-                inputOptions["TASK2"] = "TASK2";
-
-
-                const { value: select_task } = await Swal.fire({
-                    title: 'Select TASK',
-                    input: 'select',
-                    inputOptions: inputOptions,
-                    inputPlaceholder: 'Select a TASK',
-                    showCancelButton: true,
-                    inputValidator: (value) => {
-                        return new Promise((resolve) => {
-                            resolve()
-                        })
-                    }
-                })
-
-                if (select_task) {
-
-                    const { value: new_activity } = await Swal.fire({
-                        title: 'Input new activity',
-                        input: 'text',
-                    })
-                    if (new_activity) {
-                        const { value: formValues } = await Swal.fire({
-                            title: 'Multiple inputs',
-                            html:
-                                '시작날짜 <input id="swal-input1"  type="date"><br>' +
-                                '종료날짜 <input id="swal-input2"  type="date">',
-                            focusConfirm: false,
-                            preConfirm: () => {
-                                return [
-                                    document.getElementById('swal-input1').value,
-                                    document.getElementById('swal-input2').value
-                                ]
-                            }
-                        })
-
-                        if (formValues) {
-
-
-
-                            const { value: importance } = await Swal.fire({
-                                title: 'importance?',
-                                input: 'range',
-                                inputAttributes: {
-                                    min: 0,
-                                    max: 100,
-                                    step: 10
-                                },
-                                inputValue: 50
-                            })
-                            if (importance) {
-                                const { value: info } = await Swal.fire({
-                                    input: 'textarea',
-                                    inputPlaceholder: 'Type your message here...',
-                                    inputAttributes: {
-                                        'aria-label': 'Type your message here'
-                                    },
-                                    showCancelButton: true
-                                })
-
-
-                                const { value: file } = await Swal.fire({
-                                    title: 'Select image',
-                                    input: 'file',
-                                    showCancelButton: true,
-                                    inputAttributes: {
-                                        'accept': 'image/hwp/doc/pdf*',
-                                        'aria-label': 'Upload your profile picture'
+                                    icon: 'success',
+                                    title: '성공',
+                                    text: '성공적으로 추가하였습니다!',
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                    preConfirm: () => {
+                                        window.location.reload(true);
                                     }
                                 })
+
                             }
-
-                            var table = $("#activity");
-
-                            var table_len = $("#activity tr").length;
-
-                            $("#activity").append("<tr><td id='" + table_len + "'>" + new_activity + "</td></tr>");
-                        }
-                        console.log(select_task);
-                        console.log(new_activity);
+                        });
                     }
                 }
 
+            })
 
-            })
-            $("#job").off("click").on("click", function () {
-                alert(username + "의job table");
-            })
-            $("#task").off("click").on("click", function () {
-                alert(username + "의task table");
-            })
-            $("#activity").off("click").on("click", function () {
-                alert(username + "의activity table");
-            })
+
+
         })
     </script>
 
