@@ -358,4 +358,10 @@ export class HttpService {
     let URL = `${this.SERVER_ADDRESS}/POST/modify_role?userId=${userId}&projId=${projId}&newRole=${newRole}`;
     return this.httpClient.get(URL, {headers: this.header});
   }
+
+
+  get_project(projId: string) : Observable<{}> {
+    let URL = `${this.SERVER_ADDRESS}/one-project/select?proj_id=${projId}`;
+    return this.httpClient.get(URL, {headers: this.header});
+  }
 }

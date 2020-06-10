@@ -66,6 +66,10 @@ const routes: Routes = [
     path: 'manage-project-role',
     loadChildren: () => import('./manage-project-role/manage-project-role.module').then( m => m.ManageProjectRolePageModule)
   },
+  {
+    path: 'modal',
+    loadChildren: () => import('./modal/modal.module').then( m => m.ModalPageModule)
+  },
   
 ];
 

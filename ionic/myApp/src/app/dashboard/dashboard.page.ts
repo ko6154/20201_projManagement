@@ -7,6 +7,9 @@ import { DataService } from '../services/data.service';
 import { MenuController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 
+import { ModalController } from '@ionic/angular';
+import { ModalPage } from '../modal/modal.page'; 
+
 declare var google;
 
 @Component({
@@ -32,9 +35,21 @@ export class DashboardPage {
     private navCtrl : NavController,
     private dataService: DataService,
     private menu: MenuController,
-    
-	  public toastController: ToastController
+    public toastController: ToastController,
+    private modalController: ModalController
   ) {}
+
+  async openModal(projectId: string, projectName: string) {
+    const modal = await this.modalController.create({
+      component: ModalPage,
+      cssClass: 'my-custom-modal-css',
+      componentProps: {
+        projectName: projectName,
+        projectId: projectId
+      }
+    });
+    return await modal.present();
+  }
 
   ionViewWillEnter(){
     this.initalize();
@@ -162,5 +177,8 @@ export class DashboardPage {
     openCustom() {
       this.menu.enable(true, 'first');
         this.menu.open('first');
+      }
+      goGenerateProject(){
+        this.navCtrl.navigateForward("/generate-project");
       }
 }

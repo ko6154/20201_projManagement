@@ -74,12 +74,12 @@
         </ion-card-header>
         
         <ion-card-content>
-          <h2 style="text-align: left;" *ngFor="let project of ongoingProjects">{{project.name}}</h2>
+          <h2 style="text-align: left;" *ngFor="let project of ongoingProjects" (click)="openModal(project.id, project.name)">{{project.name}}</h2>
         </ion-card-content>
       </ion-card>
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button color="secondary" (click)="goMain()">
-          <ion-icon name="arrow-forward-outline"></ion-icon>
+        <ion-fab-button color="secondary" (click)="goGenerateProject()">
+          <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </ion-fab>
     </ion-slide>
