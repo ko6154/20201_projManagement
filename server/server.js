@@ -688,12 +688,12 @@ router.route("/insertTask").post(function(req, res) {
 //activity추가
 router.route("/insertAct").post(function(req, res) {
     var act_name = req.body.act_name;
-    var act_start = req.body.act_start;
-    var act_end = req.body.act_end;
+    
     var act_desc = req.body.act_desc;
     var act_file = req.body.act_file;
     var select_job = req.body.select_job;
     var select_task = req.body.select_task;
+    var act_member = req.body.member;
     console.log(req.body);
     res.send("ACCEPT FINISH");
 
