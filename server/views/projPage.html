@@ -110,8 +110,10 @@
             var job_len = job.length;
             var task = JSON.parse('<%- Tasks %>');
             var task_len = task.length;
+            var activity = JSON.parse('<%- activity %>');
             var username = '<%- user %>';
-
+            var attend_user = JSON.parse('<%- attend_user %>');
+            console.log(activity);
             var pm = JSON.parse('<%- isPM %>');
             pm = pm[0].ISPM;
 
@@ -166,13 +168,21 @@
 
             $(".td-2").off("click").on("click", async function () {
                 var id_set = $(this).attr("id");
-                var list_activity;
+                var list_activity="";
+                console.log(activity);
+                for(let i=0; i<activity.length; i++) {
+                    for(let j=0; j<activity[i].length; j++) {
+                        console.log(activity[i][j]);
+                        list_activity += "<option value='" + activity[i][j].SML_TITLE + "'>" + activity[i][j].SML_TITLE + "</option>";
+                    }
+                }
+
                 const { value: act_info } = await Swal.fire({
                     title: 'activity 정보',
                     html:
                         '<div class="input-group-prepend"><span class="input-group-text">act선택</span>' +
                         '<select class="custom-select" id="select_job" ><option selected>activity를 선택하세요</option>' + list_activity + '</select><button class="btn btn-secondary" id="select_act" type="button">확인</button></div><br>' +
-                        '<div class="input-group-prepend"><span class="input-group-text">시작날짜</span> <input type="text" class="form-control" id="task_author" value=' + "작성날짜" + '></div><br>'+
+                        '<div class="input-group-prepend"><span class="input-group-text">시작날짜</span> <input type="text" class="form-control" value=' + "작성날짜" + '></div><br>'+
                         '<div class="input-group-prepend"><div class="input-group-text">작업내용</div><textarea id="task_desc" placeholder="여기에 입력하세요" style="resize:none;width:90%" readonly>' + "작업내용" + '</textarea></div><br>' +
                         '<div class="input-group-prepend"><span class="input-group-text">생성자</span> <input type="text" class="form-control" id="task_author" value=' + "작성자" + '></div><br>'+
                         '<div class="input-group-prepend"><span class="input-group-text">명단</span> <input type="text" class="form-control"  value=' + "작업자 명단" + '></div><br>'+
@@ -476,11 +486,16 @@
                     var list_job = "";
                     var list_task = "";
                     //프로젝트 참여자 명단//
-                    var list_member = "<option value='member1'>member1</option><option value='member2'>member2</option>";
+                    //var list_member = "<option value='member1'>member1</option><option value='member2'>member2</option>";
+                    var list_member= "";
+                    for(var i=0; i<attend_user.length; i++) {
+                        list_member += "<option value='" + attend_user[i].USER_ID + "'>" + attend_user[i].USER_ID + "</option>";
+                    }
+                    console.log(list_member);
                     for (var i = 0; i < job_len; i++) {
-                        list_job = list_job + "<option value='" + job[i].BIG_TITLE + "'>" + job[i].BIG_TITLE + "</option>";
+                        list_job = list_job + "<option value='" + job[i].BIG_ID + "'>" + job[i].BIG_TITLE + "</option>";
                         for (var j = 0; j < task[i].length; j++) {
-                            list_task = list_task + "<option value='" + task[i][j].MID_TITLE + "'>" + task[i][j].MID_TITLE + "</option>";
+                            list_task = list_task + "<option value='" + task[i][j].MID_ID + "'>" + task[i][j].MID_TITLE + "</option>";
                         }
 
                     }
@@ -498,7 +513,7 @@
                             '<button class="btn btn-outline-secondary" type="button" id="insert_member">추가</button></div><br>' +
                             '<div class="input-group-prepend"><table  class="table table-bordered"><tr id = "member"></tr></table></div>' +
                             '<div class="input-group-prepend"><div class="input-group-text">작업내용</div><textarea id="act_desc" placeholder="여기에 입력하세요" style="resize:none;width:90%"></textarea></div><br>' +
-                            '<div class="input-group-prepend"><span class="input-group-text">추가파일</span> </div><div class="custom-file"><input type="file" class="custom-file-input" id="act_file"><label class="custom-file-label" for="task_file">파일을 선택하세요</label></div>',
+                            '<div class="input-group-prepend"><span class="input-group-text">추가파일</span> </div><div class="custom-file"><input type="file" class="custom-file-input" id="act_attachment"><label class="custom-file-label" for="task_file">파일을 선택하세요</label></div>',
 
                         showCancelButton: true,
                         focusConfirm: false,
@@ -519,11 +534,12 @@
                             return [
 
                                 param = {
-                                    select_job: document.getElementById('select_job').value,
-                                    select_task: document.getElementById('select_task').value,
+                                    proj_id: document.getElementById('proj_id').value,
+                                    act_job_id: document.getElementById('select_job').value,
+                                    act_task_id: document.getElementById('select_task').value,
                                     act_name: document.getElementById('act_name').value,
                                     act_desc: document.getElementById('act_desc').value,
-                                    act_file: document.getElementById('act_file').value,
+                                    act_attachment: document.getElementById('act_attachment').value,
                                     act_member: member
                                 },
                                 flag = true
