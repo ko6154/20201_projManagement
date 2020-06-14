@@ -133,6 +133,10 @@ router.route("/projPage").post(function (req,res){
     var job_size;
     var task_size;
     var task = new Array();
+    var activity = new Array();
+    var activity_size;
+    var isPM;
+    var attend_user;
 
     mysqlDB.query("SELECT * FROM POST_BIG WHERE PROJ_ID = ? ORDER BY BIG_LEVEL", [proj_id] ,function(err,row, fields){
         if (err) {
@@ -145,18 +149,32 @@ router.route("/projPage").post(function (req,res){
             
 
            // console.log(job[0].BIG_ID);
-            for(var i=0;i<job_size;i++){
+            for(let i=0;i<job_size;i++){
                 //console.log("task 출력시작");
                 mysqlDB.query("SELECT * FROM POST_MID WHERE BIG_ID = ? ORDER BY MID_LEVEL",[job[i].BIG_ID],function(err,rows){
                     if (err) {
                         console.log(err);
                         res.end();
-                    }else{
-                        
+                    }else{                       
                         //console.log("task_len "+rows.length);                        
                         //console.log("task입니다 "+JSON.stringify(rows));
                         task.push(rows);
-                        //console.log(task);
+                        task_size = rows.length;
+                        for(let j=0; j<rows.length; j++) {
+                            console.log("i: " + i + " j: " + j);
+                            console.log(task[i][j]);
+                            mysqlDB.query("SELECT * FROM POST_SML WHERE MID_ID = ?", [task[i][j].MID_ID], function(err, rows) {
+                                if (err) {
+                                    console.log(err);
+                                    res.end();
+                                }
+                                else {
+                                    console.log(rows);
+                                    activity.push(rows);
+                                }
+                            })
+                        }
+                        activity=JSON.stringify(activity);
                     }
                 })
             } 
@@ -169,12 +187,20 @@ router.route("/projPage").post(function (req,res){
                     res.end();
                 }
                 else {
-                    var isPM = JSON.stringify(rows);
-                    //console.log("174:" + job);
-                    res.render("projPage.html", {isPM:isPM, proj:proj, user:sess.username, Job:job, Tasks:JSON.stringify(task)});
+                    isPM = JSON.stringify(rows);
                 }
             });
 
+            mysqlDB.query('SELECT USER_ID FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID=?', [proj_id], function(err, rows) {
+                if (err) {
+                    console.log(err);
+                    res.end();
+                }
+                else {
+                    attend_user = JSON.stringify(rows);
+                    res.render("projPage.html", {isPM:isPM, proj:proj, user:sess.username, Job:job, Tasks:JSON.stringify(task), activity:activity, attend_user:attend_user});
+                }
+            })
         }
     })
     
@@ -687,16 +713,82 @@ router.route("/insertTask").post(function(req, res) {
 
 //activity추가
 router.route("/insertAct").post(function(req, res) {
-    var act_name = req.body.act_name;
-    
-    var act_desc = req.body.act_desc;
-    var act_file = req.body.act_file;
-    var select_job = req.body.select_job;
-    var select_task = req.body.select_task;
-    var act_member = req.body.member;
-    console.log(req.body);
-    res.send("ACCEPT FINISH");
 
+    sess = req.session;
+
+    if (req.files != null)
+        files = req.files;
+    else
+        files = [];
+
+    var proj_id = req.body.proj_id;
+    var act_job_id = req.body.act_job_id;
+    var act_task_id = req.body.act_task_id;
+    var act_name = req.body.act_name;
+    var act_desc = req.body.act_desc;
+    var act_attachment = req.body.act_attachment;
+    var act_author = sess.email;
+    var act_created = null;
+    var act_member = req.body.member;
+
+    console.log(req.body);
+
+
+    //console.log(`MidID : ${MidID} , SmlTitle : ${SmlTitle}, SmlDesc : ${SmlDesc}, `
+    //    + `SmlAttach : ${SmlAttach} , SmlStatus : ${SmlStatus}, SmlAuthor : ${SmlAuthor}, SmlCreated : ${SmlCreated}`);
+
+    var data = {
+        MID_ID: act_task_id, SML_TITLE: act_name, SML_DESC: act_desc, SML_ATTACHMENT: act_attachment, 
+        SML_STATUS: 0, SML_AUTHOR: act_author, SML_CREATED: act_created, SML_ACTOR: act_member
+    };
+    mysqlDB.query('INSERT INTO POST_SML set ?', data, function (err, results) {
+        var admit;
+        if (!err) {
+            var result_id = results["insertId"];
+            var dir = `./public/${proj_id}/${act_job_id}/${act_task_id}/${result_id}`;
+            
+            if (!fs.existsSync(dir))
+                fs.mkdirSync(dir);
+                
+            /*for (var i = 0; i < files.length; ++i){
+                fs.rename("./public/" + files[i].originalname, dir + "/" + files[i].originalname, function (err) { });
+                var extension = path.extname(files[i].originalname);    // move
+                
+                if (extension == '.pdf' || extension == '.pptx' || extension == '.docx')
+                    var options = {
+                        mode: 'text',
+                        pythonPath: '/usr/bin/python',//doesn't matter
+                        pythonOptions: ['-u'],
+                        scriptPath: '', //doesn't matter
+                        args: [dir + "/" + files[i].originalname] // SET THIS !!!!!  sample.docx  
+                    };
+                var fpath = dir + '/' + files[i].originalname;
+                pythonShell(fpath, options, projectID);
+            }*/
+
+            var result_attach = act_attachment.split('*');
+            var attaches='';
+            for(var i = 0; i<result_attach.length-1; i++){
+                attaches += dir +'/' + result_attach[i] +'*';
+            }
+            mysqlDB.query('UPDATE POST_SML set SML_ATTACHMENT = ? where SML_ID = ?', [attaches, result_id] , function(err,rows,field){
+                if(err){
+                    console.log("ACTIVITY 생성 실패");
+                    admit = { "create": "deny" };
+                    res.write(JSON.stringify(admit));
+                    res.end();
+                }else{
+                    console.log("ACTIVITY 생성 성공")
+                    res.send("ACTIVITY INSERT FINISH");
+                }
+            });   
+        } else {
+            console.log("ACTIVITY INSERT ERROR");
+            admit = { "create": "deny" };
+            res.write(JSON.stringify(admit));
+            res.end();
+        }
+    })
 })
 
 // 초대 수락
@@ -911,82 +1003,6 @@ function searchQueries(fpath, word, projectID){
         }
     })
 }
-
-
-// GENERATE-TASK-Middle
-router.route("/createMID").post(upload.array('userFiles', 12), function (req, res) {
-    if (req.files != null)
-        files = req.files;
-    else
-        files = [];    
-    var projectID = req.body.ProjectID;
-    var BigID = req.body.BigID;
-    var MidLevel = req.body.MidLevel;
-    var MidTitle = req.body.MidTitle;
-    var MidStart = req.body.MidStart;
-    var MidEnd = req.body.MidEnd;
-    var MidDesc = req.body.MidDesc;
-    var MidAttach = req.body.MidAttach;
-    var MidStatus = req.body.MidStatus;
-    var MidAuthor = req.body.MidAuthor;
-    var MidCreated = req.body.MidCreated;
-
-    console.log(`BigID : ${BigID} , MidLevel : ${MidLevel}, MidTitle : ${MidTitle}, MidStart : ${MidStart} , MidEnd : ${MidEnd}, MidDesc : ${MidDesc}, `
-        + `MidAttach : ${MidAttach} , MidStatus : ${MidStatus}, MidAuthor : ${MidAuthor}, MidCreated : ${MidCreated}`);
-
-    var data = {
-        BIG_ID: BigID, MID_LEVEL: MidLevel, MID_TITLE: MidTitle, MID_START: MidStart, MID_END: MidEnd, MID_DESC: MidDesc,
-        MID_ATTACHMENT: MidAttach, MID_STATUS: MidStatus, MID_AUTHOR: MidAuthor, MID_CREATED: MidCreated, MID_SML_NUM:0, MID_SML_COM:0
-    };
-    mysqlDB.query('INSERT INTO POST_MID set ?', data, function (err, results) {
-        var admit;
-        if (!err) {
-            var result_id = results["insertId"];
-            var dir = `./public/${projectID}/${BigID}/${result_id}`;
-            
-            if (!fs.existsSync(dir))
-                fs.mkdirSync(dir);
-                
-            /*for (var i = 0; i < files.length; ++i){
-                fs.rename("./public/" + files[i].originalname, dir + "/" + files[i].originalname, function (err) { });
-                var extension = path.extname(files[i].originalname);    // move
-
-                if (extension == '.pdf' || extension == '.pptx' || extension == '.docx')
-                    var options = {
-                        mode: 'text',
-                        pythonPath: '/usr/bin/python',//doesn't matter
-                        pythonOptions: ['-u'],
-                        scriptPath: '', //doesn't matter
-                        args: [dir + "/" + files[i].originalname] // SET THIS !!!!!  sample.docx  
-                    };
-                var fpath = dir + '/' + files[i].originalname;
-                pythonShell(fpath, options, projectID);
-            }*/
-
-            var result_attach = MidAttach.split('*');
-            var attaches='';
-            for(var i = 0; i<result_attach.length-1; i++){
-                attaches += dir +'/' + result_attach[i] +'*';
-            }
-            mysqlDB.query('UPDATE POST_MID set MID_ATTACHMENT = ? where MID_ID = ?', [attaches, result_id] , function(err,rows,field){
-                if(err){
-                    console.log(err);
-                    admit = { "create": "deny" };
-                }else{
-                    console.log("post update 성공");
-                    admit = { "create": "success" };
-                }
-                res.write(JSON.stringify(admit));
-                res.end();
-            });            
-        } else {
-            console.log(err);
-            admit = { "create": "deny" };
-            res.write(JSON.stringify(admit));
-            res.end();
-        }
-    })
-})
 
 // GENERATE-TASK-Small
 router.route("/createSML").post(upload.array('userFiles', 12), function (req, res) {
