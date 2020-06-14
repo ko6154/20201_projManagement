@@ -12,7 +12,7 @@ var crypto = require('crypto'); //비밀번호 암호화
 var mysqlDB = require('./mysql-db');
 var hostname = '0.0.0.0';
 const swal = require('sweetalert2');
-let {PythonShell} = require('python-shell')
+let { PythonShell } = require('python-shell')
 //var PythonShell = require('python-shell'); 
 var session = require('express-session');
 var query;
@@ -31,10 +31,10 @@ app.use(session({
     resave: false,//세션 상시 저장할지 정하는 flag
     saveUninitialized: true
 }));
-app.use('node_modules',express.static(path.join(__dirname,'/node_modules')))
-app.set('views',__dirname + '/views');
-app.set('views engin','ejs');
-app.engine('html',require('ejs').renderFile);
+app.use('node_modules', express.static(path.join(__dirname, '/node_modules')))
+app.set('views', __dirname + '/views');
+app.set('views engin', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
 var storage = multer.diskStorage({
     destination: function (req, file, callback) {
@@ -60,63 +60,33 @@ var router = express.Router();
 app.use('/', router);
 
 app.use(function (req, res, next) {
-   //res.writeHead(200, { 'Content-Type': 'text/html;charset=utf8' })
-   //res.write(`<h3>해당하는 내용이 없습니다</h3>`)
-   //res.end();
+    //res.writeHead(200, { 'Content-Type': 'text/html;charset=utf8' })
+    //res.write(`<h3>해당하는 내용이 없습니다</h3>`)
+    //res.end();
     sess = req.session;
-	res.render('index.html');
+    res.render('index.html');
 })
 
-http.createServer(app).listen(app.get('port'),  function () {
+http.createServer(app).listen(app.get('port'), function () {
     console.log("익스프레스로 웹 서버를 실행함 : " + app.get('port'));
 }) //express를 이용해 웹서버 만든다
 
-router.route("/login").get(function (req, res){
-	res.render("login.html");
+router.route("/login").get(function (req, res) {
+    res.render("login.html");
 })
 
 
 
-router.route("/logout").get(function (req, res){
-	req.session.destroy(function(){
+router.route("/logout").get(function (req, res) {
+    req.session.destroy(function () {
         req.session;
     });
     res.redirect('/');
 })
 
-/*
-router.route("/projPage").get(function (req, res){
-   
-    sess=req.session;
-    console.log("GET projPage.html");
 
-    var proj = new Object();
-    proj.proj_id = req.body.proj_id;
-    proj.proj_name = req.body.proj_name;
-    proj.proj_prog = req.body.proj_prog;
-    proj.proj_start = req.body.proj_start;
-    proj.proj_end = req.body.proj_end;
-    proj.proj_desc = req.body.proj_desc;
-    proj = JSON.stringify(proj);
-    console.log(proj);
-
-    var user = req.body.user;
-
-    var proj_id = req.body.proj_id;
-    mysqlDB.query('SELECT ISPM FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID = ? AND ATTENDENCE.USER_ID = ?;', [proj_id, sess.email], function (err, rows, results) {
-        if (err) {
-            console.log(err);
-            res.end();
-        }
-        else {
-            var isPM = JSON.stringify(rows);
-            res.render("projPage.html", {isPM:isPM, proj:proj, user:user});
-        }
-    });
-})
-*/
-router.route("/projPage").post(function (req,res){
-    sess=req.session;
+router.route("/projPage").post(function (req, res) {
+    sess = req.session;
     //console.log("POST projPage.html");
 
     var proj = new Object();
@@ -134,51 +104,57 @@ router.route("/projPage").post(function (req,res){
     var task_size;
     var task = new Array();
     var activity = new Array();
-    var activity_size;
+    var activity_str;
     var isPM;
     var attend_user;
 
-    mysqlDB.query("SELECT * FROM POST_BIG WHERE PROJ_ID = ? ORDER BY BIG_LEVEL", [proj_id] ,function(err,row, fields){
+    mysqlDB.query("SELECT * FROM POST_BIG WHERE PROJ_ID = ? ORDER BY BIG_LEVEL", [proj_id], function (err, row, fields) {
         if (err) {
             console.log(err);
             res.end();
-        }else{
+        } else {
             job_size = row.length;
-            job=row;
+            job = row;
 
-            
 
-           // console.log(job[0].BIG_ID);
-            for(let i=0;i<job_size;i++){
+            // console.log(job[0].BIG_ID);
+            for (let i = 0; i < job_size; i++) {
                 //console.log("task 출력시작");
-                mysqlDB.query("SELECT * FROM POST_MID WHERE BIG_ID = ? ORDER BY MID_LEVEL",[job[i].BIG_ID],function(err,rows){
+                mysqlDB.query("SELECT * FROM POST_MID WHERE BIG_ID = ? ORDER BY MID_LEVEL", [job[i].BIG_ID], function (err, rows) {
                     if (err) {
                         console.log(err);
                         res.end();
-                    }else{                       
+                    } else {
                         //console.log("task_len "+rows.length);                        
                         //console.log("task입니다 "+JSON.stringify(rows));
                         task.push(rows);
                         task_size = rows.length;
-                        for(let j=0; j<rows.length; j++) {
+                        for (let j = 0; j < task_size; j++) {
                             console.log("i: " + i + " j: " + j);
                             console.log(task[i][j]);
-                            mysqlDB.query("SELECT * FROM POST_SML WHERE MID_ID = ?", [task[i][j].MID_ID], function(err, rows) {
+                            mysqlDB.query("SELECT * FROM POST_SML WHERE MID_ID = ?", [task[i][j].MID_ID], async function (err, rows) {
                                 if (err) {
                                     console.log(err);
                                     res.end();
                                 }
                                 else {
-                                    console.log(rows);
-                                    activity.push(rows);
+                                    var actlist = await rows;
+                                    console.log(actlist);
+                                    activity.push(actlist);                                                            
+                                    activity_str = JSON.stringify(activity);
+                                    
+
                                 }
+        
                             })
+        
                         }
-                        activity=JSON.stringify(activity);
                     }
                 })
-            } 
+            }         
+          
             job = JSON.stringify(row);
+
             //console.log("job_len "+row.length);
             //console.log("job입니다 "+job);
             mysqlDB.query('SELECT ISPM FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID = ? AND ATTENDENCE.USER_ID = ?;', [proj_id, sess.email], function (err, rows, results) {
@@ -191,24 +167,28 @@ router.route("/projPage").post(function (req,res){
                 }
             });
 
-            mysqlDB.query('SELECT USER_ID FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID=?', [proj_id], function(err, rows) {
+            mysqlDB.query('SELECT USER_ID FROM ATTENDENCE WHERE ATTENDENCE.PROJ_ID=?', [proj_id], function (err, rows) {
                 if (err) {
                     console.log(err);
                     res.end();
                 }
                 else {
                     attend_user = JSON.stringify(rows);
-                    res.render("projPage.html", {isPM:isPM, proj:proj, user:sess.username, Job:job, Tasks:JSON.stringify(task), activity:activity, attend_user:attend_user});
+                    setTimeout(function(){
+                        res.render("projPage.html", { isPM: isPM, proj: proj, user: sess.username, Job: job, Tasks: JSON.stringify(task), activity: JSON.stringify(activity), attend_user: attend_user });
+                
+                    },1000);
+                    
                 }
             })
         }
     })
-    
-   
+
+
 })
 
-router.route("/projPage/update/projInfo").post(function (req,res){
-    sess=req.session;
+router.route("/projPage/update/projInfo").post(function (req, res) {
+    sess = req.session;
     console.log("POST projPage/update/projInfo");
 
     console.log(req.body);
@@ -240,125 +220,125 @@ router.route("/projPage/update/projInfo").post(function (req,res){
 
 })
 
-router.route("/signup").get(function (req, res){
-	res.render("signup.html");
+router.route("/signup").get(function (req, res) {
+    res.render("signup.html");
 })
 
 //router.route("/main").get(function (req, res){
 //	res.render("main.html");
 //})
 
-router.route("/create").get(function(req,res){
-    sess=req.session;
-    res.render("create.html",{username:sess.name,useremail:sess.email,admit:" "});
+router.route("/create").get(function (req, res) {
+    sess = req.session;
+    res.render("create.html", { username: sess.name, useremail: sess.email, admit: " " });
 })
 
-router.route("/search").get(function(req,res){
-    sess=req.session;
-    res.render("search.html",{username:sess.name});
+router.route("/search").get(function (req, res) {
+    sess = req.session;
+    res.render("search.html", { username: sess.name });
 })
 
-router.route("/table").get(function(req,res){
-    sess = req.session; 
-    mysqlDB.query('SELECT PROJECT.* FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=0', [sess.name], function (err,rows, fields) {
+router.route("/table").get(function (req, res) {
+    sess = req.session;
+    mysqlDB.query('SELECT PROJECT.* FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=0', [sess.name], function (err, rows, fields) {
         if (err) {
             console.log(err);
             res.end();
         }
         else {
-       
+
             //console.log(rows);
             //console.log(rows.length);
-           // console.log(rows[0]);
-          //  console.log(JSON.stringify(rows[0]));
-            var project = JSON.stringify(rows);   
-            var size = rows.length;        
-            project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
+            // console.log(rows[0]);
+            //  console.log(JSON.stringify(rows[0]));
+            var project = JSON.stringify(rows);
+            var size = rows.length;
+            project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');
             //console.log(project);         
-            res.render("table.html",{pro:project,len:size,username:sess.name});
-        }        
-    }); 
-  
-    
+            res.render("table.html", { pro: project, len: size, username: sess.name });
+        }
+    });
+
+
 })
 
-router.route("/finish").get(function(req,res){
-    sess = req.session; 
-    mysqlDB.query('SELECT PROJECT.*FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=1', [sess.name], function (err,rows, fields) {
+router.route("/finish").get(function (req, res) {
+    sess = req.session;
+    mysqlDB.query('SELECT PROJECT.*FROM ATTENDENCE, USER, PROJECT WHERE USER.NAME = ? AND USER.USER_ID = ATTENDENCE.USER_ID AND ATTENDENCE.PROJ_ID = PROJECT.PROJ_ID AND PROJ_STATUS=1', [sess.name], function (err, rows, fields) {
         if (err) {
             console.log(err);
             res.end();
         }
         else {
-       
+
             console.log(rows);
             console.log(rows.length);
-           // console.log(rows[0]);
-          //  console.log(JSON.stringify(rows[0]));
-            var project = JSON.stringify(rows);   
-            var size = rows.length;        
-            project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
+            // console.log(rows[0]);
+            //  console.log(JSON.stringify(rows[0]));
+            var project = JSON.stringify(rows);
+            var size = rows.length;
+            project = project.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');
             //console.log(project);         
-            res.render("finish.html",{pro:project,len:size,session:sess});
-        }        
-    }); 
-  
-    
+            res.render("finish.html", { pro: project, len: size, session: sess });
+        }
+    });
+
+
 })
 //search_project
-router.route("/search/project").post(function(req,res){
+router.route("/search/project").post(function (req, res) {
     var pid = req.body.p_name;
     var mname = req.body.m_name;
     var sdate = req.body.s_date;
     var edate = req.body.e_date;
-    var inputIsNothing =1;   // 검색조건이 하나도 안 들어왔음을 체크하는 변수,   1이면 empty, 0이면 입력 있음
-    console.log(pid+""+mname+""+sdate+""+edate);
- 
-     var sql="SELECT * FROM PROJECT WHERE 1=1 ";
-     if (pid !== '') {sql = sql.concat("AND PROJ_NAME = '" + pid + "' "); inputIsNothing=0;}
-     if (mname !== '') {sql = sql.concat("AND PROJ_MGR_UID = '" + mname + "' "); inputIsNothing=0;}
-     if (sdate !== '') {sql = sql.concat("AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= '" + sdate + "' "); inputIsNothing=0;}
-     if (edate !== '') {sql = sql.concat("AND DATE_FORMAT(PROJ_END, '%Y-%m-%d') <= '" + edate + "'"); inputIsNothing=0;}
- 
-     if ( (inputIsNothing) ) {   // 검색조건을 하나도 입력 안한경우 경고창만 띄우고 밑의 query는 실행하지 않는다.
-         // alert:true -> searchtbl.html 에서 alert를 띄운다.
-         res.render("searchtbl.html",{pro:"", len:0,name:sess.name, alert:true});
-         return 0;
-     }
-     
-     console.log("pid : " + pid);
-     console.log("mname : " + mname);
-     console.log("sdate : " + sdate);
-     console.log("edate : " + edate);
-     console.log("pid !== '' : " +(pid !== ''));
-     console.log("mname !== '' : " +(mname !== ''));
-     console.log("sdate !== '' : " +(sdate !== ''));
-     console.log("edate !== '' : " +(edate !== ''));
- 
-     console.log(sql);
-     mysqlDB.query(sql, function(err, rows) {
-     if (err) {
-         console.log(err);
-         res.end();
-     }
-     else {
-         console.log(rows);
-         console.log("row length : " + rows.length);
-        // console.log(rows[0]);
-       //  console.log(JSON.stringify(rows[0]));
-         var project = JSON.stringify(rows);
-        
-         var size = rows.length;
-        // console.log(project);
-         res.render("searchtbl.html",{pro:project,len:size, alert:false});
-     }        
- }); 
- })
+    var inputIsNothing = 1;   // 검색조건이 하나도 안 들어왔음을 체크하는 변수,   1이면 empty, 0이면 입력 있음
+    console.log(pid + "" + mname + "" + sdate + "" + edate);
+
+    var sql = "SELECT * FROM PROJECT WHERE 1=1 ";
+    if (pid !== '') { sql = sql.concat("AND PROJ_NAME = '" + pid + "' "); inputIsNothing = 0; }
+    if (mname !== '') { sql = sql.concat("AND PROJ_MGR_UID = '" + mname + "' "); inputIsNothing = 0; }
+    if (sdate !== '') { sql = sql.concat("AND DATE_FORMAT(PROJ_START, '%Y-%m-%d') >= '" + sdate + "' "); inputIsNothing = 0; }
+    if (edate !== '') { sql = sql.concat("AND DATE_FORMAT(PROJ_END, '%Y-%m-%d') <= '" + edate + "'"); inputIsNothing = 0; }
+
+    if ((inputIsNothing)) {   // 검색조건을 하나도 입력 안한경우 경고창만 띄우고 밑의 query는 실행하지 않는다.
+        // alert:true -> searchtbl.html 에서 alert를 띄운다.
+        res.render("searchtbl.html", { pro: "", len: 0, name: sess.name, alert: true });
+        return 0;
+    }
+
+    console.log("pid : " + pid);
+    console.log("mname : " + mname);
+    console.log("sdate : " + sdate);
+    console.log("edate : " + edate);
+    console.log("pid !== '' : " + (pid !== ''));
+    console.log("mname !== '' : " + (mname !== ''));
+    console.log("sdate !== '' : " + (sdate !== ''));
+    console.log("edate !== '' : " + (edate !== ''));
+
+    console.log(sql);
+    mysqlDB.query(sql, function (err, rows) {
+        if (err) {
+            console.log(err);
+            res.end();
+        }
+        else {
+            console.log(rows);
+            console.log("row length : " + rows.length);
+            // console.log(rows[0]);
+            //  console.log(JSON.stringify(rows[0]));
+            var project = JSON.stringify(rows);
+
+            var size = rows.length;
+            // console.log(project);
+            res.render("searchtbl.html", { pro: project, len: size, alert: false });
+        }
+    });
+})
 
 //search_table
-router.route("/search/table").get(function(req,res){
-    sess=req.session;
-    res.render("searchtbl.html",{pro:"",len:0,name:sess.name, alert:false});    
+router.route("/search/table").get(function (req, res) {
+    sess = req.session;
+    res.render("searchtbl.html", { pro: "", len: 0, name: sess.name, alert: false });
 })
 
 // SIGNUP
@@ -380,7 +360,7 @@ router.route("/user/register").post(function (req, res) {
             res.write(JSON.stringify(admit));
             res.end();
             console.log(results);
-            
+
         } else {
             console.log("USER INSERT ERROR");
             admit = { "register": "deny" };
@@ -408,11 +388,11 @@ router.route("/user_pc/register").post(function (req, res) {
             console.log("Create user success");
             console.log(results);
             res.redirect('/login');
-            
+
         } else {
             console.log("USER INSERT ERROR");
             admit = { "register": "deny" };
-            res.redirect('/signup');            
+            res.redirect('/signup');
         }
     })
 })
@@ -427,7 +407,7 @@ router.route("/user/login").post(function (req, res) {
     mysqlDB.query('select * from USER where USER_ID=?', [email], function (err, results) {
         var login;
         var login_data;
-        
+
         if (err) {
             login = { "login": "error" };
             console.log("LOGIN ERROR");
@@ -439,20 +419,20 @@ router.route("/user/login").post(function (req, res) {
         }
 
         if (results.length > 0) {
-            console.log(results);            
+            console.log(results);
             var user = results[0];
-            
-            var hashPassword = crypto.createHash("sha512").update(password + user.SALT).digest("hex");            
+
+            var hashPassword = crypto.createHash("sha512").update(password + user.SALT).digest("hex");
 
             if (hashPassword === user.USER_PW) {
                 console.log("login success");
-                login = { "login": "success" };  
-                console.log("name = "+user.NAME);  
-                 //세션 처리 해야한다// 
+                login = { "login": "success" };
+                console.log("name = " + user.NAME);
+                //세션 처리 해야한다// 
                 sess = req.session;
                 sess.email = email;
-                sess.state = 't';  
-                sess.name = user.NAME;  
+                sess.state = 't';
+                sess.name = user.NAME;
                 console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
             } else {
@@ -461,7 +441,7 @@ router.route("/user/login").post(function (req, res) {
             }
             login_data = JSON.stringify(login);
             console.log(login_data);
-            res.write(login_data);              
+            res.write(login_data);
             res.end();
         }
         else {
@@ -469,7 +449,7 @@ router.route("/user/login").post(function (req, res) {
             console.log("WRONG ID")
             login_data = JSON.stringify(login);
             console.log(login_data);
-            res.write(login_data);  
+            res.write(login_data);
             res.end();
         }
     })
@@ -488,7 +468,7 @@ router.route("/user_pc/login").post(function (req, res) {
             login = { "login": "error" };
             console.log("LOGIN ERROR");
             console.log(err);
-            console.log(JSON.stringify(login));         
+            console.log(JSON.stringify(login));
             res.redirect('/login');
             return;
         }
@@ -499,64 +479,64 @@ router.route("/user_pc/login").post(function (req, res) {
 
             if (hashPassword === user.USER_PW) {
                 console.log("login success");
-                login = { "login": "success" };    
-               
-                 //세션 처리 해야한다// 
+                login = { "login": "success" };
+
+                //세션 처리 해야한다// 
                 sess = req.session;
                 sess.email = email;
                 sess.state = 't'; //권한  
-                sess.name = user.NAME;  
+                sess.name = user.NAME;
                 //console.log(sess.email + sess.name);
                 //권한 세션 입력해야한다.-> 디비처리//      
-              
-                
+
+
                 mysqlDB.query('SELECT PROJECT.PROJ_NAME, INVITE.PROJ_ID, INVITE.SEND_USER_ID, INVITE.RECV_USER_ID, INVITE.ISPM FROM INVITE, PROJECT WHERE INVITE.RECV_USER_ID = ? AND INVITE.PROJ_ID = PROJECT.PROJ_ID;', [sess.email], function (err, row) {
                     if (err) {
                         console.log(err);
                         res.end();
                     }
-                    else {                   
-                        
-                       // console.log(rows[0]);
-                      //  console.log(JSON.stringify(rows[0]));
-                        
-                      //console.log(row);   
-                        var invite = JSON.stringify(row);   
-                        var size = row.length;     
+                    else {
+
+                        // console.log(rows[0]);
+                        //  console.log(JSON.stringify(rows[0]));
+
+                        //console.log(row);   
+                        var invite = JSON.stringify(row);
+                        var size = row.length;
                         //console.log(size);   
-                        invite = invite.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');    
-                       
+                        invite = invite.replace(/\\r/gi, '').replace(/\\n/gi, ' ').replace(/\\t/gi, ' ').replace(/\\f/gi, ' ');
+
                         //console.log(invite);       
-                       req.session.save(function(){
-                        
-                        res.render('main.html',{username:sess.name,len:size,invite:invite});
-                        });     
-                       
-                    }        
+                        req.session.save(function () {
+
+                            res.render('main.html', { username: sess.name, len: size, invite: invite });
+                        });
+
+                    }
                 })
 
-                       
-               
-                
+
+
+
             } else {
                 console.log("WRONG ID or PASSWORD");
                 login = { "login": "wrong" };
-              
+
                 res.redirect('/login');
             }
-            
+
         }
         else {
             login = { "login": "wrong" };
             console.log("WRONG ID");
-         
-            res.redirect('/login'); 
+
+            res.redirect('/login');
         }
     })
 })
 
 //job추가
-router.route("/insertJob").post(upload.array('job_file', 12), function(req, res) {
+router.route("/insertJob").post(upload.array('job_file', 12), function (req, res) {
 
     sess = req.session;
 
@@ -574,7 +554,7 @@ router.route("/insertJob").post(upload.array('job_file', 12), function(req, res)
     var job_attachment = req.body.job_attachment;
     var job_author = sess.email;
     var job_created = null;
-    
+
     console.log(req.body);
 
 
@@ -583,9 +563,9 @@ router.route("/insertJob").post(upload.array('job_file', 12), function(req, res)
     //BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated}`);
 
     var data = {
-          PROJ_ID: proj_id, BIG_LEVEL: job_level, BIG_TITLE: job_name, BIG_START: job_start, 
-          BIG_END: job_end, BIG_DESC: job_desc, BIG_ATTACHMENT: job_attachment, BIG_STATUS:0, 
-          BIG_AUTHOR: job_author, BIG_CREATED: job_created, BIG_MID_NUM:0, BIG_MID_COM:0
+        PROJ_ID: proj_id, BIG_LEVEL: job_level, BIG_TITLE: job_name, BIG_START: job_start,
+        BIG_END: job_end, BIG_DESC: job_desc, BIG_ATTACHMENT: job_attachment, BIG_STATUS: 0,
+        BIG_AUTHOR: job_author, BIG_CREATED: job_created, BIG_MID_NUM: 0, BIG_MID_COM: 0
     };
     console.log(data);
 
@@ -593,31 +573,31 @@ router.route("/insertJob").post(upload.array('job_file', 12), function(req, res)
         var admit;
         if (!err) {
             var result_id = results["insertId"];
-            var dir = "./public/" + proj_id + "/" +result_id;
+            var dir = "./public/" + proj_id + "/" + result_id;
 
             if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
 
             var result_attach = job_attachment.split('*');
             console.log("result_attach" + result_attach);
-            var attaches='';
-            for(var i = 0; i<result_attach.length-1; i++){
-                attaches += dir +'/' + result_attach[i] +'*';
+            var attaches = '';
+            for (var i = 0; i < result_attach.length - 1; i++) {
+                attaches += dir + '/' + result_attach[i] + '*';
             }
-            console.log("최종 attach: "+attaches);
-            mysqlDB.query('UPDATE POST_BIG set BIG_ATTACHMENT = ? where BIG_ID = ?', [attaches, result_id] , function(err,rows,field){
-                if(err){
+            console.log("최종 attach: " + attaches);
+            mysqlDB.query('UPDATE POST_BIG set BIG_ATTACHMENT = ? where BIG_ID = ?', [attaches, result_id], function (err, rows, field) {
+                if (err) {
                     console.log(err);
                     admit = { "create": "deny" };
                     res.write(JSON.stringify(admit));
                     res.end();
-                }else{
+                } else {
                     console.log("post update 성공")
                     res.send("ACCEPT FINISH");
                 }
- 
-            });         
-  
+
+            });
+
         } else {
             console.log(err);
             console.log("TASK INSERT ERROR");
@@ -626,15 +606,15 @@ router.route("/insertJob").post(upload.array('job_file', 12), function(req, res)
             res.end();
         }
     })
-    
 
-    
+
+
 
 })
 
 //task추가
-router.route("/insertTask").post(function(req, res) {
- 
+router.route("/insertTask").post(function (req, res) {
+
     sess = req.session;
 
     if (req.files != null)
@@ -652,7 +632,7 @@ router.route("/insertTask").post(function(req, res) {
     var task_attachment = req.body.task_attachment;
     var task_author = sess.email;
     var task_created = null;
-    
+
     console.log(req.body);
 
 
@@ -661,9 +641,9 @@ router.route("/insertTask").post(function(req, res) {
     //BigStatus : ${BigStatus}, BigAuthor : ${BigAuthor}, BigCreated : ${BigCreated}`);
 
     var data = {
-          BIG_ID: task_job_id, MID_LEVEL: task_level, MID_TITLE: task_name, MID_START: task_start, 
-          MID_END: task_end, MID_DESC: task_desc, MID_ATTACHMENT: task_attachment, MID_STATUS:0, 
-          MID_AUTHOR: task_author, MID_CREATED: task_created, MID_SML_NUM:0, MID_SML_COM:0
+        BIG_ID: task_job_id, MID_LEVEL: task_level, MID_TITLE: task_name, MID_START: task_start,
+        MID_END: task_end, MID_DESC: task_desc, MID_ATTACHMENT: task_attachment, MID_STATUS: 0,
+        MID_AUTHOR: task_author, MID_CREATED: task_created, MID_SML_NUM: 0, MID_SML_COM: 0
     };
     console.log(data);
 
@@ -671,7 +651,7 @@ router.route("/insertTask").post(function(req, res) {
         var admit;
         if (!err) {
             var result_id = results["insertId"];
-            var dir = "./public/" + proj_id + "/" +result_id;
+            var dir = "./public/" + proj_id + "/" + result_id;
             var dir = `./public/${proj_id}/${task_job_id}/${result_id}`;
 
             if (!fs.existsSync(dir))
@@ -679,24 +659,24 @@ router.route("/insertTask").post(function(req, res) {
 
             var result_attach = task_attachment.split('*');
             console.log("result_attach" + result_attach);
-            var attaches='';
-            for(var i = 0; i<result_attach.length-1; i++){
-                attaches += dir +'/' + result_attach[i] +'*';
+            var attaches = '';
+            for (var i = 0; i < result_attach.length - 1; i++) {
+                attaches += dir + '/' + result_attach[i] + '*';
             }
-            console.log("최종 attach: "+attaches);
-            mysqlDB.query('UPDATE POST_MID set MID_ATTACHMENT = ? where MID_ID = ?', [attaches, result_id] , function(err,rows,field){
-                if(err){
+            console.log("최종 attach: " + attaches);
+            mysqlDB.query('UPDATE POST_MID set MID_ATTACHMENT = ? where MID_ID = ?', [attaches, result_id], function (err, rows, field) {
+                if (err) {
                     console.log(err);
                     admit = { "create": "deny" };
                     res.write(JSON.stringify(admit));
                     res.end();
-                }else{
+                } else {
                     console.log("TASK update 성공")
                     res.send("TASK INSERT FINISH");
                 }
- 
-            });         
-  
+
+            });
+
         } else {
             console.log(err);
             console.log("TASK INSERT ERROR");
@@ -705,14 +685,14 @@ router.route("/insertTask").post(function(req, res) {
             res.end();
         }
     })
-    
 
-    
+
+
 
 })
 
 //activity추가
-router.route("/insertAct").post(function(req, res) {
+router.route("/insertAct").post(function (req, res) {
 
     sess = req.session;
 
@@ -738,7 +718,7 @@ router.route("/insertAct").post(function(req, res) {
     //    + `SmlAttach : ${SmlAttach} , SmlStatus : ${SmlStatus}, SmlAuthor : ${SmlAuthor}, SmlCreated : ${SmlCreated}`);
 
     var data = {
-        MID_ID: act_task_id, SML_TITLE: act_name, SML_DESC: act_desc, SML_ATTACHMENT: act_attachment, 
+        MID_ID: act_task_id, SML_TITLE: act_name, SML_DESC: act_desc, SML_ATTACHMENT: act_attachment,
         SML_STATUS: 0, SML_AUTHOR: act_author, SML_CREATED: act_created, SML_ACTOR: act_member
     };
     mysqlDB.query('INSERT INTO POST_SML set ?', data, function (err, results) {
@@ -746,42 +726,26 @@ router.route("/insertAct").post(function(req, res) {
         if (!err) {
             var result_id = results["insertId"];
             var dir = `./public/${proj_id}/${act_job_id}/${act_task_id}/${result_id}`;
-            
+
             if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
-                
-            /*for (var i = 0; i < files.length; ++i){
-                fs.rename("./public/" + files[i].originalname, dir + "/" + files[i].originalname, function (err) { });
-                var extension = path.extname(files[i].originalname);    // move
-                
-                if (extension == '.pdf' || extension == '.pptx' || extension == '.docx')
-                    var options = {
-                        mode: 'text',
-                        pythonPath: '/usr/bin/python',//doesn't matter
-                        pythonOptions: ['-u'],
-                        scriptPath: '', //doesn't matter
-                        args: [dir + "/" + files[i].originalname] // SET THIS !!!!!  sample.docx  
-                    };
-                var fpath = dir + '/' + files[i].originalname;
-                pythonShell(fpath, options, projectID);
-            }*/
 
             var result_attach = act_attachment.split('*');
-            var attaches='';
-            for(var i = 0; i<result_attach.length-1; i++){
-                attaches += dir +'/' + result_attach[i] +'*';
+            var attaches = '';
+            for (var i = 0; i < result_attach.length - 1; i++) {
+                attaches += dir + '/' + result_attach[i] + '*';
             }
-            mysqlDB.query('UPDATE POST_SML set SML_ATTACHMENT = ? where SML_ID = ?', [attaches, result_id] , function(err,rows,field){
-                if(err){
+            mysqlDB.query('UPDATE POST_SML set SML_ATTACHMENT = ? where SML_ID = ?', [attaches, result_id], function (err, rows, field) {
+                if (err) {
                     console.log("ACTIVITY 생성 실패");
                     admit = { "create": "deny" };
                     res.write(JSON.stringify(admit));
                     res.end();
-                }else{
+                } else {
                     console.log("ACTIVITY 생성 성공")
                     res.send("ACTIVITY INSERT FINISH");
                 }
-            });   
+            });
         } else {
             console.log("ACTIVITY INSERT ERROR");
             admit = { "create": "deny" };
@@ -792,7 +756,7 @@ router.route("/insertAct").post(function(req, res) {
 })
 
 // 초대 수락
-router.route("/accept-invite").post(function(req, res) {
+router.route("/accept-invite").post(function (req, res) {
     sess = req.session;
     console.log(req.body);
     //var proj_id = req.body.invite_proj_id;
@@ -806,19 +770,19 @@ router.route("/accept-invite").post(function(req, res) {
     //
     // 초대 수락한 계정과 해당 프로젝트를 Attendence DB에 추가
     //
-    var sql="INSERT INTO ATTENDENCE(PROJ_ID, USER_ID, ATTENDENCE_ROLE, ISPM) VALUES(?,?,?,?);"
-    var params=[proj_id, recv_user_id , null ,isPM];
+    var sql = "INSERT INTO ATTENDENCE(PROJ_ID, USER_ID, ATTENDENCE_ROLE, ISPM) VALUES(?,?,?,?);"
+    var params = [proj_id, recv_user_id, null, isPM];
 
-    mysqlDB.query(sql, params, function(err, rows) {
+    mysqlDB.query(sql, params, function (err, rows) {
         if (!err) {
 
             //
             // INVITE DB에 수락했던 정보 삭제
             // 
             sql = "DELETE FROM INVITE WHERE PROJ_ID=? AND SEND_USER_ID=? AND RECV_USER_ID=?;";
-            params=[proj_id, send_user_id, recv_user_id];
+            params = [proj_id, send_user_id, recv_user_id];
 
-            mysqlDB.query(sql, params, function(err, rows){
+            mysqlDB.query(sql, params, function (err, rows) {
                 if (!err) {
                     res.send("ACCEPT FINISH");  // ajax success(function()) {}으로
                 }
@@ -836,7 +800,7 @@ router.route("/accept-invite").post(function(req, res) {
 })
 
 // 초대 거절
-router.route('/reject-invite').post(function(req,res) {
+router.route('/reject-invite').post(function (req, res) {
     console.log(req.body);
     //var proj_id = req.body.invite_proj_id;
     //var send_user_id = req.body.invite_send_user_id;
@@ -853,9 +817,9 @@ router.route('/reject-invite').post(function(req,res) {
     //
     // INVITE DB에 저장했던 정보 삭제
     //
-    var sql="DELETE FROM INVITE WHERE PROJ_ID=? AND SEND_USER_ID=? AND RECV_USER_ID=?;";
-    params=[proj_id, send_user_id, recv_user_id];
-    mysqlDB.query(sql, params, function(err, rows) {
+    var sql = "DELETE FROM INVITE WHERE PROJ_ID=? AND SEND_USER_ID=? AND RECV_USER_ID=?;";
+    params = [proj_id, send_user_id, recv_user_id];
+    mysqlDB.query(sql, params, function (err, rows) {
         if (!err) {
             res.send("REJECT FINISH");
         }
@@ -888,18 +852,18 @@ router.route("/createBIG").post(upload.array('userFiles', 12), function (req, re
 
     var data = {
         PROJ_ID: projectID, BIG_LEVEL: BigLevel, BIG_TITLE: BigTitle, BIG_START: BigStart, BIG_END: BigEnd, BIG_DESC: BigDesc, BIG_ATTACHMENT: BigAttach,
-        BIG_STATUS: BigStatus, BIG_AUTHOR: BigAuthor, BIG_CREATED: BigCreated, BIG_MID_NUM:0, BIG_MID_COM:0
+        BIG_STATUS: BigStatus, BIG_AUTHOR: BigAuthor, BIG_CREATED: BigCreated, BIG_MID_NUM: 0, BIG_MID_COM: 0
     };
 
     mysqlDB.query('INSERT INTO POST_BIG set ?', data, async function (err, results) {
         var admit;
         if (!err) {
             var result_id = results["insertId"];
-            var dir = "./public/" + projectID + "/" +result_id;
+            var dir = "./public/" + projectID + "/" + result_id;
 
             if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
-                
+
             /*for (var i = 0; i < files.length; ++i) {
                 fs.renameSync("./public/" + files[i].originalname, dir + "/" + files[i].originalname);
                 var extension = path.extname(files[i].originalname);    // move
@@ -918,23 +882,23 @@ router.route("/createBIG").post(upload.array('userFiles', 12), function (req, re
 
             var result_attach = BigAttach.split('*');
             console.log("result_attach" + result_attach);
-            var attaches='';
-            for(var i = 0; i<result_attach.length-1; i++){
-                attaches += dir +'/' + result_attach[i] +'*';
+            var attaches = '';
+            for (var i = 0; i < result_attach.length - 1; i++) {
+                attaches += dir + '/' + result_attach[i] + '*';
             }
 
-            mysqlDB.query('UPDATE POST_BIG set BIG_ATTACHMENT = ? where BIG_ID = ?', [attaches, result_id] , function(err,rows,field){
-                if(err){
+            mysqlDB.query('UPDATE POST_BIG set BIG_ATTACHMENT = ? where BIG_ID = ?', [attaches, result_id], function (err, rows, field) {
+                if (err) {
                     console.log(err);
                     admit = { "create": "deny" };
-                }else{
+                } else {
                     console.log("post update 성공")
                     admit = { "create": "success" };
                 }
                 res.write(JSON.stringify(admit));
                 res.end();
-            });         
-  
+            });
+
         } else {
             console.log(err);
             console.log("TASK INSERT ERROR");
@@ -945,24 +909,24 @@ router.route("/createBIG").post(upload.array('userFiles', 12), function (req, re
     })
 })
 
-function pythonShell(fpath, options, projectID){
-    console.log("path: "+fpath);
-    console.log("options: "+options);
+function pythonShell(fpath, options, projectID) {
+    console.log("path: " + fpath);
+    console.log("options: " + options);
 
     PythonShell.run('./public/extract_word/extract_text_from_file.py', options, function (err, extract_results) {
         if (err) throw err;
-        else{
+        else {
             console.log('results: %j', extract_results);
-            for(var j = 0; j< extract_results.length; j++){
+            for (var j = 0; j < extract_results.length; j++) {
                 searchQueries(fpath, extract_results[j], projectID);
-            }   
+            }
         }
     });
 }
 
-function searchQueries(fpath, word, projectID){
-    console.log("sub path: "+fpath);
-    console.log("sub word: "+word);
+function searchQueries(fpath, word, projectID) {
+    console.log("sub path: " + fpath);
+    console.log("sub word: " + word);
 
     mysqlDB.query('select * from SEARCH where PROJ_ID=? and WORD = ?', [projectID, word], function (err, select_results) {
         if (err) {
@@ -973,16 +937,16 @@ function searchQueries(fpath, word, projectID){
         }
         else if (select_results.length > 0) {
             console.log(select_results);
-            var new_path = select_results[0]['FILE_PATHS'] + '*' + fpath; 
+            var new_path = select_results[0]['FILE_PATHS'] + '*' + fpath;
             mysqlDB.query('UPDATE SEARCH set FILE_PATHS = ? where PROJ_ID = ? and WORD = ?', [new_path, projectID, word],
-             function(err,rows,field){
-                if(err){
-                    console.log(err);
-                    console.log("SEARCH UPDATE 실패");
-                }else{
-                    console.log("SEARCH UPDATE 성공")
-                }
-            });         
+                function (err, rows, field) {
+                    if (err) {
+                        console.log(err);
+                        console.log("SEARCH UPDATE 실패");
+                    } else {
+                        console.log("SEARCH UPDATE 성공")
+                    }
+                });
         }
         else {
             var search_data = {
@@ -991,15 +955,15 @@ function searchQueries(fpath, word, projectID){
                 FILE_PATHS: fpath
             }
             console.log(search_data);
-            mysqlDB.query('INSERT INTO SEARCH set ?', search_data, function(err,results){
-                if(err){
+            mysqlDB.query('INSERT INTO SEARCH set ?', search_data, function (err, results) {
+                if (err) {
                     console.log(err);
                     console.log("SEARCH insert 실패");
-                }else{
+                } else {
                     console.log(results);
                     console.log("SEARCH insert 성공")
                 }
-            });   
+            });
         }
     })
 }
@@ -1025,7 +989,7 @@ router.route("/createSML").post(upload.array('userFiles', 12), function (req, re
         + `SmlAttach : ${SmlAttach} , SmlStatus : ${SmlStatus}, SmlAuthor : ${SmlAuthor}, SmlCreated : ${SmlCreated}`);
 
     var data = {
-        MID_ID: MidID, SML_TITLE: SmlTitle, SML_DESC: SmlDesc, SML_ATTACHMENT: SmlAttach, 
+        MID_ID: MidID, SML_TITLE: SmlTitle, SML_DESC: SmlDesc, SML_ATTACHMENT: SmlAttach,
         SML_STATUS: SmlStatus, SML_AUTHOR: SmlAuthor, SML_CREATED: SmlCreated, SML_ACTOR: SmlActor
     };
     mysqlDB.query('INSERT INTO POST_SML set ?', data, function (err, results) {
@@ -1033,10 +997,10 @@ router.route("/createSML").post(upload.array('userFiles', 12), function (req, re
         if (!err) {
             var result_id = results["insertId"];
             var dir = `./public/${projectID}/${BigID}/${MidID}/${result_id}`;
-            
+
             if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
-                
+
             /*for (var i = 0; i < files.length; ++i){
                 fs.rename("./public/" + files[i].originalname, dir + "/" + files[i].originalname, function (err) { });
                 var extension = path.extname(files[i].originalname);    // move
@@ -1054,21 +1018,21 @@ router.route("/createSML").post(upload.array('userFiles', 12), function (req, re
             }*/
 
             var result_attach = SmlAttach.split('*');
-            var attaches='';
-            for(var i = 0; i<result_attach.length-1; i++){
-                attaches += dir +'/' + result_attach[i] +'*';
+            var attaches = '';
+            for (var i = 0; i < result_attach.length - 1; i++) {
+                attaches += dir + '/' + result_attach[i] + '*';
             }
-            mysqlDB.query('UPDATE POST_SML set SML_ATTACHMENT = ? where SML_ID = ?', [attaches, result_id] , function(err,rows,field){
-                if(err){
+            mysqlDB.query('UPDATE POST_SML set SML_ATTACHMENT = ? where SML_ID = ?', [attaches, result_id], function (err, rows, field) {
+                if (err) {
                     console.log("post update 실패");
                     admit = { "create": "deny" };
-                }else{
+                } else {
                     console.log("post update 성공")
                     admit = { "create": "success" };
                 }
                 res.write(JSON.stringify(admit));
                 res.end();
-            });   
+            });
         } else {
             console.log("TASK INSERT ERROR");
             admit = { "create": "deny" };
@@ -1137,9 +1101,9 @@ router.route("/project/create").post(function (req, res) {
         if (!err) {
             var projectID = results["insertId"];
             var dir = `./public/${projectID}`;
-            if(!fs.existsSync(dir))
+            if (!fs.existsSync(dir))
                 fs.mkdirSync(dir);
-            
+
             console.log("PROJECT create success");
             console.log(results);
 
@@ -1155,31 +1119,31 @@ router.route("/project/create").post(function (req, res) {
                 var admit;
                 if (!err) {
                     console.log("mgr_id ATTENDENCE create success");
-                }else {
+                } else {
                     console.log("mgr_id ATTENDENCE create fail");
                     admit = { "create": "mgr_id ATTENDENE create fail." };
                     res.write(JSON.stringify(admit));
                     res.end();
                 }
             })
-            
+
             /****************************
              * user invite table insert
              ****************************/
-            console.log('user_id :'+user_id);
-            if ( typeof(user_id) === 'undefined' ) {   // 참가할 팀원에 한명도 추가 안했을 시
+            console.log('user_id :' + user_id);
+            if (typeof (user_id) === 'undefined') {   // 참가할 팀원에 한명도 추가 안했을 시
                 console.log('user_id: undefined');
             }
             else if (Array.isArray(user_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
                 // user_id 배열 요소 하나씩 Invite db에 넣는다.
-                for(var i=0; i<user_id.length; i++) {
+                for (var i = 0; i < user_id.length; i++) {
                     data = {
                         PROJ_ID: results.insertId,
                         SEND_USER_ID: mgr_id,
                         RECV_USER_ID: user_id[i],
                         ISPM: false
                     };
-                    console.log(data); 
+                    console.log(data);
 
                     mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
                         var admit;
@@ -1190,7 +1154,7 @@ router.route("/project/create").post(function (req, res) {
                                 res.write(JSON.stringify(admit));
                                 res.end();
                             }*/
-                        }else {
+                        } else {
                             console.log("INVITE user create fail");
                             admit = { "create": "INVITE user create fail." };
                             res.write(JSON.stringify(admit));
@@ -1198,14 +1162,14 @@ router.route("/project/create").post(function (req, res) {
                         }
                     })
                 }
-            }else { // user_id가 배열이 아닌 경우 입력이 1개만 된 경우이므로 따로 처리한다.
+            } else { // user_id가 배열이 아닌 경우 입력이 1개만 된 경우이므로 따로 처리한다.
                 data = {
                     PROJ_ID: results.insertId,
                     SEND_USER_ID: mgr_id,
                     RECV_USER_ID: user_id,
                     ISPM: false
                 };
-                console.log(data); 
+                console.log(data);
 
                 mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
                     var admit;
@@ -1216,7 +1180,7 @@ router.route("/project/create").post(function (req, res) {
                             res.write(JSON.stringify(admit));
                             res.end();
                         }*/
-                    }else {
+                    } else {
                         console.log("INVITE user create fail");
                         admit = { "create": "INVITE user create fail." };
                         res.write(JSON.stringify(admit));
@@ -1228,8 +1192,8 @@ router.route("/project/create").post(function (req, res) {
             /********************
              * pm invite insert
              ********************/
-            console.log('pm_id :'+pm_id);
-            if ( typeof(pm_id) === 'undefined' ) {   // 참가할 팀원에 한명도 추가 안했을 시
+            console.log('pm_id :' + pm_id);
+            if (typeof (pm_id) === 'undefined') {   // 참가할 팀원에 한명도 추가 안했을 시
                 sess = req.session;
                 console.log('pm_id: undefined');
                 //res.render('main.html', {username:sess.name});
@@ -1238,28 +1202,28 @@ router.route("/project/create").post(function (req, res) {
             }
             else if (Array.isArray(pm_id)) {   // 만약 user_id가 array이다 : array 요소 하나하나에 대해 따로 처리한다.
                 // user_id 배열 요소 하나씩 INVITE db에 넣는다.
-                for(var i=0; i<pm_id.length; i++) {
+                for (var i = 0; i < pm_id.length; i++) {
                     data = {
                         PROJ_ID: results.insertId,
                         SEND_USER_ID: mgr_id,
                         RECV_USER_ID: pm_id[i],
                         ISPM: true
                     };
-                    console.log(data); 
+                    console.log(data);
 
                     mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
                         var admit;
                         if (!err) {
                             sess = req.session;
                             console.log("INVITE pm create success");
-                           //res.render('main.html', {username:sess.name});
+                            //res.render('main.html', {username:sess.name});
                             res.redirect('/table');
                             /*if (i == user_id.length-1) {
                                 admit = { "create": "success" };
                                 res.write(JSON.stringify(admit));
                                 res.end();
                             }*/
-                        }else {
+                        } else {
                             console.log("INVITE pm create fail");
                             admit = { "create": "INVITE pm create fail." };
                             res.write(JSON.stringify(admit));
@@ -1268,14 +1232,14 @@ router.route("/project/create").post(function (req, res) {
                         }
                     })
                 }
-            }else { // user_id가 배열이 아닌 경우 입력이 1개만 된 경우이므로 따로 처리한다.
+            } else { // user_id가 배열이 아닌 경우 입력이 1개만 된 경우이므로 따로 처리한다.
                 data = {
                     PROJ_ID: results.insertId,
                     SEND_USER_ID: mgr_id,
                     RECV_USER_ID: pm_id,
                     ISPM: true
                 };
-                console.log(data); 
+                console.log(data);
 
                 mysqlDB.query('INSERT INTO INVITE set ?', data, function (err, results) {
                     var admit;
@@ -1283,15 +1247,15 @@ router.route("/project/create").post(function (req, res) {
                         sess = req.session;
                         console.log("INVITE pm create success");
                         //res.render('main.html', {username:sess.name});
-                         res.redirect('/table');
+                        res.redirect('/table');
                         /*if (i == user_id.length-1) {
                             admit = { "create": "success" };
                             res.write(JSON.stringify(admit));
                             res.end();
                         }*/
-                    }else {
+                    } else {
                         console.log("INVITE pm create fail");
-                        admit = { "create": "INVITE pm create fail." };                        
+                        admit = { "create": "INVITE pm create fail." };
                         res.write(JSON.stringify(admit));
                         res.send('<script type="text/javascript">alert("프로젝트 생성에 실패했습니다.");</script>');
                         res.end();
@@ -1448,108 +1412,108 @@ router.route("/attend/member").post(function (req, res) {
         }
     })
 })
-router.route("/update-status/noti").get(function(req,res){ //NOTI 상태 변경
+router.route("/update-status/noti").get(function (req, res) { //NOTI 상태 변경
     var id = req.query.id;
     var status = req.query.status;
-    mysqlDB.query('update POST_NOTI set NOTI_STATUS = ? where NOTI_ID=?',[status,id],function(err,rows,fields){
+    mysqlDB.query('update POST_NOTI set NOTI_STATUS = ? where NOTI_ID=?', [status, id], function (err, rows, fields) {
         var project;
-        if(err){
+        if (err) {
             console.log(err);
-            project = {"check":"no"}
+            project = { "check": "no" }
             res.send(JSON.stringify(project))
-        }else{
+        } else {
             console.log("상태변경 성공");
-            project = {"check":"yes"}
+            project = { "check": "yes" }
             res.send(JSON.stringify(project))
         }
     })
 });
-router.route("/update-status/big").get(function(req,res){ //BIG 상태 변경
+router.route("/update-status/big").get(function (req, res) { //BIG 상태 변경
     var id = req.query.id;
     var status = req.query.status;
-    mysqlDB.query('update POST_BIG set BIG_STATUS = ? where BIG_ID=?',[status,id],function(err,rows,fields){
+    mysqlDB.query('update POST_BIG set BIG_STATUS = ? where BIG_ID=?', [status, id], function (err, rows, fields) {
         var project;
-        if(err){
+        if (err) {
             console.log(err);
-            project = {"check":"no"}
+            project = { "check": "no" }
             res.send(JSON.stringify(project))
-        }else{
+        } else {
             console.log("상태변경 성공");
-            project = {"check":"yes"}
+            project = { "check": "yes" }
             res.send(JSON.stringify(project))
         }
     })
 });
-router.route("/update-status/mid").get(function(req,res){ //MID 상태 변경
+router.route("/update-status/mid").get(function (req, res) { //MID 상태 변경
     var id = req.query.id;
     var status = req.query.status;
-    mysqlDB.query('update POST_MID set MID_STATUS = ? where MID_ID=?',[status,id],function(err,rows,fields){
+    mysqlDB.query('update POST_MID set MID_STATUS = ? where MID_ID=?', [status, id], function (err, rows, fields) {
         var project;
-        if(err){
+        if (err) {
             console.log(err);
-            project = {"check":"no"}
+            project = { "check": "no" }
             res.send(JSON.stringify(project))
-        }else{
+        } else {
             console.log("상태변경 성공");
-            project = {"check":"yes"}
+            project = { "check": "yes" }
             res.send(JSON.stringify(project))
         }
     })
 });
-router.route("/update-status/sml").get(function(req,res){ //SML 상태 변경
+router.route("/update-status/sml").get(function (req, res) { //SML 상태 변경
     var id = req.query.id;
     var status = req.query.status;
-    mysqlDB.query('update POST_SML set SML_STATUS = ? where SML_ID=?',[status,id],function(err,rows,fields){
+    mysqlDB.query('update POST_SML set SML_STATUS = ? where SML_ID=?', [status, id], function (err, rows, fields) {
         var project;
-        if(err){
+        if (err) {
             console.log(err);
-            project = {"check":"no"}
+            project = { "check": "no" }
             res.send(JSON.stringify(project))
-        }else{
+        } else {
             console.log("상태변경 성공");
-            project = {"check":"yes"}
+            project = { "check": "yes" }
             res.send(JSON.stringify(project))
         }
     })
 });
 
-router.route("/update-status/project").get(function(req,res){ //프로젝트 상태 변경
+router.route("/update-status/project").get(function (req, res) { //프로젝트 상태 변경
     var projectID = req.query.proj_id;
     var projectSTATUS = req.query.proj_status;
-    mysqlDB.query('update PROJECT set PROJ_STATUS = ? where PROJ_ID=?',[projectSTATUS,projectID],function(err,rows,fields){
+    mysqlDB.query('update PROJECT set PROJ_STATUS = ? where PROJ_ID=?', [projectSTATUS, projectID], function (err, rows, fields) {
         var project;
-        if(err){
+        if (err) {
             console.log(err);
-            project = {"check":"no"}
+            project = { "check": "no" }
             res.send(JSON.stringify(project))
-        }else{
+        } else {
             console.log("상태변경 성공");
-            project = {"check":"yes"}
+            project = { "check": "yes" }
             res.send(JSON.stringify(project))
         }
     })
 });
-router.route("/update-progress/project").get(function(req,res){ //프로젝트 상태 변경
+router.route("/update-progress/project").get(function (req, res) { //프로젝트 상태 변경
     var projectID = req.query.proj_id;
     var projectProgress = req.query.proj_progress;
-    console.log(projectID +' '+ projectProgress)
-    mysqlDB.query('update PROJECT set PROJ_PROGRESS = ? where PROJ_ID=?',[projectProgress, projectID],function(err,rows,fields){
+    console.log(projectID + ' ' + projectProgress)
+    mysqlDB.query('update PROJECT set PROJ_PROGRESS = ? where PROJ_ID=?', [projectProgress, projectID], function (err, rows, fields) {
         var project;
-        if(err){
+        if (err) {
             console.log(err);
-            project = {"check":"no"}
+            project = { "check": "no" }
             res.send(JSON.stringify(project))
-        }else{
+        } else {
             console.log("상태변경 성공");
-            project = {"check":"yes"}
+            project = { "check": "yes" }
             res.send(JSON.stringify(project))
         }
     })
 });
 
-router.route('/download').get(function(req, res){
-  const file = req.query.path;
-  res.download(file);
+router.route('/download').get(function (req, res) {
+    const file = req.query.path;
+    res.download(file);
 });
 
 
@@ -1737,7 +1701,7 @@ router.route("/delete/big-comment").get(function (req, res) {
 
     mysqlDB.query('delete from COMMENT_BIG where BIGC_ID = ?', [BigCID], function (err, results, fields) {
         if (err) {
-            admit = {"delete" : "error"};
+            admit = { "delete": "error" };
             console.log("Delete comment error");
             res.write(JSON.stringify(admit));
             res.end();
@@ -1758,7 +1722,7 @@ router.route("/delete/mid-comment").get(function (req, res) {
 
     mysqlDB.query('delete from COMMENT_MID where MIDC_ID = ?', [MidCID], function (err, results, fields) {
         if (err) {
-            admit = {"delete" : "error"};
+            admit = { "delete": "error" };
             console.log("Delete comment error");
             res.write(JSON.stringify(admit));
             res.end();
@@ -1779,7 +1743,7 @@ router.route("/delete/sml-comment").get(function (req, res) {
 
     mysqlDB.query('delete from COMMENT_SML where SMLC_ID = ?', [SmlCID], function (err, results, fields) {
         if (err) {
-            admit = {"delete" : "error"};
+            admit = { "delete": "error" };
             console.log("Delete comment error");
             res.write(JSON.stringify(admit));
             res.end();
@@ -1800,7 +1764,7 @@ router.route("/delete/noti-comment").get(function (req, res) {
 
     mysqlDB.query('delete from COMMENT_NOTI where NOTIC_ID = ?', [NotiCID], function (err, results, fields) {
         if (err) {
-            admit = {"delete" : "error"};
+            admit = { "delete": "error" };
             console.log("Delete comment error");
             res.write(JSON.stringify(admit));
             res.end();
@@ -1928,7 +1892,7 @@ router.route("/select/search").get(function (req, res) {
 //postnoti one select
 router.route("/extract/word").get(function (req, res) {
     var options = {
-        mode: 'text', 
+        mode: 'text',
         pythonPath: '/usr/bin/python',//doesn't matter
         pythonOptions: ['-u'],
         scriptPath: '', //doesn't matter
@@ -1938,8 +1902,8 @@ router.route("/extract/word").get(function (req, res) {
     PythonShell.run('./public/extract_word/extract_text_from_file.py', options, function (err, results) {
 
         if (err) throw err;
-      
+
         console.log('results: %j', results);
-      
+
     });
 });
