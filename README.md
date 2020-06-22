@@ -1,3 +1,6 @@
+# NEXA PROJECT MANAGEMENT TOOL
+## KNU 2020 Capstone Design Project 2 - Team 5
+
 > 본 프로젝트는 [경북대학교](http://knu.ac.kr/wbbs/)와 [(주)넥사](http://nexabg.com/)와의 산학 협력 프로젝트로 진행 되었습니다.
 
 
